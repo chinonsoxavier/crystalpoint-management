@@ -1,0 +1,208 @@
+// stores/useUserStore.ts
+import { create } from "zustand";
+import { baseAxios } from "@/network/axios";
+import { isAxiosError } from "axios";
+import { enqueueSnackbar } from "notistack";
+import { NextResponse } from "next/server";
+
+interface IUserProfile {
+  firstName: string;
+  lastName: string;
+  country: string;
+  phone: string;
+  tier: number;
+}
+
+interface IUserBalance {
+  deposit: number;
+  profile: number;
+  bonus: number;
+}
+// Types
+interface IUser {
+  email: string;
+  username: string;
+  profile: IUserProfile;
+  balance: IUserBalance;
+  id: string;
+}
+
+interface ILogin {
+  username: string;
+  password: string;
+}
+
+interface UserStore {
+  // State
+  user: IUser | null;
+  authStatus: "idle" | "loading" | "authenticated" | "error" | "email-sent";
+  errorMessage?: string;
+  sideMenuOpen: boolean;
+  showBalance: boolean;
+
+  // Actions
+  loadUser: () => Promise<void>;
+  toggleSideMenuOpen: () => void;
+  closeSideMenu: () => void;
+  toggleShowBalance: () => void;
+
+  register: (data: {
+    firstName: string;
+    lastName: string;
+    username: string;
+    email: string;
+    password: string;
+    country: string;
+    phone: string;
+    confirmPassword: string;
+  }) => Promise<string | undefined>;
+
+  login: ({ username, password }: ILogin) => Promise<string | undefined>;
+
+  logout: () => void;
+}
+
+// Create store
+const useUserStore = create<UserStore>((set, get) => ({
+  user: null,
+  authStatus: "idle",
+  errorMessage: undefined,
+  sideMenuOpen: false,
+  showBalance: true,
+
+  toggleSideMenuOpen: () =>
+    set((state) => ({ sideMenuOpen: !state.sideMenuOpen })),
+
+  closeSideMenu: () => set({ sideMenuOpen: false }),
+
+  toggleShowBalance: () =>
+    set((state) => ({ showBalance: !state.showBalance })),
+
+  // REGISTER
+  register: async ({
+    email,
+    password,
+    country,
+    username,
+    firstName,
+    lastName,
+    phone,
+    confirmPassword,
+  }) => {
+    try {
+      set({ authStatus: "loading", errorMessage: undefined });
+      if (password.length < 4) {
+        enqueueSnackbar("Password must be at least 8 characters", {
+          variant: "error",
+        });
+        set({ errorMessage: "Password too short", authStatus: "error" });
+        return;
+      }
+
+      const res = await baseAxios.post("/auth/register", {
+        email,
+        password,
+        username,
+        country,
+        firstName,
+        lastName,
+        phone,
+        confirmPassword,
+      });
+
+      if (res.status === 409 || res.data?.message?.includes("exists")) {
+        enqueueSnackbar("Email already registered. Please login.", {
+          variant: "info",
+        });
+        return "email-exists";
+      }
+
+      enqueueSnackbar("Account created! Please log in.", {
+        variant: "success",
+      });
+      set({ authStatus: "email-sent" });
+      return "success";
+    } catch (error) {
+      set({ authStatus: "error" });
+
+      if (isAxiosError(error) && error.response) {
+        const msg = error.response.data?.error || "Registration failed";
+        console.log(error.response.data);
+        enqueueSnackbar(msg, { variant: "error" });
+        set({ errorMessage: msg });
+      } else {
+        enqueueSnackbar("Network error. Please try again.", {
+          variant: "error",
+        });
+        set({ errorMessage: "Network error" });
+      }
+    } finally {
+      set({ authStatus: "idle" });
+    }
+  },
+
+  // LOGIN
+  login: async ({ username, password }: ILogin) => {
+    try {
+      set({ authStatus: "loading", errorMessage: undefined });
+
+      const res = await baseAxios.post(
+        "/auth/login",
+        { username, password },
+        { withCredentials: true }
+      );
+
+      const { token, user } = res.data?.data;
+
+
+      set({
+        authStatus: "authenticated",
+      });
+
+      enqueueSnackbar(`Welcome back, ${user?.username}!`, {
+        variant: "success",
+      });
+
+      console.log("Login response:", res.data);
+      return "success";
+    } catch (error) {
+      set({ authStatus: "error" });
+
+      if (isAxiosError(error) && error.response) {
+        const msg =
+          error.response.data?.error || "Invalid username or password";
+        set({ errorMessage: msg });
+        enqueueSnackbar(msg, { variant: "error" });
+      } else {
+        enqueueSnackbar("Login failed. Check your connection.", {
+          variant: "error",
+        });
+      }
+    }
+  },
+
+  // LOGOUT
+  logout: () => {
+    localStorage.removeItem("authToken");
+    delete baseAxios.defaults.headers.common["Authorization"];
+    set({
+      user: null,
+      authStatus: "idle",
+      sideMenuOpen: false,
+    });
+    enqueueSnackbar("Logged out successfully", { variant: "info" });
+  },
+  loadUser: async () => {
+    try {
+      const res = await baseAxios.get("/auth/me", {
+        withCredentials: true,
+      });
+      console.log(res.data, "data");
+      set({ user: res.data.user });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+}));
+
+export default useUserStore;
