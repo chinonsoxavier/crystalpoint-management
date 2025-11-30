@@ -54,13 +54,15 @@ const Page = () => {
    const res = await login({ username: formData.username, password: formData.password });
 
    if(res==='success'){
-        router.push("/user");
+    alert("Login successful!");
+    // window.location.href = '/user';
+        // router.push("/user");
    }
   };
 
   return (
     <div className="w-full wrapper min-h-screen md:px-6 px-4 flex items-center justify-center bg-linear-to-br from-slate-900 via-slate-800 to-slate-900">
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-lg">
         {/* Logo and Title Section */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-lg">
@@ -207,7 +209,7 @@ const Page = () => {
         {/* Back to Home */}
         <div className="center">
 
-        <Button className="mt-8 text-center">
+        <Button variant="ghost" className="mt-8 text-center">
           <Link
             href="/"
             className="inline-flex items-center text-sm transition-colors"

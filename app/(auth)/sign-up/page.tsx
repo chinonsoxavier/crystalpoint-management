@@ -11,13 +11,12 @@ import {
   Phone,
   Lock,
   Home,
-  AlertCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import axios from "axios";
 import useUserStore from "@/app/user/user_store";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface FormData {
   firstName: string;
@@ -44,11 +43,11 @@ const Page = () => {
     agreeTerms: false,
   });
 
-  const { register } = useUserStore();
+  const router = useRouter();
+  const { register,authStatus } = useUserStore();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isLoading, setIsLoading] = useState(false);
 
   const countries = [
     "United States",
@@ -93,8 +92,8 @@ const Page = () => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
       newErrors.email = "Please enter a valid email";
     if (!formData.password) newErrors.password = "Password is required";
-    if (formData.password.length < 6)
-      newErrors.password = "Password must be at least 6 characters";
+    if (formData.password.length < 4)
+      newErrors.password = "Password must be at least 4 characters";
     if (formData.password !== formData.confirmPassword)
       newErrors.confirmPassword = "Passwords do not match";
     if (!formData.agreeTerms) newErrors.agreeTerms = "You must agree to terms";
@@ -111,9 +110,8 @@ const Page = () => {
       return;
     }
 
-    setIsLoading(true);
+    // setIsLoading(true);
 
-    try {
       const payload = {
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
@@ -125,7 +123,12 @@ const Page = () => {
         phone: formData.phone.trim(),
       };
 
-      await register(payload);
+   const res = await register(payload);
+
+   if(res==='success'){
+            router.push("/sign-in");
+
+   }
 
       // Reset form
       setFormData({
@@ -140,17 +143,12 @@ const Page = () => {
         agreeTerms: false,
       });
       setErrors({});
-    } catch (err) {
-      console.error("Registration failed:", err);
-      toast.error("Registration failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+
   };
 
   return (
     <div className="w-full py-10 wrapper min-h-screen md:px-6 px-4 flex items-center justify-center bg-linear-to-br from-slate-900 via-slate-800 to-slate-900">
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-lg">
         {/* Logo and Title Section */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-lg">
@@ -194,7 +192,7 @@ const Page = () => {
                       errors.firstName &&
                         "border-destructive focus:ring-destructive/20"
                     )}
-                    disabled={isLoading}
+                    disabled={authStatus === "loading"}
                   />
                 </div>
                 {errors.firstName && (
@@ -225,7 +223,7 @@ const Page = () => {
                       errors.lastName &&
                         "border-destructive focus:ring-destructive/20"
                     )}
-                    disabled={isLoading}
+                    disabled={authStatus === "loading"}
                   />
                 </div>
                 {errors.lastName && (
@@ -259,7 +257,7 @@ const Page = () => {
                       errors.username &&
                         "border-destructive focus:ring-destructive/20"
                     )}
-                    disabled={isLoading}
+                    disabled={authStatus === "loading"}
                   />
                 </div>
                 {errors.username && (
@@ -290,7 +288,7 @@ const Page = () => {
                       errors.email &&
                         "border-destructive focus:ring-destructive/20"
                     )}
-                    disabled={isLoading}
+                    disabled={authStatus === "loading"}
                   />
                 </div>
                 {errors.email && (
@@ -322,7 +320,7 @@ const Page = () => {
                       errors.country &&
                         "border-destructive focus:ring-destructive/20"
                     )}
-                    disabled={isLoading}
+                    disabled={authStatus === "loading"}
                   >
                     <option value="">Select a country</option>
                     {countries.map((c) => (
@@ -360,7 +358,7 @@ const Page = () => {
                       errors.phone &&
                         "border-destructive focus:ring-destructive/20"
                     )}
-                    disabled={isLoading}
+                    disabled={authStatus === "loading"}
                   />
                 </div>
                 {errors.phone && (
@@ -394,13 +392,13 @@ const Page = () => {
                       errors.password &&
                         "border-destructive focus:ring-destructive/20"
                     )}
-                    disabled={isLoading}
+                    disabled={authStatus === "loading"}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground transition-colors"
-                    disabled={isLoading}
+                    disabled={authStatus === "loading"}
                   >
                     {showPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -437,13 +435,13 @@ const Page = () => {
                       errors.confirmPassword &&
                         "border-destructive focus:ring-destructive/20"
                     )}
-                    disabled={isLoading}
+                    disabled={authStatus === "loading"}
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground transition-colors"
-                    disabled={isLoading}
+                    disabled={authStatus === "loading"}
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -469,7 +467,7 @@ const Page = () => {
                 checked={formData.agreeTerms}
                 onChange={handleChange}
                 className="w-5 h-5 mt-0.5 border-border rounded focus:ring-2 focus:ring-primary/20"
-                disabled={isLoading}
+                disabled={authStatus === "loading"}
               />
               <label htmlFor="agreeTerms" className="text-sm text-foreground">
                 I agree to{" "}
@@ -495,10 +493,10 @@ const Page = () => {
             {/* Submit Button */}
             <Button
               type="submit"
-              disabled={isLoading}
+              disabled={authStatus === "loading"}
               className="w-full py-3 rounded-lg font-medium"
             >
-              {isLoading ? (
+              {authStatus === "loading" ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
                   Creating Account...
@@ -525,7 +523,7 @@ const Page = () => {
 
         {/* Back to Home */}
         <div className="center">
-          <Button className="mt-8 text-center">
+          <Button variant="ghost" className="mt-8 text-center">
             <Link
               href="/"
               className="inline-flex items-center text-sm text-primary-foreground hover:text-foreground transition-colors"

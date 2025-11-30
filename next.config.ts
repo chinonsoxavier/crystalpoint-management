@@ -1,7 +1,14 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    // This forces ALL internal fetches (prefetch, router, middleware) to send cookies
+    credentialsInclude: true,
+  },
 
-const nextConfig: NextConfig = {
-  /* config options here */
+  // OR in Next.js 14.2+ / 15+, use the new stable flag:
+  // fetch: {
+  //   credentials: "include",
+  // },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

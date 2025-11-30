@@ -3,7 +3,7 @@ import useUserStore from "@/app/user/user_store";
 import { WalletMinimal } from "lucide-react";
 
 const LedgerBalance = () => {
-const {showBalance,toggleShowBalance} =  useUserStore();
+const {showBalance,user} =  useUserStore();
   return (
     <div className="w-full">
       {/* Header */}
@@ -53,7 +53,7 @@ const {showBalance,toggleShowBalance} =  useUserStore();
               Account Holder
             </p>
             <p className="text-xl md:text-2xl font-semibold text-accent-text mt-1">
-              Chinonso
+              {user?.profile?.firstName}
             </p>
           </div>
         </div>

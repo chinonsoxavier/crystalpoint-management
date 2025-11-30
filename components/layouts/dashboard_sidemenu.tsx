@@ -16,7 +16,7 @@ import {
   faWallet,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { PromoModal } from "../user/user_dashboard/promo_modal";
@@ -27,21 +27,17 @@ interface IDashboardSidemenu {
 
 
 const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
-  const { sideMenuOpen, closeSideMenu } = useUserStore();
+  const router = useRouter();
+  const { sideMenuOpen, closeSideMenu, logout } = useUserStore();
   const pathname = usePathname(); // ← Track current route
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     if (window.innerWidth < 768 && sideMenuOpen) {
-  //       closeSideMenu(); // auto-close on mobile
-  //     }
-  //   };
-
-  //   handleResize(); // run on mount
-  //   window.addEventListener("resize", handleResize);
-  //   return () => window.removeEventListener("resize", handleResize);
-  // }, [sideMenuOpen, closeSideMenu]);
-
+  const handleLogout = async () => {
+    // logout returns void (no result to check)
+   const res = await logout();
+   if(res==='success'){
+    router.push("/");
+   }
+  };
   // Close menu whenever route changes
   useEffect(() => {
     if (sideMenuOpen && window.innerWidth <= 768) {
@@ -323,7 +319,7 @@ const tier2Features = [
       eventHandler: () => setPromodalModalOpen(true),
     },
     { label: "Help & Support", icon: faHeadphones, link: "/user/support" },
-    { label: "Logout", icon: faDoorOpen },
+    { label: "Logout", icon: faDoorOpen,eventHandler: handleLogout },
   ];
 
   return (

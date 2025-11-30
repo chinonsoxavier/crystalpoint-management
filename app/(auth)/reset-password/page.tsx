@@ -1,13 +1,14 @@
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, Mail, Lock, Home } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Home, CheckCircle } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
-const Page=()=> {
+const Page = () => {
   const [step, setStep] = useState<"email" | "reset">("email");
   const [formData, setFormData] = useState({
     email: "",
@@ -19,6 +20,7 @@ const Page=()=> {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -26,6 +28,11 @@ const Page=()=> {
       ...prev,
       [name]: value,
     }));
+
+    // Clear error on input
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
   };
 
   const validateEmailStep = () => {
@@ -33,7 +40,7 @@ const Page=()=> {
 
     if (!formData.email.trim()) newErrors.email = "Email is required";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-      newErrors.email = "Invalid email";
+      newErrors.email = "Please enter a valid email";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -44,13 +51,12 @@ const Page=()=> {
 
     if (!formData.newPassword)
       newErrors.newPassword = "New password is required";
-    if (formData.newPassword.length < 4)
-      newErrors.newPassword = "Password must be at least 4 characters";
+    if (formData.newPassword.length < 6)
+      newErrors.newPassword = "Password must be at least 6 characters";
     if (!formData.confirmPassword)
       newErrors.confirmPassword = "Confirm password is required";
-    if (formData.newPassword !== formData.confirmPassword) {
+    if (formData.newPassword !== formData.confirmPassword)
       newErrors.confirmPassword = "Passwords do not match";
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -63,6 +69,28 @@ const Page=()=> {
 
     setIsLoading(true);
 
+    try {
+      const response = await fetch("/api/request-reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email,
+        }),
+      });
+
+      if (response.ok) {
+        toast.success("Reset link sent to your email");
+        setStep("reset");
+      } else {
+        const data = await response.json();
+        toast.error(data.error || "Failed to send reset link");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Network error. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleResetSubmit = async (e: React.FormEvent) => {
@@ -71,6 +99,7 @@ const Page=()=> {
     if (!validateResetStep()) return;
 
     setIsLoading(true);
+
     try {
       const response = await fetch("/api/reset-password", {
         method: "POST",
@@ -82,191 +111,253 @@ const Page=()=> {
       });
 
       if (response.ok) {
-        alert("Password reset successful! Redirecting to login...");
+        setIsSuccess(true);
+        toast.success("Password reset successfully!");
         setTimeout(() => {
-          window.location.href = "/login";
+          window.location.href = "/sign-in";
         }, 2000);
       } else {
         const data = await response.json();
-        alert(data.error || "Password reset failed");
+        toast.error(data.error || "Failed to reset password");
       }
     } catch (error) {
-      alert("An error occurred. Please try again.");
+      console.log(error);
+      toast.error("Network error. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="wrapper min-h-screen md:px-6 px-4">
-      <div className="w-full mx-auto max-w-2xl bg-white my-10 rounded-md shadow">
-        {/* Header Section */}
-        <div className="bg-white rounded-t-lg p-8 border-b border-gray-200">
-          <div className="mb-4 pb-4 border-b-4 border-blue-900 inline-block">
-            <h1 className="text-3xl font-bold text-gray-900">Reset Password</h1>
+    <div className="w-full wrapper min-h-screen md:px-6 px-4 flex items-center justify-center bg-linear-to-br from-slate-900 via-slate-800 to-slate-900">
+      <div className="w-full max-w-md">
+        {/* Logo and Title Section */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-lg">
+            <span className="text-2xl font-bold text-primary-foreground">
+              CP
+            </span>
           </div>
-          <p className="text-gray-700 text-lg mb-6">
+          <h1 className="text-3xl font-bold text-white mb-2">
+            {step === "email" ? "Reset Password" : "Create New Password"}
+          </h1>
+          <p className="text-muted-foreground">
             {step === "email"
-              ? "Enter your email to reset your password"
-              : "Create your new password"}
+              ? "Enter your email to receive a reset link"
+              : "Enter your new password below"}
           </p>
-          <Link href="/">
-            <Button className="bg-primary hover:bg-orange-400 text-white font-bold px-6 py-2 rounded">
-              <Home className="mr-2 h-4 w-4" />
-              GO BACK HOME
-            </Button>
-          </Link>
         </div>
 
-        {/* Form Section */}
-        {step === "email" ? (
-          <form
-            onSubmit={handleEmailSubmit}
-            className="bg-white rounded-b-lg p-8 space-y-6"
-          >
-            {/* Email Address */}
-            <div>
-              <label className="block text-gray-900 font-bold mb-2">
-                E-mail Address*
-              </label>
-              <div className="flex border border-gray-300 rounded overflow-hidden">
-                <div className="bg-primary text-white p-3 flex items-center justify-center">
-                  <Mail className="h-5 w-5" />
-                </div>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="your@email.com"
-                  className="flex-1 px-4 py-2 outline-none text-gray-900"
-                />
-              </div>
-              {errors.email && (
-                <p className="text-primary text-sm mt-1">{errors.email}</p>
-              )}
-            </div>
-
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-primary hover:bg-orange-400 text-white font-bold py-3 rounded"
-            >
-              {isLoading ? "PROCESSING..." : "SEND RESET LINK"}
-            </Button>
-
-            {/* Back to Login */}
-            <div className="text-center">
-              <Link
-                href="/sign-in"
-                className="text-primary font-semibold text-sm"
-              >
-                Back to login
-              </Link>
-            </div>
-          </form>
-        ) : (
-          <form
-            onSubmit={handleResetSubmit}
-            className="bg-white rounded-b-lg p-8 space-y-6"
-          >
-            {/* New Password */}
-            <div>
-              <label className="block text-gray-900 font-bold mb-2">
-                NEW PASSWORD*
-              </label>
-              <div className="flex border border-gray-300 rounded overflow-hidden">
-                <div className="bg-primary text-white p-3 flex items-center justify-center">
-                  <Lock className="h-5 w-5" />
-                </div>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="newPassword"
-                  value={formData.newPassword}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  className="flex-1 px-4 py-2 outline-none text-gray-900"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="px-3 flex items-center justify-center text-gray-500 hover:text-gray-700"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
-                </button>
-              </div>
-              {errors.newPassword && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.newPassword}
-                </p>
-              )}
-            </div>
-
-            {/* Confirm New Password */}
-            <div>
-              <label className="block text-gray-900 font-bold mb-2">
-                CONFIRM NEW PASSWORD*
-              </label>
-              <div className="flex border border-gray-300 rounded overflow-hidden">
-                <div className="bg-primary text-white p-3 flex items-center justify-center">
-                  <Lock className="h-5 w-5" />
-                </div>
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  className="flex-1 px-4 py-2 outline-none text-gray-900"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="px-3 flex items-center justify-center text-gray-500 hover:text-gray-700"
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
-                </button>
-              </div>
-              {errors.confirmPassword && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.confirmPassword}
-                </p>
-              )}
-            </div>
-
-            {/* Reset Button */}
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-primary hover:bg-orange-600 text-white font-bold py-3 rounded"
-            >
-              {isLoading ? "RESETTING..." : "RESET PASSWORD"}
-            </Button>
-
-            {/* Back to Login */}
-            <div className="text-center">
-              <Link
-                href="/signin"
-                className="text-primary font-semibold text-sm"
-              >
-                Back to login
-              </Link>
-            </div>
-          </form>
+        {/* Success Message */}
+        {isSuccess && (
+          <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-lg flex items-start gap-3">
+            <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
+            <p className="text-sm text-green-500">
+              Password reset successfully! Redirecting to login...
+            </p>
+          </div>
         )}
+
+        {/* Form Card */}
+        <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-xl border border-border/50 overflow-hidden">
+          {step === "email" ? (
+            <form onSubmit={handleEmailSubmit} className="p-8 space-y-6">
+              {/* Email Field */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="email"
+                  className="text-sm font-medium text-foreground"
+                >
+                  Email Address
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <Mail className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Enter your email"
+                    className={cn(
+                      "w-full pl-10 pr-3 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
+                      errors.email &&
+                        "border-destructive focus:ring-destructive/20"
+                    )}
+                    disabled={isLoading}
+                  />
+                </div>
+                {errors.email && (
+                  <p className="text-sm text-destructive">{errors.email}</p>
+                )}
+              </div>
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-3 rounded-lg font-medium"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+                    Sending Reset Link...
+                  </>
+                ) : (
+                  "Send Reset Link"
+                )}
+              </Button>
+
+              {/* Back to Login */}
+              <div className="text-center">
+                <Link
+                  href="/sign-in"
+                  className="text-sm text-primary hover:text-primary/80 transition-colors"
+                >
+                  Back to login
+                </Link>
+              </div>
+            </form>
+          ) : (
+            <form onSubmit={handleResetSubmit} className="p-8 space-y-6">
+              {/* New Password Field */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="newPassword"
+                  className="text-sm font-medium text-foreground"
+                >
+                  New Password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <Lock className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <input
+                    id="newPassword"
+                    name="newPassword"
+                    type={showPassword ? "text" : "password"}
+                    value={formData.newPassword}
+                    onChange={handleChange}
+                    placeholder="Enter your new password"
+                    className={cn(
+                      "w-full pl-10 pr-10 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
+                      errors.newPassword &&
+                        "border-destructive focus:ring-destructive/20"
+                    )}
+                    disabled={isLoading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground transition-colors"
+                    disabled={isLoading}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+                {errors.newPassword && (
+                  <p className="text-sm text-destructive">
+                    {errors.newPassword}
+                  </p>
+                )}
+              </div>
+
+              {/* Confirm Password Field */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="confirmPassword"
+                  className="text-sm font-medium text-foreground"
+                >
+                  Confirm New Password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <Lock className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Confirm your new password"
+                    className={cn(
+                      "w-full pl-10 pr-10 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
+                      errors.confirmPassword &&
+                        "border-destructive focus:ring-destructive/20"
+                    )}
+                    disabled={isLoading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground transition-colors"
+                    disabled={isLoading}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+                {errors.confirmPassword && (
+                  <p className="text-sm text-destructive">
+                    {errors.confirmPassword}
+                  </p>
+                )}
+              </div>
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                disabled={isLoading || isSuccess}
+                className="w-full py-3 rounded-lg font-medium"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+                    Resetting Password...
+                  </>
+                ) : (
+                  "Reset Password"
+                )}
+              </Button>
+
+              {/* Back to Login */}
+              <div className="text-center">
+                <Link
+                  href="/sign-in"
+                  className="text-sm text-primary hover:text-primary/80 transition-colors"
+                >
+                  Back to login
+                </Link>
+              </div>
+            </form>
+          )}
+        </div>
+
+        {/* Back to Home */}
+        <div className="center">
+          <Button variant="ghost" className="mt-8 text-center">
+            <Link
+              href="/"
+              className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Home className="h-4 w-4 mr-1" />
+              Back to Home
+            </Link>
+          </Button>
+        </div>
       </div>
     </div>
   );
-}
-
+};
 
 export default Page;

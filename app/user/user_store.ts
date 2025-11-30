@@ -32,6 +32,11 @@ interface ILogin {
   password: string;
 }
 
+interface IResetPassword {
+  username: string;
+  email: string;
+}
+
 interface UserStore {
   // State
   user: IUser | null;
@@ -45,6 +50,7 @@ interface UserStore {
   toggleSideMenuOpen: () => void;
   closeSideMenu: () => void;
   toggleShowBalance: () => void;
+  resetPassword: ({username,email}: IResetPassword) => Promise<void>;
 
   register: (data: {
     firstName: string;
@@ -59,11 +65,11 @@ interface UserStore {
 
   login: ({ username, password }: ILogin) => Promise<string | undefined>;
 
-  logout: () => void;
+  logout: () => Promise<string | undefined>;
 }
 
 // Create store
-const useUserStore = create<UserStore>((set, get) => ({
+const useUserStore = create<UserStore>((set) => ({
   user: null,
   authStatus: "idle",
   errorMessage: undefined,
@@ -77,6 +83,18 @@ const useUserStore = create<UserStore>((set, get) => ({
 
   toggleShowBalance: () =>
     set((state) => ({ showBalance: !state.showBalance })),
+
+   resetPassword: async ({username,email}:IResetPassword) => {
+    try {
+      const res = await baseAxios.post("/auth/reset-password", {
+        withCredentials: true,
+      });
+      enqueueSnackbar("Password reset link sent to your email.", { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar("Failed to send password reset link.", { variant: "error" });
+      console.log("Reset password error:", error);
+    } 
+  },
 
   // REGISTER
   register: async ({
@@ -152,6 +170,8 @@ const useUserStore = create<UserStore>((set, get) => ({
         { withCredentials: true }
       );
 
+      
+
       const { token, user } = res.data?.data;
 
 
@@ -182,15 +202,22 @@ const useUserStore = create<UserStore>((set, get) => ({
   },
 
   // LOGOUT
-  logout: () => {
-    localStorage.removeItem("authToken");
-    delete baseAxios.defaults.headers.common["Authorization"];
-    set({
-      user: null,
-      authStatus: "idle",
-      sideMenuOpen: false,
-    });
-    enqueueSnackbar("Logged out successfully", { variant: "info" });
+  logout:async () => {
+    try {
+
+      await baseAxios.post("/auth/logout", {}, { withCredentials: true });
+      delete baseAxios.defaults.headers.common["Authorization"];
+      set({
+        user: null,
+        authStatus: "idle",
+        sideMenuOpen: false,
+      });
+      enqueueSnackbar("Logged out successfully", { variant: "info" });
+      return "success";
+    } catch (error) {
+      enqueueSnackbar("Logout failed. Please try again.", { variant: "error" });
+      console.log("Logout error:", error);
+    }
   },
   loadUser: async () => {
     try {
@@ -198,7 +225,7 @@ const useUserStore = create<UserStore>((set, get) => ({
         withCredentials: true,
       });
       console.log(res.data, "data");
-      set({ user: res.data.user });
+      set({ user: res.data?.data?.user });
     } catch (error) {
       console.log(error);
     }

@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get("authToken")?.value;
+  const token = request.cookies.get("token")?.value;
   const { pathname } = request.nextUrl;
-  console.log("token middleware:", token);
+  console.log("token:", token);
 
   // Allow static files + Next.js internal files
   if (
@@ -23,22 +23,19 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/sign-in") ||
     pathname.startsWith("/sign-up");
 
-  if (isPublicRoute) {
-    // If logged in and trying to access login/signup → redirect to dashboard
-    if (token && (pathname === "/sign-in" || pathname === "/sign-up")) {
-    //   console.log(token, "token");
-      // return NextResponse.redirect(new URL("/user", request.url));
-    }
-    return NextResponse.next();
+  // If logged in and trying to access login/signup → redirect to dashboard
+  if (token && (pathname === "/sign-in" || pathname === "/sign-up")) {
+    return NextResponse.redirect(new URL("/user", request.url));
   }
 
   // 🚀 Protected routes (token required)
   const isProtectedRoute = pathname.startsWith("/user");
 
+  // If trying to access protected route without token → redirect to login
   if (isProtectedRoute && !token) {
     const loginUrl = new URL("/sign-in", request.url);
-    loginUrl.searchParams.set("callbackUrl", pathname);
-    return NextResponse.redirect(loginUrl);
+    // loginUrl.searchParams.set("callbackUrl", pathname);
+    // return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();

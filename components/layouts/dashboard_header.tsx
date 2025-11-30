@@ -12,10 +12,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Search } from "lucide-react";
 // import { useTheme } from "next-themes";
 import { useTheme } from "../theme_provider";
+import Link from "next/link";
 
 const DashboardHeader = () => {
   const {user}=  useUserStore();
   const { theme, toggleTheme } = useTheme();
+
 
   const { showBalance, toggleShowBalance, toggleSideMenuOpen, sideMenuOpen } =
     useUserStore();
@@ -106,10 +108,12 @@ const DashboardHeader = () => {
                 <b>{user?.username}</b>
               </span>
             </p>
+            <Link href="/user/settings">
             <FontAwesomeIcon
               className="size-20 w-20 h-20 text-xl"
               icon={faUser}
             />
+            </Link>
           </div>
         </div>
       </div>
