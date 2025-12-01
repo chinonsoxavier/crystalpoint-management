@@ -5,11 +5,21 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SnackbarProvider } from "notistack";
 import { useEffect, useState } from "react";
 import userStore from "@/app/user/user_store"; // your function
+import { baseAxios } from "@/network/axios";
 
 
 export function Providers({ children }: { children: React.ReactNode }) {
     const {loadUser} = userStore();
   useEffect(() => {
+    const checkServerHealth = async () => {
+      try {
+        await baseAxios.get("/health");
+        console.log("Server is running ");
+      } catch (error) {
+        console.error("Server health check failed:", error);
+      }
+    }
+    checkServerHealth();
     loadUser(); 
   }, []);
   const [queryClient] = useState(

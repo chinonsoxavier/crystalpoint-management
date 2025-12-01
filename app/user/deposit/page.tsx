@@ -10,21 +10,32 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import LedgerBalance from "@/components/shared/ledger_balance";
+import useDepositStore from "./_deposit_store";
 
 const Page = () => {
+
+  const {depositMethods,fetchDepositMethods} =  useDepositStore();
   const [copied, setCopied] = useState(false);
-  const referralLink = "bc1q5jz22pkp7y6vq4e38hn69kpzu9lcmlj454f64e";
+
+
+  const walletAddress = "bc1q5jz22pkp7y6vq4e38hn69kpzu9lcmlj454f64e";
   const handleCopy = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
     e.preventDefault();
-    await navigator.clipboard.writeText(referralLink);
+    await navigator.clipboard.writeText(walletAddress);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+
+  useEffect(() => {
+    fetchDepositMethods();
+  }, [])
+  
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     setIsSubmitted(true);
@@ -54,14 +65,26 @@ const Page = () => {
 
                   {/* Cryptocurrency Dropdown */}
                   <div className="mb-6">
-                                                                                                                    
                     <Select required>
                       <SelectTrigger className="w-full text-accent-text">
                         <SelectValue placeholder="Select a wallet" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
+                          <SelectLabel>Wallet Type</SelectLabel>
+                          {depositMethods.map((method) => (
+                            <SelectItem
+                              key={method.id}
+                              className=""
+                              value={method.network}
+                            >
+                              {method.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                        {/* <SelectGroup>
                           <SelectLabel>Crypto Deposit</SelectLabel>
+
                           <SelectItem className="" value="Bitcoin">
                             Bitcoin
                           </SelectItem>
@@ -77,7 +100,7 @@ const Page = () => {
                           <SelectItem className="" value="Ethereum">
                             Ethereum
                           </SelectItem>
-                        </SelectGroup>
+                        </SelectGroup> */}
                       </SelectContent>
                     </Select>
                   </div>
@@ -131,7 +154,7 @@ const Page = () => {
                   </div>
                   <div className="flex-1 bg-accent rounded-lg px-4 h-12 flex items-center justify-start border border-border">
                     <p className="text-sm font-mono text-accent-text break-all">
-                      {referralLink}
+                      {walletAddress}
                     </p>
                   </div>
 

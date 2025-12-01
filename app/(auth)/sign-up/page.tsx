@@ -156,9 +156,7 @@ const Page = () => {
               CP
             </span>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Create Account
-          </h1>
+          <h1 className="text-3xl font-bold text-white mb-2">Create Account</h1>
           <p className="text-muted-foreground">
             Enter your details to register a new account
           </p>
@@ -523,10 +521,10 @@ const Page = () => {
 
         {/* Back to Home */}
         <div className="center">
-          <Button variant="ghost" className="mt-8 text-center">
+          <Button variant="link" className="mt-8 text-center ">
             <Link
               href="/"
-              className="inline-flex items-center text-sm text-primary-foreground hover:text-foreground transition-colors"
+              className="inline-flex items-center text-sm transition-colors"
             >
               <Home className="h-4 w-4 mr-1" />
               Back to Home

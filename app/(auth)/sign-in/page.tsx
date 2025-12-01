@@ -54,7 +54,7 @@ const Page = () => {
    const res = await login({ username: formData.username, password: formData.password });
 
    if(res==='success'){
-    alert("Login successful!");
+    // alert("Login successful!");
     // window.location.href = '/user';
         // router.push("/user");
    }
@@ -70,9 +70,7 @@ const Page = () => {
               CP
             </span>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Welcome Back
-          </h1>
+          <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
           <p className="text-muted-foreground">
             Sign in to your account to continue
           </p>
@@ -208,17 +206,16 @@ const Page = () => {
 
         {/* Back to Home */}
         <div className="center">
-
-        <Button variant="ghost" className="mt-8 text-center">
-          <Link
-            href="/"
-            className="inline-flex items-center text-sm transition-colors"
+          <Button variant="link" className="mt-8 text-center ">
+            <Link
+              href="/"
+              className="inline-flex items-center text-sm transition-colors"
             >
-            <Home className="h-4 w-4 mr-1" />
-            Back to Home
-          </Link>
-        </Button>
-            </div>
+              <Home className="h-4 w-4 mr-1" />
+              Back to Home
+            </Link>
+          </Button>
+        </div>
       </div>
     </div>
   );

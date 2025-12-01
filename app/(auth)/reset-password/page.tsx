@@ -345,10 +345,10 @@ const Page = () => {
 
         {/* Back to Home */}
         <div className="center">
-          <Button variant="ghost" className="mt-8 text-center">
+          <Button variant="link" className="mt-8 text-center ">
             <Link
               href="/"
-              className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="inline-flex items-center text-sm transition-colors"
             >
               <Home className="h-4 w-4 mr-1" />
               Back to Home

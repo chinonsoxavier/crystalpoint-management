@@ -9,7 +9,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   //   const menuOpen = useStore((state: any) => state.menuOpen);
 
   return (
-    <main className={`relative overflow-hidden`}>
+    <main className={`relative bg-accent overflow-hidden`}>
       {/* header */}
       <DashboardHeader />
       <section className="flex h-[calc(100dvh-80px-48px)] w-full">
