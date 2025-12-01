@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Archivo } from "next/font/google";
-import "./globals.css"
+import "./globals.css";
 //import GlobalLoader from "@/components/animation/loader/global_loader";
 import { Providers } from "@/providers/provider";
 import BackToTop from "@/components/shared/back-to-top";
+import { AuthGuard } from "@/components/auth_guard";
 const archivoSans = Archivo({
   variable: "--font-archivo-sans",
   subsets: ["latin"],
@@ -25,8 +26,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-
   // const pathname = usePathname();
   // const searchParams = useSearchParams();
   // const { setIsLoading } = useLoading();
@@ -46,12 +45,12 @@ export default function RootLayout({
         className={`${archivoSans.variable} ${archivoMono.variable} antialiased`}
       >
         {/* <LoadingProvider> */}
-        <Providers>
-          {children}
-          </Providers>
+        {/* <AuthGuard> */}
+        <Providers>{children}</Providers>
+        {/* </AuthGuard> */}
         {/* <GlobalLoader /> */}
         {/* </LoadingProvider> */}
-        <BackToTop/>
+        <BackToTop />
       </body>
     </html>
   );

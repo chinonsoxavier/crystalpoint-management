@@ -9,7 +9,7 @@ import { baseAxios } from "@/network/axios";
 
 
 export function Providers({ children }: { children: React.ReactNode }) {
-    const {loadUser} = userStore();
+    const {loadUser,authStatus} = userStore();
   useEffect(() => {
     const checkServerHealth = async () => {
       try {
@@ -35,6 +35,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
       })
   );
 
+// if (authStatus === "loading") {
+//     return (
+//    <div className="flex items-center justify-center min-h-screen">
+//         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+//       </div>
+//     )}
   return (
     <QueryClientProvider client={queryClient}>
       <SnackbarProvider />

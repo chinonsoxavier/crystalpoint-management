@@ -18,7 +18,6 @@ const Hero = () => {
         }
     const timeout =  setTimeout(() => {
         setCurrentSlide(currentSlide + 1);
-        console.log(currentSlide);
       }, 5000);
       if(currentSlide>=slides.length){
         clearTimeout(timeout);

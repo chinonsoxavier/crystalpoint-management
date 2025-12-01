@@ -1,7 +1,7 @@
 // stores/useUserStore.ts
 import { create } from "zustand";
 import { baseAxios } from "@/network/axios";
-import { isAxiosError } from "axios";
+import { AxiosResponse, isAxiosError } from "axios";
 import { enqueueSnackbar } from "notistack";
 import { NextResponse } from "next/server";
 
@@ -169,12 +169,8 @@ const useUserStore = create<UserStore>((set) => ({
         { username, password },
         { withCredentials: true }
       );
-
-      
-
-      const { token, user } = res.data?.data;
-
-
+      const { user } = res.data?.data;
+      useUserStore.getState().loadUser();
       set({
         authStatus: "authenticated",
       });
@@ -219,17 +215,50 @@ const useUserStore = create<UserStore>((set) => ({
       console.log("Logout error:", error);
     }
   },
-  loadUser: async () => {
-    try {
-      const res = await baseAxios.get("/auth/me", {
-        withCredentials: true,
+loadUser: async () => {
+  const { authStatus } = useUserStore.getState();
+
+  // Prevent parallel fetching
+  if (authStatus === "loading") return;
+
+  set({ authStatus: "loading" });
+
+  try {
+    const res = await baseAxios.get("/auth/me", { withCredentials: true });
+
+    const user = res.data?.data?.user;
+
+    if (user) {
+      set({
+        user,
+        authStatus: "authenticated",
       });
-      console.log(res.data, "data");
-      set({ user: res.data?.data?.user });
-    } catch (error) {
-      console.log(error);
+    } else {
+      // Gracefully handle "user not found"
+      set({
+        user: null,
+        authStatus: "idle",
+      });
     }
-  },
+  } catch (error: unknown) {
+    // Expected UNAUTH states (e.g. 401, 404)
+    if (isAxiosError(error) && (error.response?.status === 401 || error.response?.status === 404)) {
+      set({
+        user: null,
+        authStatus: "idle",
+      });
+      return;
+    }
+
+    // Unexpected errors only
+    console.error("Unexpected error loading user:", error);
+    set({
+      user: null,
+      authStatus: "idle",
+    });
+  }
+},
+
 }));
 
 export default useUserStore;

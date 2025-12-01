@@ -23,7 +23,7 @@ const useDashboardStore = create<DashboardStore>((set) => ({
   referralLink: undefined,
   loadProfile: async () => {
     try {
-      const res = await baseAxios.get("/dashboard/summary");
+      const res = await baseAxios.get("/dashboard/summary",{withCredentials:true});
       set({ profile: res.data?.data });
       await useDashboardStore.getState().getRefferalLink();
       console.log(res.data);
@@ -32,7 +32,7 @@ const useDashboardStore = create<DashboardStore>((set) => ({
     }
   },
   getRefferalLink: async () => {
-    const res = await baseAxios.get("/dashboard/referral-link");
+    const res = await baseAxios.get("/dashboard/referral-link",{withCredentials:true});
     try {
       set({ referralLink: res.data?.data?.referral_link });
       console.log("Referral Link:", res.data.data);

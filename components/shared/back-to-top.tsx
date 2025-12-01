@@ -15,11 +15,22 @@ const BackToTop = () => {
     }
   };
 
-  const updateProgress = () => {
-    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = (window.pageYOffset / totalHeight) * 100;
-    setScrollProgress(progress);
-  };
+const updateProgress = () => {
+  const totalHeight =
+    document.documentElement.scrollHeight - window.innerHeight;
+
+  // Prevent division by zero on short pages
+  if (totalHeight <= 0) {
+    setScrollProgress(0);
+    return;
+  }
+
+  const progress = (window.pageYOffset / totalHeight) * 100;
+
+  // Ensure progress stays 0–100
+  setScrollProgress(Math.min(Math.max(progress, 0), 100));
+};
+
 
   const scrollToTop = () => {
     window.scrollTo({

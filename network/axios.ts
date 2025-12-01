@@ -6,7 +6,6 @@ export const baseUrl = "https://crystalpoint-api.onrender.com";
 
 export const baseAxios = axios.create({
   baseURL: baseUrl,
-  withCredentials:true,
 });
 
 
