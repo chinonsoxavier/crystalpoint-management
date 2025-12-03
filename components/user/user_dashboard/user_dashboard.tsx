@@ -67,8 +67,8 @@ useEffect(() => {
                   </>
                 ) : (
                   <>
-                    <Copy size={18} />
-                    <span>Copy</span>
+                    <Copy size={18} className="text-white"/>
+                    <span className="text-white">Copy</span>
                   </>
                 )}
               </Button>

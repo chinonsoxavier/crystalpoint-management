@@ -181,7 +181,7 @@ export default function SettingsPage() {
                     <Button
                       disabled={isLoading}
                       type="submit"
-                      className="w-full mt-6"
+                      className="w-full mt-6 text-white"
                     >
                       {isLoading ? (
                         <>
@@ -361,7 +361,7 @@ export default function SettingsPage() {
 
                   <Button
                     onClick={handleAccountUpdate}
-                    className="w-full max-w-xs mt-8"
+                    className="w-full max-w-xs mt-8 text-white"
                   >
                     UPDATE
                   </Button>

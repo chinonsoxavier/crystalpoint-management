@@ -159,7 +159,7 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
                 <Button
                   type="submit"
                   disabled={authStatus==='loading'}
-                  className="w-full py-3 rounded-lg font-medium"
+                  className="w-full py-3 rounded-lg font-medium text-white"
                 >
                   {authStatus==='loading' ? (
                     <>
