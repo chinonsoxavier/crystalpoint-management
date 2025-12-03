@@ -49,7 +49,7 @@ const Page = () => {
               cryptocurrency exchanges performed by qualified professional
               traders.
             </p>
-            <Button>Learn More</Button>
+            <Button className="text-white">Learn More</Button>
         </div>
       </Animate>
 

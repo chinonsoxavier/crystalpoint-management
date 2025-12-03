@@ -5,18 +5,25 @@ import { ChevronDown, LogIn, X } from "lucide-react";
 import useLandingStore from "@/app/(landing)/landing_store";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { usePathname } from "next/navigation"; // ← Add this
+import { usePathname } from "next/navigation";
 
 export default function Sidemenu() {
   const [companyOpen, setCompanyOpen] = useState(true);
   const { toggleSideMenuOpen, sideMenuOpen } = useLandingStore();
+  const pathname = usePathname();
 
-  const pathname = usePathname(); // ← Track current route
+  // Check if link is active - same logic as Header
+  const isActiveLink = (href: string) => {
+    if (href === "/") {
+      return pathname === href;
+    }
+    return pathname.startsWith(href);
+  };
 
   // Close menu whenever route changes
   useEffect(() => {
     if (sideMenuOpen) {
-      toggleSideMenuOpen(); // This sets sideMenuOpen = false
+      toggleSideMenuOpen();
     }
   }, [pathname]);
 
@@ -42,11 +49,27 @@ export default function Sidemenu() {
               onClick={() => setCompanyOpen(!companyOpen)}
               className="flex items-center justify-between w-full mb-4 group"
             >
-              <h2 className="text-xl font-bold text-primary">Company</h2>
+              <h2 
+                className={`text-xl font-bold transition-colors duration-300 ${
+                  isActiveLink("/about-us") || 
+                  isActiveLink("/faqs") || 
+                  isActiveLink("/contact-us") 
+                    ? "text-[#1a365d]" 
+                    : "text-primary"
+                }`}
+              >
+                Company
+              </h2>
               <ChevronDown
                 size={24}
-                className={`text-primary duration-500 transition-transform ${
+                className={`duration-500 transition-transform ${
                   companyOpen ? "rotate-0" : "rotate-90"
+                } ${
+                  isActiveLink("/about-us") || 
+                  isActiveLink("/faqs") || 
+                  isActiveLink("/contact-us") 
+                    ? "text-[#1a365d]" 
+                    : "text-primary"
                 }`}
               />
             </button>
@@ -57,22 +80,34 @@ export default function Sidemenu() {
             >
               <Link
                 href="/about-us"
-                onClick={() => toggleSideMenuOpen()} // ← Also close on click
-                className="block text-lg text-gray-300 hover:text-gray-100 transition-colors"
+                onClick={() => toggleSideMenuOpen()}
+                className={`block text-lg transition-colors duration-300 ${
+                  isActiveLink("/about-us")
+                    ? "text-[#1a365d] font-semibold"
+                    : "text-gray-300 hover:text-gray-100"
+                }`}
               >
                 About Us
               </Link>
               <Link
                 href="/faqs"
                 onClick={() => toggleSideMenuOpen()}
-                className="block text-lg text-gray-300 hover:text-gray-100 transition-colors"
+                className={`block text-lg transition-colors duration-300 ${
+                  isActiveLink("/faqs")
+                    ? "text-[#1a365d] font-semibold"
+                    : "text-gray-300 hover:text-gray-100"
+                }`}
               >
                 FAQ`s
               </Link>
               <Link
                 href="/contact-us"
                 onClick={() => toggleSideMenuOpen()}
-                className="block text-lg text-gray-300 hover:text-gray-100 transition-colors"
+                className={`block text-lg transition-colors duration-300 ${
+                  isActiveLink("/contact-us")
+                    ? "text-[#1a365d] font-semibold"
+                    : "text-gray-300 hover:text-gray-100"
+                }`}
               >
                 Contact Us
               </Link>
@@ -80,24 +115,48 @@ export default function Sidemenu() {
           </div>
 
           <div>
-            <h3 className="text-xl font-bold text-white mb-4">
-              <Link href="/markets" onClick={() => toggleSideMenuOpen()}>
+            <h3 className={`text-xl font-bold mb-4 transition-colors duration-300 ${
+              isActiveLink("/markets")
+                ? "text-[#1a365d]"
+                : "text-white"
+            }`}>
+              <Link 
+                href="/markets" 
+                onClick={() => toggleSideMenuOpen()}
+                className={isActiveLink("/markets") ? "text-[#1a365d]" : ""}
+              >
                 Markets
               </Link>
             </h3>
           </div>
 
           <div>
-            <h3 className="text-xl font-bold text-white mb-4">
-              <Link href="/plans" onClick={() => toggleSideMenuOpen()}>
+            <h3 className={`text-xl font-bold mb-4 transition-colors duration-300 ${
+              isActiveLink("/plans")
+                ? "text-[#1a365d]"
+                : "text-white"
+            }`}>
+              <Link 
+                href="/plans" 
+                onClick={() => toggleSideMenuOpen()}
+                className={isActiveLink("/plans") ? "text-[#1a365d]" : ""}
+              >
                 Plans
               </Link>
             </h3>
           </div>
 
           <div>
-            <h3 className="text-xl font-bold text-white mb-4">
-              <Link href="/services" onClick={() => toggleSideMenuOpen()}>
+            <h3 className={`text-xl font-bold mb-4 transition-colors duration-300 ${
+              isActiveLink("/services")
+                ? "text-[#1a365d]"
+                : "text-white"
+            }`}>
+              <Link 
+                href="/services" 
+                onClick={() => toggleSideMenuOpen()}
+                className={isActiveLink("/services") ? "text-[#1a365d]" : ""}
+              >
                 Our Services
               </Link>
             </h3>
@@ -105,7 +164,13 @@ export default function Sidemenu() {
         </nav>
 
         <Link href="/sign-in" onClick={() => toggleSideMenuOpen()}>
-          <Button className="w-full duration-500 hover:text-white min-w-0 mt-12 transition-colors flex items-center justify-center gap-2 text-lg">
+          <Button 
+            className={`w-full duration-500 min-w-0 mt-12 transition-all flex items-center justify-center gap-2 text-lg ${
+              isActiveLink("/sign-in")
+                ? "bg-[#1a365d] text-white hover:bg-[#1a365d]/90"
+                : "hover:text-primary hover:bg-white text-white"
+            }`}
+          >
             Log in
             <LogIn size={20} />
           </Button>

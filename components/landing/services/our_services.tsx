@@ -29,7 +29,7 @@ const OurServices = () => {
     {
       image: service1,
       label: "Retirement Planning",
-      desc: "Saving for retirement can be a daunting task, but with a sound strategy, it’s well within reach. Visional Wellington is here to bring clarity to retirement...",
+      desc: "Saving for retirement can be a daunting task, but with a sound strategy, it’s well within reach.  Crystalpoint investment management is here to bring clarity to retirement...",
       link: "/services/retirement-planning",
     },
     {
@@ -86,11 +86,11 @@ const OurServices = () => {
                 </p>
 
                 <Link href={service.link}>
-                  <Button className="w-min whitespace-nowrap group hover:text-white duration-300">
+                  <Button className="w-min whitespace-nowrap group hover:text-white duration-300 text-white">
                     Learn More
                     <HoverArrow
                       variant="custom"
-                      className="text-primary bg-primary-foreground group-hover:bg-white duration-500"
+                      className="text-primary bg-white group-hover:bg-white duration-500"
                     />
                   </Button>
                 </Link>

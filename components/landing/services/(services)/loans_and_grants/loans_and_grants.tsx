@@ -49,11 +49,11 @@ const LoansAndGrants = () => {
                   yearly with 5% paid monthly, or the investor could wish to
                   compound the interest till the time limit, provided all
                   required information and identity of the investor are duly
-                  confirmed by Visional Wellington loan board. Every investor
+                  confirmed by  Crystalpoint loan board. Every investor
                   above $50,000 is provided with a personal account manager and
                   the investor has a direct communication with the manager in
                   order to see that our loan offers are secured. GREAT INVESTING
-                  WITH Visional Wellington FAMILY
+                  WITH  Crystalpoint FAMILY
                 </p>
               </div>
             </Animate>

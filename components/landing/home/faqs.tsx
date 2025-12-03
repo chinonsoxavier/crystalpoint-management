@@ -87,7 +87,7 @@ export default function FAQ({showButton}: FAQProps) {
               <button
                 onClick={() => toggleExpanded(item.id)}
                 className={`w-full text-left px-6 py-4 rounded-lg font-semibold transition-all ${
-                  expandedIds.has(item.id) ? "bg-primary" : "bg-white"
+                  expandedIds.has(item.id) ? "bg-primary text-white" : "bg-white"
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -97,7 +97,9 @@ export default function FAQ({showButton}: FAQProps) {
                       expandedIds.has(item.id) ? "rotate-90" : ""
                     }`}
                   />
-                  <span className="text-primary-foreground">
+                  <span className={`text-primary-foreground} ${
+                    expandedIds.has(item.id) ? "text-white" : "text-primary-foreground "
+                  }`}>
                     {item.question}
                   </span>
                 </div>

@@ -43,7 +43,7 @@ const Hero = () => {
             <Button variant="secondary">
               Login <HoverArrow variant="secondary" />
             </Button>
-            <Button>
+            <Button className="text-white">
               Create Account <HoverArrow />
             </Button>
           </div>
@@ -78,7 +78,7 @@ const Hero = () => {
             <Button variant="secondary">
               Login <HoverArrow variant="secondary" />
             </Button>
-            <Button>
+            <Button className="text-white">
               Create Account <HoverArrow />
             </Button>
           </div>
@@ -97,7 +97,7 @@ const Hero = () => {
           >
             <div className="max_width space-y-5  md:space-y-8 text-white">
               <div className="flex items-center justify-between w-min bg-[rgba(255,255,255,.2)] rounded-[7px] text-[#cacdd1] py-1.5 gap-6 px-4">
-                <div className="bg-[#0A8A9F] text-sm md:text-base text-white whitespace-nowrap px-3">
+                <div className="bg-[#1a365d] text-sm md:text-base text-white whitespace-nowrap px-3">
                   Learn More
                 </div>
                 <Link href="/">

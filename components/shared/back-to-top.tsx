@@ -53,8 +53,8 @@ const updateProgress = () => {
       onClick={scrollToTop}
       className={cn(
         "fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full shadow-2xl transition-all duration-500 ease-in-out transform",
-        "bg-[#0A8A9F] hover:bg-[#0A8A9F]/90 text-white border border-[#0A8A9F]/20",
-        "hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#0A8A9F] focus:ring-offset-2 focus:ring-offset-gray-900",
+        "bg-[#1a365d] hover:bg-[#1a365d]/90 text-white border border-[#1a365d]/20",
+        "hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#1a365d] focus:ring-offset-2 focus:ring-offset-gray-900",
         isVisible
           ? "opacity-100 translate-y-0"
           : "opacity-0 translate-y-10 pointer-events-none"

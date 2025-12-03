@@ -28,9 +28,9 @@ const Investment = () => {
             We pride ourself as the prime of finance management and investment.
           </p>
 
-          <Button className="w-min whitespace-nowrap group hover:text-white duration-300" >
+          <Button className="w-min whitespace-nowrap group hover:text-white duration-300 text-white" >
             Start Investing
-            <HoverArrow variant="custom" className="text-primary bg-primary-foreground group-hover:bg-white duration-500" />
+            <HoverArrow variant="custom" className=" bg-white text-primary-foreground group-hover:bg-white duration-500" />
           </Button>
         </Animate>
       </div>

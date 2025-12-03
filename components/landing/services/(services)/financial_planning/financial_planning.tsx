@@ -35,7 +35,7 @@ const FinancialPlanning = () => {
               <div className="flex-1 space-y-5">
                 <p className="text-secondary-foreground text-[16px] md:text-lg tracking-wide">
                   Saving for retirement can be a daunting task, but with a sound
-                  strategy, it’s well within reach. Visional Wellington is here
+                  strategy, it’s well within reach.  Crystalpoint investment management is here
                   to bring clarity to retirement planning and set you on your
                   path to success. Here you’ll better understand your options
                   and find the right investment. If you had the chance to

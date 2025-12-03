@@ -32,9 +32,15 @@ const DashboardHeader = () => {
           sideMenuOpen ? "w-70 justify-start" : "w-20 justify-center"
         } transition-opacity duration-300`}
       >
-        <div className="text-xs roboto text-">Logo</div>
+        <div className="text-xs roboto text-">
+           <div className="inline-flex items-center justify-center w-12 h-12 bg-white rounded-2xl mb-4 shadow-lg">
+              <span className="text-xl font-bold text-primary">
+                CP
+              </span>
+            </div>
+        </div>
         {sideMenuOpen && (
-          <div className="text-2xl hidden large:block">Logo</div>
+          <div className="text-2xl hidden large:block"></div>
         )}
       </div>
 

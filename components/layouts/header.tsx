@@ -34,18 +34,18 @@ const Header = () => {
                     <Gem
                       className={`w-8 h-8 transition-colors duration-300 ${
                         isActiveLink("/")
-                          ? "text-[#0A8A9F]"
-                          : "text-gray-400 group-hover:text-[#0A8A9F]"
+                          ? "text-[#1a365d]"
+                          : "text-gray-400 group-hover:text-[#1a365d]"
                       }`}
                     />
-                    <div className="absolute inset-0 bg-[#0A8A9F]/20 rounded-full blur-sm group-hover:bg-[#0A8A9F]/30 transition-all duration-300"></div>
+                    <div className="absolute inset-0 bg-[#1a365d]/20 rounded-full blur-sm group-hover:bg-[#1a365d]/30 transition-all duration-300"></div>
                   </div>
                   <div className="flex flex-col">
                     <p
                       className={`text-xl font-bold transition-all duration-500 ${
                         isActiveLink("/")
-                          ? "text-[#0A8A9F]"
-                          : "text-white group-hover:text-[#0A8A9F]"
+                          ? "text-white"
+                          : "text-white group-hover:text-[#1a365d]"
                       }`}
                     >
                       CrystalPoint
@@ -70,8 +70,8 @@ const Header = () => {
                   href="#"
                   className={`flex gap-1 center h-full transition-colors duration-300 ${
                     isActiveLink("#")
-                      ? "text-[#0A8A9F]"
-                      : "text-white hover:text-[#0A8A9F]"
+                      ? "text-[#1a365d]"
+                      : "text-white hover:text-[#1a365d]"
                   }`}
                 >
                   Company <ChevronDown className="w-4 mt-px" />
@@ -83,31 +83,31 @@ const Header = () => {
                   }`}
                 >
                   <ul className="space-y-2">
-                    <li className="text-primary-foreground duration-500 hover:text-[#0A8A9F]">
+                    <li className="text-primary-foreground duration-500 hover:text-[#1a365d]">
                       <Link
                         href="/about-us"
                         className={
-                          isActiveLink("/about-us") ? "text-[#0A8A9F]" : ""
+                          isActiveLink("/about-us") ? "text-[#1a365d]" : ""
                         }
                       >
                         About Us
                       </Link>
                     </li>
-                    <li className="text-primary-foreground duration-500 hover:text-[#0A8A9F]">
+                    <li className="text-primary-foreground duration-500 hover:text-[#1a365d]">
                       <Link
                         href="/faqs"
                         className={
-                          isActiveLink("/faqs") ? "text-[#0A8A9F]" : ""
+                          isActiveLink("/faqs") ? "text-[#1a365d]" : ""
                         }
                       >
                         FAQ`s
                       </Link>
                     </li>
-                    <li className="text-primary-foreground duration-500 hover:text-[#0A8A9F]">
+                    <li className="text-primary-foreground duration-500 hover:text-[#1a365d]">
                       <Link
                         href="/contact-us"
                         className={
-                          isActiveLink("/contact-us") ? "text-[#0A8A9F]" : ""
+                          isActiveLink("/contact-us") ? "text-[#1a365d]" : ""
                         }
                       >
                         Contact Us
@@ -121,8 +121,8 @@ const Header = () => {
                   href="/markets"
                   className={`transition-colors duration-300 ${
                     isActiveLink("/markets")
-                      ? "text-[#0A8A9F]"
-                      : "text-white hover:text-[#0A8A9F]"
+                      ? "text-[#1a365d]"
+                      : "text-white hover:text-[#1a365d]"
                   }`}
                 >
                   Markets
@@ -133,8 +133,8 @@ const Header = () => {
                   href="/plans"
                   className={`transition-colors duration-300 ${
                     isActiveLink("/plans")
-                      ? "text-[#0A8A9F]"
-                      : "text-white hover:text-[#0A8A9F]"
+                      ? "text-[#1a365d]"
+                      : "text-white hover:text-[#1a365d]"
                   }`}
                 >
                   Plans
@@ -145,8 +145,8 @@ const Header = () => {
                   href="/services"
                   className={`transition-colors duration-300 ${
                     isActiveLink("/services")
-                      ? "text-[#0A8A9F]"
-                      : "text-white hover:text-[#0A8A9F]"
+                      ? "text-[#1a365d]"
+                      : "text-white hover:text-[#1a365d]"
                   }`}
                 >
                   Our Services
@@ -161,7 +161,7 @@ const Header = () => {
               variant="ghost"
               className={`group transition-all duration-300 ${
                 isActiveLink("/sign-in")
-                  ? "text-[#0A8A9F] border-[#0A8A9F]"
+                  ? "text-[#1a365d] border-[#1a365d]"
                   : "hover:text-black text-white"
               }`}
             >
@@ -169,7 +169,7 @@ const Header = () => {
               <div
                 className={`center rounded-full transition-all duration-500 ${
                   isActiveLink("/sign-in")
-                    ? "bg-[#0A8A9F]"
+                    ? "bg-[#1a365d]"
                     : "bg-white group-hover:bg-black"
                 } w-4.5 h-4.5`}
               >
@@ -187,8 +187,8 @@ const Header = () => {
             <Button
               className={`leading-[42px] duration-700 group transition-all ${
                 isActiveLink("/sign-up")
-                  ? "bg-[#0A8A9F] text-white hover:bg-[#0A8A9F]/90"
-                  : "hover:text-white text-[#2c2d32] bg-white hover:bg-[#0A8A9F]"
+                  ? "bg-[#1a365d] text-white hover:bg-[#1a365d]/90"
+                  : "hover:text-white text-[#2c2d32] bg-white hover:bg-[#1a365d]"
               }`}
             >
               Sign Up
@@ -202,8 +202,8 @@ const Header = () => {
                 <ArrowUp
                   className={`delay-200 transition-all duration-500 mx-auto ${
                     isActiveLink("/sign-up")
-                      ? "text-[#0A8A9F]"
-                      : "text-primary group-hover:rotate-90 rotate-45 group-hover:text-[#0A8A9F]"
+                      ? "text-[#1a365d]"
+                      : "text-white group-hover:rotate-90 rotate-45 group-hover:text-[#1a365d]"
                   }`}
                 />
               </div>
@@ -214,7 +214,7 @@ const Header = () => {
           onClick={() => {
             toggleSideMenuOpen();
           }}
-          className="text-white medium:hidden h-10 w-10 cursor-pointer hover:text-[#0A8A9F] transition-colors duration-300"
+          className="text-white medium:hidden h-10 w-10 cursor-pointer hover:text-[#1a365d] transition-colors duration-300"
         />
       </div>
     </Animate>

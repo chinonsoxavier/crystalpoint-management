@@ -103,12 +103,12 @@ export default function InvestmentCard({ plan }: InvestmentCardProps) {
       <div className="flex delay-200 item-center justify-end">
         <button
           onClick={handleGetStarted}
-          className="mt-8 flex items-center group justify-center gap-2 text-primary cursor-pointer font-semibold text-lg transition-colors"
+          className="mt-8 flex items-center group justify-center gap-2 text-white cursor-pointer font-semibold text-lg transition-colors"
         >
           Get Started
           <HoverArrow
             variant="custom"
-            className="group-hover:rotate-0 duration-500 bg-primary text-primary-foreground"
+            className="group-hover:rotate-0 duration-500 bg-white text-primary-foreground"
           />
         </button>
       </div>

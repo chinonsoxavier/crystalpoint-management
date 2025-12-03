@@ -113,7 +113,7 @@ const AboutUs = () => {
                 traders that will create high trading and investment volume for
                 we are proud to help many customers to make revenue as we
                 provide real-time market data from leading analytical agencies.
-                Visional Wellington have had a very strong relationship with
+                Crystalpoint investment management have had a very strong relationship with
                 equity and funding providers since our inception, we have also
                 had experience of working across multiple sectors and offering
                 variety of full partner led services from experienced and

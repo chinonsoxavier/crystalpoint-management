@@ -2,7 +2,7 @@ import Animate from "../animation/animate";
 
 const InvestorsChoice = () => {
   return (
-    <div className="w-full md:py-16 py-10 flex items-cener bg-primary">
+    <div className="w-full md:py-16 py-10 flex items-cener bg-primary/50">
       <div className="max_width_sm flex-wrap gap-12 flex items-center justify-between">
         <Animate
           type="fadeInLeft"
@@ -18,7 +18,7 @@ const InvestorsChoice = () => {
         </Animate>
 
         <Animate type="fadeInRight">
-          <button className="bg-[#252526] text-white md:py-4 py-2.5 px-5 md:px-8 text-base md:text-lg rounded-md cursor-pointer">
+          <button className="bg-primary text-white md:py-4 py-2.5 px-5 md:px-8 text-base md:text-lg rounded-md cursor-pointer">
             Open your account
           </button>
         </Animate>

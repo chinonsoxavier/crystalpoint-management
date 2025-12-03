@@ -69,7 +69,7 @@ const Page = () => {
           {/* Logo and Title Section */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-lg">
-              <span className="text-2xl font-bold text-primary-foreground">
+              <span className="text-2xl font-bold text-white">
                 CP
               </span>
             </div>
@@ -180,11 +180,11 @@ const Page = () => {
               <Button
                 type="submit"
                 disabled={authStatus === "loading"}
-                className="w-full py-3 rounded-lg font-medium"
+                className="w-full py-3 rounded-lg font-medium text-white"
               >
                 {authStatus === "loading" ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2 text-white"></div>
                     Signing in...
                   </>
                 ) : (
@@ -200,7 +200,7 @@ const Page = () => {
               Don`t have an account?{" "}
               <Link
                 href="/sign-up"
-                className="text-primary hover:text-primary/80 font-medium transition-colors"
+                className="text-white  font-medium transition-colors"
               >
                 Register here
               </Link>
@@ -209,7 +209,7 @@ const Page = () => {
 
           {/* Back to Home */}
           <div className="center">
-            <Button variant="link" className="mt-8 text-center ">
+            <Button variant="link" className="mt-8 text-center bg-white ">
               <Link
                 href="/"
                 className="inline-flex items-center text-sm transition-colors"

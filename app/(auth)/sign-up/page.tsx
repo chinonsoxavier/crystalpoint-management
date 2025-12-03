@@ -152,7 +152,7 @@ const Page = () => {
           {/* Logo and Title Section */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-lg">
-              <span className="text-2xl font-bold text-primary-foreground">
+              <span className="text-2xl font-bold text-white">
                 CP
               </span>
             </div>
@@ -504,7 +504,7 @@ const Page = () => {
               <Button
                 type="submit"
                 disabled={authStatus === "loading"}
-                className="w-full py-3 rounded-lg font-medium"
+                className="w-full py-3 rounded-lg font-medium text-white"
               >
                 {authStatus === "loading" ? (
                   <>
@@ -533,10 +533,10 @@ const Page = () => {
 
           {/* Back to Home */}
           <div className="center">
-            <Button variant="link" className="mt-8 text-center ">
+            <Button variant="link" className="mt-8 text-center bg-white ">
               <Link
                 href="/"
-                className="inline-flex items-center text-sm transition-colors"
+                className="inline-flex items-center text-sm transition-colors "
               >
                 <Home className="h-4 w-4 mr-1" />
                 Back to Home

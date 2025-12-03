@@ -6,7 +6,7 @@ import Animate from '@/components/animation/animate';
 
 const ClientFundSecurity = () => {
   return (
-    <div className="center bg-primary">
+    <div className="center bg-primary/50">
       <div className="max_width relative overflow-hidden">
         <Image className='absolute top-0 right-0 bottom-0 w-fll object-contain' src={BgShapeImage} alt="background shape" />
 
@@ -62,7 +62,7 @@ const ClientFundSecurity = () => {
                 Login
                 <HoverArrow variant='light' className='' />
               </Button>
-              <Button variant="dark" className='text-sm md:text-base' >
+              <Button variant="dark" className='text-sm md:text-base text-white bg-primary' >
                 Create Account
                 <HoverArrow variant='secondary'  />
               </Button>

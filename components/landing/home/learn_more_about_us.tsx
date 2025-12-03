@@ -100,7 +100,7 @@ const LearnMoreAboutUs = () => {
               traders.
             </p>
 
-            <Button variant="dark" className="text-white">
+            <Button variant="dark" className="text-white bg-primary">
               Learn More <HoverArrow className="" variant="dark" />
             </Button>
           </Animate>

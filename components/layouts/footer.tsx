@@ -12,11 +12,11 @@ const Footer=()=> {
               <div className="w-min whitespace-nowrap">
                 <div className="flex items-center gap-3">
                   <div className="relative">
-                    <Gem className="w-8 h-8 text-[#0A8A9F] group-hover:text-[#0A8A9F] transition-colors duration-300" />
-                    <div className="absolute inset-0 bg-cyan-400/20 rounded-full blur-sm group-hover:bg-cyan-300/30 transition-all duration-300"></div>
+                    <Gem className="w-8 h-8 text-[#1a365d] group-hover:text-[#1a365d] transition-colors duration-300" />
+                    <div className="absolute inset-0 bg-primary-400/20 rounded-full blur-sm group-hover:bg-primary-300/30 transition-all duration-300"></div>
                   </div>
                   <div className="flex flex-col">
-                    <p className="text-xl font-bold bg-linear-to-r from-black to-cyan-[#0A8A9F] bg-clip-text text-transparent group-hover:from-cyan-200 group-hover:to-white transition-all duration-500">
+                    <p className="text-xl font-bold bg-linear-to-r from-black to-cyan-[#1a365d] bg-clip-text text-transparent group-hover:from-primary-200 group-hover:to-white transition-all duration-500">
                       CrystalPoint
                     </p>
                     <p className="text-xs text-gray-800 font-medium tracking-widest group-hover:text-gray-300 transition-colors duration-300">
