@@ -25,7 +25,6 @@ interface IDashboardSidemenu {
   totalDeposit: number;
 }
 
-
 const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
   const router = useRouter();
   const { sideMenuOpen, closeSideMenu, logout } = useUserStore();
@@ -223,13 +222,15 @@ const tier2Features = [
                 <p className="text-xs text-gray-300 mb-3">
                   Get access to advanced features and tools
                 </p>
+                <Link href="/user/deposit">
                 <Button
                   variant="secondary"
                   size="sm"
-                  className="w-full bg-blue-500 hover:bg-blue-600 text-white border-blue-500/30 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/20"
-                >
+                  className="w-full min-w-0 bg-blue-500 hover:bg-blue-600 text-white border-blue-500/30 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/20"
+                  >
                   Upgrade to Tier 2
                 </Button>
+                  </Link>
               </div>
             </div>
           )}
@@ -299,6 +300,7 @@ const tier2Features = [
                 <p className="text-xs text-accent-text mb-3">
                   Get exclusive access to all premium features
                 </p>
+                <Link href="/user/deposit">
                 <Button
                   variant="secondary"
                   size="sm"
@@ -306,6 +308,7 @@ const tier2Features = [
                 >
                   Upgrade to Tier 3
                 </Button>
+                  </Link>
               </div>
             </div>
           )}

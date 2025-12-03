@@ -8,6 +8,8 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { AuthGuard } from "@/components/auth_guard";
+import useUserStore from "@/app/user/user_store";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const [step, setStep] = useState<"email" | "reset">("email");
@@ -16,17 +18,18 @@ const Page = () => {
     newPassword: "",
     confirmPassword: "",
   });
-
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-
+   const {resetPassword,authStatus} = useUserStore()
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
+
       [name]: value,
     }));
 
@@ -63,36 +66,16 @@ const Page = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleEmailSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+const handleEmailSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (!validateEmailStep()) return;
+  if (!validateEmailStep()) return;
 
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("/api/request-reset", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: formData.email,
-        }),
-      });
-
-      if (response.ok) {
-        toast.success("Reset link sent to your email");
-        setStep("reset");
-      } else {
-        const data = await response.json();
-        toast.error(data.error || "Failed to send reset link");
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Network error. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const res = await resetPassword(formData.email);
+  if(res === 'success'){
+    router.push("/sign-in");
+  }
+};
 
   const handleResetSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,32 +84,8 @@ const Page = () => {
 
     setIsLoading(true);
 
-    try {
-      const response = await fetch("/api/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: formData.email,
-          newPassword: formData.newPassword,
-        }),
-      });
+   
 
-      if (response.ok) {
-        setIsSuccess(true);
-        toast.success("Password reset successfully!");
-        setTimeout(() => {
-          window.location.href = "/sign-in";
-        }, 2000);
-      } else {
-        const data = await response.json();
-        toast.error(data.error || "Failed to reset password");
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Network error. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   return (
@@ -188,7 +147,7 @@ const Page = () => {
                         errors.email &&
                           "border-destructive focus:ring-destructive/20"
                       )}
-                      disabled={isLoading}
+                      disabled={authStatus==='loading'}
                     />
                   </div>
                   {errors.email && (
@@ -199,10 +158,10 @@ const Page = () => {
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  disabled={isLoading}
+                  disabled={authStatus==='loading'}
                   className="w-full py-3 rounded-lg font-medium"
                 >
-                  {isLoading ? (
+                  {authStatus==='loading' ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
                       Sending Reset Link...
@@ -248,13 +207,13 @@ const Page = () => {
                         errors.newPassword &&
                           "border-destructive focus:ring-destructive/20"
                       )}
-                      disabled={isLoading}
+                      disabled={authStatus==='loading'}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground transition-colors"
-                      disabled={isLoading}
+                      disabled={authStatus==='loading'}
                     >
                       {showPassword ? (
                         <EyeOff className="h-5 w-5" />
@@ -294,7 +253,7 @@ const Page = () => {
                         errors.confirmPassword &&
                           "border-destructive focus:ring-destructive/20"
                       )}
-                      disabled={isLoading}
+                      disabled={authStatus==='loading'}
                     />
                     <button
                       type="button"
@@ -302,7 +261,7 @@ const Page = () => {
                         setShowConfirmPassword(!showConfirmPassword)
                       }
                       className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground transition-colors"
-                      disabled={isLoading}
+                      disabled={authStatus==='loading'}
                     >
                       {showConfirmPassword ? (
                         <EyeOff className="h-5 w-5" />
@@ -321,10 +280,10 @@ const Page = () => {
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  disabled={isLoading || isSuccess}
+                  disabled={authStatus==='loading' || isSuccess}
                   className="w-full py-3 rounded-lg font-medium"
                 >
-                  {isLoading ? (
+                  {authStatus==='loading' ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
                       Resetting Password...

@@ -1,9 +1,11 @@
 "use client";
+import useDashboardStore from "@/app/user/(user)/_dashboard_store";
 import useUserStore from "@/app/user/user_store";
 import { WalletMinimal } from "lucide-react";
 
 const LedgerBalance = () => {
 const {showBalance,user} =  useUserStore();
+const {profile} = useDashboardStore();
   return (
     <div className="w-full">
       {/* Header */}
@@ -38,7 +40,7 @@ const {showBalance,user} =  useUserStore();
               <div className="flex items-center gap-3">
                 <p className="text-3xl md:text-4xl lg:text-5xl font-bold text-accent-text tabular-nums">
                   {showBalance ? (
-                    <span>$12,450.80</span>
+                    <span>${profile?.ledger_balance}</span>
                   ) : (
                     <span className="tracking-widest">••••••</span>
                   )}

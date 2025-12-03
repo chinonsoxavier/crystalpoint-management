@@ -16,13 +16,16 @@ import LedgerBalance from "@/components/shared/ledger_balance";
 import useDepositStore from "./_deposit_store";
 
 const Page = () => {
-
-  const {depositMethods,fetchDepositMethods} =  useDepositStore();
+  const { depositMethods, fetchDepositMethods,setSelectedDepositMethod,selectedDepositMethod } = useDepositStore();
   const [copied, setCopied] = useState(false);
-
-
-  const walletAddress = "bc1q5jz22pkp7y6vq4e38hn69kpzu9lcmlj454f64e";
-  const handleCopy = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
+  const [depositAmount, setDepositAmount] = useState<number>(0);
+  const walletAddress = selectedDepositMethod
+    ? selectedDepositMethod.walletAddress
+    : "";
+    console.log(selectedDepositMethod)
+  const handleCopy = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ): Promise<void> => {
     e.preventDefault();
     await navigator.clipboard.writeText(walletAddress);
     setCopied(true);
@@ -31,11 +34,10 @@ const Page = () => {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-
   useEffect(() => {
     fetchDepositMethods();
-  }, [])
-  
+  }, []);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     setIsSubmitted(true);
@@ -65,16 +67,20 @@ const Page = () => {
 
                   {/* Cryptocurrency Dropdown */}
                   <div className="mb-6">
-                    <Select required>
+                    <Select required
+  onValueChange={(value) => {
+    const selected = depositMethods.find((m) => m.network === value);
+    setSelectedDepositMethod(selected!);
+  }}>
                       <SelectTrigger className="w-full text-accent-text">
                         <SelectValue placeholder="Select a wallet" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Wallet Type</SelectLabel>
-                          {depositMethods.map((method) => (
+                          {depositMethods.map((method, index) => (
                             <SelectItem
-                              key={method.id}
+                              key={index}
                               className=""
                               value={method.network}
                             >
@@ -111,8 +117,12 @@ const Page = () => {
                       Amount
                     </Label>
                     <Input
+                      onChange={(e) => {
+                        const v = parseFloat(e.target.value);
+                        setDepositAmount(isNaN(v) ? 0 : v);
+                      }}
                       required
-                      type="text"
+                      type="number"
                       placeholder=""
                       className="w-full text-accent-text"
                     />
@@ -137,19 +147,19 @@ const Page = () => {
               <form className="max-w-4xl">
                 <div className="border-b py-4">
                   <p className="text-accent-text font-medium text-lg">
-                    You are about to make a deposit of $100 to this bitcoin
+                    You are about to make a deposit of ${depositAmount} to this{" "}
+                    {selectedDepositMethod?.name}
                     wallet
                   </p>
                 </div>
 
                 <div className="border-b pb-4 space-y-5">
                   <div className="space-y-1 pt-4">
-                    <Label className="text-accent-text text-base font-medium">
-                      Payment Method
-                    </Label>
-                    <p className="text-[#b3b3b3] text-lg">
+                  
+                    <p className="text-[#b3b3b3] text-sm">
                       Copy the wallet address to make your payment. Once payment
-                      has been made, click on submit button below
+                      has been made, wait a few minutes for the transaction to be
+                      confirmed and your account credited.
                     </p>
                   </div>
                   <div className="flex-1 bg-accent rounded-lg px-4 h-12 flex items-center justify-start border border-border">
@@ -216,14 +226,14 @@ const Page = () => {
                   </svg>
                   <p className="text-sm text-amber-200">
                     <strong>Important:</strong> Send{" "}
-                    <strong>only Bitcoin (BTC)</strong> to this address. Sending
+                    <strong>only {selectedDepositMethod?.name} {" "} {selectedDepositMethod?.network} {" "}</strong> to this address. Sending
                     any other cryptocurrency will result in permanent loss of
                     funds.
                   </p>
                 </div>
-                <Button className="max-w-full w-full" type="submit">
+                {/* <Button className="max-w-full w-full" type="submit">
                   Submit
-                </Button>
+                </Button> */}
               </form>
             )}
           </div>

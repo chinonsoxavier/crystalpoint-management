@@ -1,10 +1,51 @@
+"use client";
 import LedgerBalance from "@/components/shared/ledger_balance";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import useWithdrawStore from "./_withdraw_store";
+import useDashboardStore from "../(user)/_dashboard_store";
+import useDepositStore from "../deposit/_deposit_store";
 
 const Page = () => {
+  const {
+    approvedWithdrawals,
+    pendingWithdrawals,
+    fetchWithdrawalsApproved,
+    fetchWithdrawalsPending,
+  } = useWithdrawStore();
+  const {
+    depositMethods,
+    fetchDepositMethods,
+    setSelectedDepositMethod,
+    selectedDepositMethod,
+  } = useDepositStore();
+
+  const {profile} = useDashboardStore();
+  const withdrawalMethods = depositMethods;
+  const selectedWithdrawalMethod = selectedDepositMethod;
+  fetchDepositMethods();
+  fetchWithdrawalsApproved();
+  fetchWithdrawalsPending();
+
+  const approvedWithdrawalsTotal = approvedWithdrawals.reduce(
+    (total, withdrawal) => total + withdrawal.amount,
+    0
+  );
+
+  const pendingWithdrawalsTotal = pendingWithdrawals.reduce(
+    (total, withdrawal) => total + withdrawal.amount,
+    0
+  );
   return (
     <div className="p-4 h-full overflow-y-scroll bg-accent md:p-6">
       <LedgerBalance />
@@ -14,14 +55,18 @@ const Page = () => {
           <p className="md:text-xl text-lg font-semibold text-black dark:text-white">
             APPROVED
           </p>
-          <p className="text-[#8b98d] dark:text-[#666e70] font-medium">$0</p>
+          <p className="text-[#8b98d] dark:text-[#666e70] font-medium">
+            ${pendingWithdrawalsTotal}
+          </p>
         </div>
 
         <div className="bg-[#2bc15533] px-8 py-3 flex-1 md:px-3 rounded-md">
           <p className="md:text-xl text-lg font-semibold text-black dark:text-white">
             PENDING
           </p>
-          <p className="text-[#8b98d] dark:text-[#666e70] font-medium">$0</p>
+          <p className="text-[#8b98d] dark:text-[#666e70] font-medium">
+            ${approvedWithdrawalsTotal}
+          </p>
         </div>
       </div>
 
@@ -35,10 +80,10 @@ const Page = () => {
             Ledger Balance: 0$
           </p>
           <p className="text-[#8b98d] dark:text-[#666e70]  md:text-lg">
-            Profit Balance: 0$
+            Profit Balance: ${profile?.profit_balance || 0}
           </p>
           <p className="text-[#8b98d] dark:text-[#666e70]  md:text-lg">
-            Promo Balance: 0$
+            Promo Balance: ${profile?.promotional_balance || 0}
           </p>
         </div>
 
@@ -54,29 +99,50 @@ const Page = () => {
               <Label className="font-semibold text-base text-accent-text mb-4">
                 Method of withdraal
               </Label>
-              <Select required>
+              <Select
+                required
+                onValueChange={(value) => {
+                  const selected = depositMethods.find(
+                    (m) => m.network === value
+                  );
+                  setSelectedDepositMethod(selected!);
+                }}
+              >
                 <SelectTrigger className="w-full text-accent-text">
                   <SelectValue placeholder="Select a wallet" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Crypto Deposit</SelectLabel>
-                    <SelectItem className="" value="Bitcoin">
-                      Bitcoin
-                    </SelectItem>
-                    <SelectItem className="" value="USDT (TRC20)">
-                      USDT (TRC20)
-                    </SelectItem>
-                    <SelectItem className="" value="USDT (ERC20)">
-                      USDT (ERC20)
-                    </SelectItem>
-                    <SelectItem className="" value="BNB">
-                      BNB
-                    </SelectItem>
-                    <SelectItem className="" value="Ethereum">
-                      Ethereum
-                    </SelectItem>
+                    <SelectLabel>Wallet Type</SelectLabel>
+                    {withdrawalMethods.map((method, index) => (
+                      <SelectItem
+                        key={index}
+                        className=""
+                        value={method.network}
+                      >
+                        {method.name}
+                      </SelectItem>
+                    ))}
                   </SelectGroup>
+                  {/* <SelectGroup>
+                          <SelectLabel>Crypto Deposit</SelectLabel>
+
+                          <SelectItem className="" value="Bitcoin">
+                            Bitcoin
+                          </SelectItem>
+                          <SelectItem className="" value="USDT (TRC20)">
+                            USDT (TRC20)
+                          </SelectItem>
+                          <SelectItem className="" value="USDT (ERC20)">
+                            USDT (ERC20)
+                          </SelectItem>
+                          <SelectItem className="" value="BNB">
+                            BNB
+                          </SelectItem>
+                          <SelectItem className="" value="Ethereum">
+                            Ethereum
+                          </SelectItem>
+                        </SelectGroup> */}
                 </SelectContent>
               </Select>
             </div>
@@ -91,7 +157,7 @@ const Page = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Crypto Deposit</SelectLabel>
+                    <SelectLabel>Sellect Wallet</SelectLabel>
                     <SelectItem className="" value="ledger balance">
                       Ledger Balance
                     </SelectItem>
