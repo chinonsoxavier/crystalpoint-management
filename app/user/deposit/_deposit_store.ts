@@ -10,36 +10,44 @@ interface IDepositMethod {
   status: string;
 }
 
-interface IDepositHistory {
-  page: number;
-  limit: number;
-}
+// interface IDepositHistory {
+//   page: number;
+// //   limit: number;
+// }
 
 interface IDepositMethods {
   id: string;
   name: string;
   network: string;
+  walletAddress: string;
 }
 
 interface DepositStore {
-  // Define your state and actions here
+    selectedDepositMethod?: IDepositMethods;
   depositMethods: IDepositMethods[];
   depositMethod: IDepositMethod;
   depositHistory: IDepositMethod[];
+  setSelectedDepositMethod: (method: IDepositMethods) => void;
   fetchDepositMethods: () => Promise<void>;
-  fetchDepositHistory: ({ page, limit }: IDepositHistory) => Promise<void>;
+  fetchDepositHistory: ( page : number) => Promise<void>;
   createDepositMethods: () => Promise<void>;
 }
+
+
 
 const useDepositStore = create<DepositStore>((set) => ({
   depositMethods: [] as IDepositMethods[],
   depositMethod: undefined as unknown as IDepositMethod,
   depositHistory: [] as IDepositMethod[],
 
-  fetchDepositHistory: async ({ page, limit }: IDepositHistory) => {
+    setSelectedDepositMethod: (method: IDepositMethods) => {
+    set({ selectedDepositMethod: method });
+  },
+
+  fetchDepositHistory: async ( page : number) => {
     try {
       const res = await baseAxios.get(
-        `/deposit/logs?page=${page}&limit=${limit}`,
+        `/deposit/logs?page=${page}&limit=${20}`,
         {
           withCredentials: true,
         }

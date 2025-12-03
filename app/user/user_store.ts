@@ -33,7 +33,6 @@ interface ILogin {
 }
 
 interface IResetPassword {
-  username: string;
   email: string;
 }
 
@@ -50,7 +49,8 @@ interface UserStore {
   toggleSideMenuOpen: () => void;
   closeSideMenu: () => void;
   toggleShowBalance: () => void;
-  resetPassword: ({username,email}: IResetPassword) => Promise<void>;
+  resetPassword: (email: string) => Promise<undefined | string>;
+
 
   register: (data: {
     firstName: string;
@@ -73,7 +73,7 @@ const useUserStore = create<UserStore>((set) => ({
   user: null,
   authStatus: "idle",
   errorMessage: undefined,
-  sideMenuOpen: false,
+  sideMenuOpen: true,
   showBalance: true,
 
   toggleSideMenuOpen: () =>
@@ -84,15 +84,18 @@ const useUserStore = create<UserStore>((set) => ({
   toggleShowBalance: () =>
     set((state) => ({ showBalance: !state.showBalance })),
 
-   resetPassword: async ({username,email}:IResetPassword) => {
+   resetPassword: async (email: string) => {
     try {
-      const res = await baseAxios.post("/auth/reset-password", {
-        withCredentials: true,
-      });
+      set({authStatus: "loading"});
+      console.log(email);
+     const res = await baseAxios.post("/auth/forgot-password",{email});
       enqueueSnackbar("Password reset link sent to your email.", { variant: "success" });
+      set({authStatus: "email-sent"});
+      return "success"
     } catch (error) {
       enqueueSnackbar("Failed to send password reset link.", { variant: "error" });
       console.log("Reset password error:", error);
+      set({authStatus: "error"});
     } 
   },
 
@@ -258,6 +261,8 @@ loadUser: async () => {
     });
   }
 },
+
+
 
 }));
 

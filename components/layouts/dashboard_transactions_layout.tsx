@@ -31,14 +31,23 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge"; // Import the Badge component
 
-type Transaction = {
+// type Transaction = {
+//   id: string;
+//   amount: number;
+//   date: Date;
+//   recipient: string;
+//   type: string;
+//   status: "pending" | "processing" | "success" | "failed";
+// };
+
+interface Transaction {
   id: string;
+  method: string;
   amount: number;
-  date: Date;
-  status: "pending" | "processing" | "success" | "failed";
-  recipient: string;
-  type: string;
-};
+  transactionHash: string;
+  status: string;
+}
+
 
 interface DashboardTransactionsLayoutProps {
   data: Transaction[];
@@ -59,29 +68,29 @@ export default function DashboardTransactionsLayout({
         </div>
       ),
     },
-    {
-      accessorKey: "date",
-      header: ({ column }) => (
-        <Button
-        //   variant="secondary"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="font-semibold bg-transparent text-white hover:bg-primary/20"
-        >
-          Date
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      ),
-      // Format date to a more readable standard
-      cell: ({ row }) => (
-        <div className="font-medium">
-          {row.original.date.toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })}
-        </div>
-      ),
-    },
+    // {
+    //   accessorKey: "date",
+    //   header: ({ column }) => (
+    //     <Button
+    //     //   variant="secondary"
+    //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    //       className="font-semibold bg-transparent text-white hover:bg-primary/20"
+    //     >
+    //       Date
+    //       <ArrowUpDown className="ml-2 h-4 w-4" />
+    //     </Button>
+    //   ),
+    //   // Format date to a more readable standard
+    //   cell: ({ row }) => (
+    //     <div className="font-medium">
+    //       {row.original.date.toLocaleDateString("en-US", {
+    //         year: "numeric",
+    //         month: "short",
+    //         day: "numeric",
+    //       })}
+    //     </div>
+    //   ),
+    // },
     {
       accessorKey: "recipient",
       header: "Recipient",

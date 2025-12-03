@@ -3,9 +3,8 @@
 import type React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, Mail, Lock, Home, User, AlertCircle } from "lucide-react";
+import { Eye, EyeOff,  Lock, Home, User, AlertCircle } from "lucide-react";
 import Link from "next/link";
-import axios from "axios";
 import useUserStore from "@/app/user/user_store";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";

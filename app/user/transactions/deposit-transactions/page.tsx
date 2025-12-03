@@ -1,4 +1,7 @@
+"use client"
 import DashboardTransactionsLayout from "@/components/layouts/dashboard_transactions_layout";
+import useDepositStore from "../../deposit/_deposit_store";
+import { useEffect } from "react";
 type Transactions = {
   id: string;
   amount: number;
@@ -11,6 +14,8 @@ type Transactions = {
 
 
 async function getData(): Promise<Transactions[]> {
+
+
   // Fetch data from your API here.
   return [
     {
@@ -63,12 +68,18 @@ async function getData(): Promise<Transactions[]> {
     },
     // ...
   ];
-}
+};
 
-const Page = async () => {
-  const data = await getData();
+const Page =  () => {
+  const {fetchDepositHistory,depositHistory} = useDepositStore();
+  // const data = await getData();
 
-  return <DashboardTransactionsLayout data={data} />;
+  useEffect(() => {
+   fetchDepositHistory(1);
+  }, [])
+  
+
+  return <DashboardTransactionsLayout data={depositHistory} />;
 };
 
 export default Page;

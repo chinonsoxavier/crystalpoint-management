@@ -9,6 +9,7 @@ interface IUserProfile {
   active_deposit: number;
   pending_withdrawals: number;
   promotional_balance: number;
+  ledger_balance: number;
 }
 
 interface DashboardStore {

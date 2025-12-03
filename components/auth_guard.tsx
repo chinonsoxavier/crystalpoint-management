@@ -42,13 +42,13 @@ const AuthGuard = ({ children, requireAuth = true }: AuthWrapperProps)=> {
     // Redirect unauthenticated users from protected routes
     if (authStatus === "idle" && requireAuth && !isPublicRoute) {
       console.log("User not authenticated, redirecting to sign-in...");
-      router.replace("/sign-in");
+      router.push("/sign-in");
     }
 
     // Redirect authenticated users from auth pages
     if (authStatus === "authenticated" && isPublicRoute) {
       console.log("User authenticated, redirecting to dashboard...");
-      router.replace("/user");
+      router.push("/user");
     }
   }, [authStatus, isInitialized, isPublicRoute, requireAuth, router]);
 

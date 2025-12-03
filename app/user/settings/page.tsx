@@ -14,16 +14,21 @@ import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import useSettingsStore from "./_settings_store";
+import { enqueueSnackbar } from "notistack";
 
 export default function SettingsPage() {
+  const {updatePassword,isLoading} = useSettingsStore();
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showRetypePassword, setShowRetypePassword] = useState(false);
   //   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Password change state
   const [passwordData, setPasswordData] = useState({
-    password: "",
-    retypePassword: "",
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
   // Account setup state
@@ -43,25 +48,25 @@ export default function SettingsPage() {
     const { name, value } = e.target;
     setPasswordData((prev) => ({ ...prev, [name]: value }));
   };
-
+  
   const handleAccountChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setAccountData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handlePasswordUpdate = () => {
-    if (passwordData.password && passwordData.retypePassword) {
-      if (passwordData.password === passwordData.retypePassword) {
-        alert("Password updated successfully!");
-        setPasswordData({ password: "", retypePassword: "" });
-      } else {
-        alert("Passwords do not match!");
-      }
+      >
+    ) => {
+      const { name, value } = e.target;
+      setAccountData((prev) => ({ ...prev, [name]: value }));
+    };
+    
+    const handlePasswordUpdate = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      enqueueSnackbar("New password and confirm password do not match!", {
+        variant: "error",
+      });
+      return;
     }
+    updatePassword(passwordData.currentPassword,passwordData.newPassword, passwordData.confirmPassword);
   };
 
   const handleAccountUpdate = () => {
@@ -76,27 +81,61 @@ export default function SettingsPage() {
             <div className="grid lg:grid-cols-7 gap-6">
               {/* Left Column - Change Password */}
               <div className="lg:col-span-2">
-                <div className="bg-accent-foreground my-auto h-full flex-col flex items-start justify-center rounded-lg p-4 md:p-6">
+                <div className="bg-accent-foreground my-auto h- flex-col flex items-start justify-center rounded-lg p-4 md:p-6">
                   <h3 className="dark:text-white text-left text-black font-semibold text-lg mb-6">
                     Change Password
                   </h3>
 
-                  <div className="space-y-4 flex-col flex h-min w-full h-full">
+                  <form
+                    onSubmit={handlePasswordUpdate}
+                    className="space-y-4 flex-col flex h-min w-full"
+                  >
+                    <div>
+                      <Label className="block text-black dark:text-white text-base font-medium mb-2">
+                        Current Password
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          required
+                          type={showCurrentPassword ? "text" : "password"}
+                          name="currentPassword"
+                          value={passwordData.currentPassword}
+                          onChange={handlePasswordChange}
+                          className=""
+                          placeholder="Enter current password"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setShowCurrentPassword(!showCurrentPassword)
+                          }
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300"
+                        >
+                          {showCurrentPassword ? (
+                            <EyeOff size={18} />
+                          ) : (
+                            <Eye size={18} />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
                     <div>
                       <Label className="block text-black dark:text-white text-base font-medium mb-2">
                         Password
                       </Label>
                       <div className="relative">
                         <Input
+                          required
                           type={showPassword ? "text" : "password"}
-                          name="password"
-                          value={passwordData.password}
+                          name="newPassword"
+                          value={passwordData.newPassword}
                           onChange={handlePasswordChange}
                           className=""
                           placeholder="Enter password"
                         />
                         <button
-                          type="button"
+                          type="submit"
                           onClick={() => setShowPassword(!showPassword)}
                           className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300"
                         >
@@ -115,9 +154,10 @@ export default function SettingsPage() {
                       </Label>
                       <div className="relative">
                         <Input
+                          required
                           type={showRetypePassword ? "text" : "password"}
-                          name="retypePassword"
-                          value={passwordData.retypePassword}
+                          name="confirmPassword"
+                          value={passwordData.confirmPassword}
                           onChange={handlePasswordChange}
                           className=""
                           placeholder="Confirm password"
@@ -139,12 +179,20 @@ export default function SettingsPage() {
                     </div>
 
                     <Button
-                      onClick={handlePasswordUpdate}
+                      disabled={isLoading}
+                      type="submit"
                       className="w-full mt-6"
                     >
-                      UPDATE
+                      {isLoading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+                          UPDATING...
+                        </>
+                      ) : (
+                        "UPDATE"
+                      )}
                     </Button>
-                  </div>
+                  </form>
                 </div>
               </div>
 
