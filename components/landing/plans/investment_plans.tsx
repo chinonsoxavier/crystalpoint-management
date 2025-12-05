@@ -7,7 +7,8 @@ interface InvestmentPlan {
   icon: string;
   min: number;
   max: number;
-  dailyReturn: string;
+  return: string;
+  frequency: string;
   duration: string;
   referralBonus: string;
   welcomeBonus: string
@@ -20,7 +21,8 @@ const investmentPlans: InvestmentPlan[] = [
     icon: "🛍",
     min: 50,
     max: 499,
-    dailyReturn: "3%",
+    return: "3%",
+    frequency: "Daily",
     duration: "5 days",
     welcomeBonus: "6%",
     referralBonus: "10%",
@@ -31,7 +33,8 @@ const investmentPlans: InvestmentPlan[] = [
     icon: "⚙",
     min: 500,
     max: 999,
-    dailyReturn: "4%",
+    return: "4%",
+     frequency: "Daily",
     duration: "7 days",
     welcomeBonus: "6%",
     referralBonus: "10%",
@@ -42,7 +45,8 @@ const investmentPlans: InvestmentPlan[] = [
     icon: "🛢",
     min: 1000,
     max: 1999,
-    dailyReturn: "5%",
+    return: "5%",
+     frequency: "Every 3 days",
     duration: "12 days",
     welcomeBonus: "6%",
     referralBonus: "10%",
@@ -53,7 +57,8 @@ const investmentPlans: InvestmentPlan[] = [
     icon: "🌾",
     min: 2000,
     max: 4999,
-    dailyReturn: "8%",
+    return: "8%",
+     frequency: "Every 4 days",
     duration: "20 days",
     welcomeBonus: "6%",
     referralBonus: "10%",
@@ -64,7 +69,8 @@ const investmentPlans: InvestmentPlan[] = [
     icon: "🏢",
     min: 5000,
     max: 1000000,
-    dailyReturn: "10%",
+    return: "10%",
+    frequency: "Every 7 days",
     duration: "28 days",
     welcomeBonus: "6%",
     referralBonus: "10%",

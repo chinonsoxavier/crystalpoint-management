@@ -12,7 +12,8 @@ interface InvestmentPlan {
   icon: string;
   min: number | null;
   max: number | null;
-  dailyReturn: string;
+  return: string;
+frequency: string;
   duration: string;
   referralBonus: string;
   welcomeBonus: string;
@@ -63,8 +64,15 @@ export default function InvestmentCard({ plan }: InvestmentCardProps) {
         <Animate type="fadeInLeft" className="flex items-start gap-2">
           <span className="text-gray-400 mt-0.5">•</span>
           <div>
-            <span className="text-gray-300">Daily Return:</span>
-            <span className="ml-2 font-semibold">{plan.dailyReturn}</span>
+            <span className="text-gray-300">Return:</span>
+            <span className="ml-2 font-semibold">{plan.return}</span>
+          </div>
+        </Animate>
+        <Animate type="fadeInLeft" className="flex items-start gap-2">
+          <span className="text-gray-400 mt-0.5">•</span>
+          <div>
+            <span className="text-gray-300">Frequency:</span>
+            <span className="ml-2 font-semibold">{plan.frequency}</span>
           </div>
         </Animate>
 

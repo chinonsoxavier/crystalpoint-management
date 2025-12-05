@@ -30,7 +30,7 @@ const Hero = () => {
 
     const slides = [
       {
-        linkLabel: "About Crystalpoint Management Investment",
+        linkLabel: "About Crystalpoint Management",
         label: (
           <h1 className="md:text-[3.5rem] text-[2.2rem] leading-12 md:leading-[68px] max-w-[540px] font-bold">
             We are experts in investments

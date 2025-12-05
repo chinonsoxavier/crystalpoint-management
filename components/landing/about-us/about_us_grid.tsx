@@ -43,13 +43,6 @@ const AboutUsGrid = () => {
   
   {/* Certificate content */}
   <div className="relative z-10 w-full h-full rounded-2xl overflow-hidden">
-    <div className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none">
-      <div className="bg-linear-to-r from-yellow-600 to-amber-700 text-white px-5 py-2 rounded-full text-sm font-bold mb-3 shadow-xl">
-        <span className="flex items-center gap-2">
-          <span className="text-lg">★</span> OFFICIAL CERTIFICATION <span className="text-lg">★</span>
-        </span>
-      </div>
-    </div>
     <Image 
       className="object-cover w-full h-full rounded-xl transform group-hover:scale-105 transition-transform duration-500" 
       alt="Official Certificate" 
