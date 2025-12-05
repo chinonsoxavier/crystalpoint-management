@@ -16,13 +16,11 @@ import Animate from "@/components/animation/animate";
 import StockMarketPage from "@/components/landing/markets/stock_market";
 import InvestmentPlans from "@/components/landing/plans/investment_plans";
 import Link from "next/link";
-import WhatsAppFloat from "@/components/shared/whatsapp-float";
+
 
 const Page = () => {
   return (
     <div className="relative overflow-x-clip">
-      {/* WhatsApp float */}
-      <WhatsAppFloat/>
 
       {/* header */}
       <Header />

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Animate from "../animation/animate";
 
 const InvestorsChoice = () => {
@@ -18,13 +19,15 @@ const InvestorsChoice = () => {
         </Animate>
 
         <Animate type="fadeInRight">
-          <button className="bg-primary text-white md:py-4 py-2.5 px-5 md:px-8 text-base md:text-lg rounded-md cursor-pointer">
-            Open your account
-          </button>
+          <Link href="/sign-up">
+            <button className="bg-primary text-white md:py-4 py-2.5 px-5 md:px-8 text-base md:text-lg rounded-md cursor-pointer">
+              Open your account
+            </button>
+          </Link>
         </Animate>
       </div>
     </div>
   );
-}
+};
 
-export default InvestorsChoice
+export default InvestorsChoice;

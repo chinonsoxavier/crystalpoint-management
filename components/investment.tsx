@@ -1,6 +1,7 @@
 import Animate from "@/components/animation/animate";
 import { Button } from "@/components/ui/button";
 import HoverArrow from "@/components/ui/hover_arrow";
+import Link from "next/link";
 
 const Investment = () => {
   return (
@@ -27,11 +28,12 @@ const Investment = () => {
           <p className="text-secondary-foreground">
             We pride ourself as the prime of finance management and investment.
           </p>
-
-          <Button className="w-min whitespace-nowrap group hover:text-white duration-300 text-white" >
+          <Link href="/sign-up">
+             <Button className="w-min whitespace-nowrap group hover:text-white duration-300 text-white" >
             Start Investing
             <HoverArrow variant="custom" className=" bg-white text-primary-foreground group-hover:bg-white duration-500" />
           </Button>
+          </Link>
         </Animate>
       </div>
     </div>
