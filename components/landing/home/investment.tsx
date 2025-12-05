@@ -5,6 +5,7 @@ import investmentImage from "@/assets/images/in-equity-11-bg.png";
 import { Button } from "@/components/ui/button";
 import HoverArrow from "@/components/ui/hover_arrow";
 import Animate from "@/components/animation/animate";
+import Link from "next/link";
 const Investment = () => {
   return (
     <div className="wrapper flex-col flex-wrap flex items-stretch justify-center overflow-clip bg-[#f5f7f9] md:pb-20 pb-10">
@@ -78,8 +79,8 @@ const Investment = () => {
           className="flex space-y-4 items-start flex-col flex-1 justify-between"
         >
           <h2 className="md:text-3xl text-2xl font-semibold text-primary-foreground">
-            Crystalpoint investment management offer Card to investors on  Crystalpoint
-            Super plan
+            Crystalpoint investment management offer Card to investors on
+            Crystalpoint Super plan
           </h2>
 
           <p className="text-secondary-foreground md:text-lg">
@@ -88,16 +89,18 @@ const Investment = () => {
             products. According to a 2024 survey by the FDIC, 25 percent of U.S.
             households are unbanked or underbanked, while global numbers have
             reached a staggering 1.7 billion, according to data released by the
-            World Bank. Through BlockCard,  Crystalpoint investors can
-            have a virtual card issued to them while a physical card is mailed
-            to them. The card has a minimum of $1000 balance needed. It can be
-            used at over 45 million merchants and ATMs – anywhere in the world
-            where major credit cards are accepted.
+            World Bank. Through BlockCard, Crystalpoint investors can have a
+            virtual card issued to them while a physical card is mailed to them.
+            The card has a minimum of $1000 balance needed. It can be used at
+            over 45 million merchants and ATMs – anywhere in the world where
+            major credit cards are accepted.
           </p>
 
-          <Button variant="dark" className="bg-primary text-white">
-            Leran More <HoverArrow variant="dark" />
-          </Button>
+          <Link href="/plans">
+            <Button variant="dark" className="bg-primary text-white">
+              Learn More <HoverArrow variant="dark" />
+            </Button>
+          </Link>
         </Animate>
       </div>
     </div>

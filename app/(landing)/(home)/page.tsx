@@ -13,23 +13,37 @@ import InvestmentProduct from "@/components/landing/home/investment_product";
 import Footer from "@/components/layouts/footer";
 import Sidemenu from "@/components/layouts/sidemenu";
 import Animate from "@/components/animation/animate";
+import StockMarketPage from "@/components/landing/markets/stock_market";
+import InvestmentPlans from "@/components/landing/plans/investment_plans";
+import Link from "next/link";
+import WhatsAppFloat from "@/components/shared/whatsapp-float";
 
 const Page = () => {
   return (
     <div className="relative overflow-x-clip">
+      {/* WhatsApp float */}
+      <WhatsAppFloat/>
+
       {/* header */}
       <Header />
 
       {/*sidemenu  */}
       <Sidemenu />
+      
       {/* hero */}
       <Hero />
 
       {/* learn more about us */}
       <LearnMoreAboutUs />
 
+      {/* Plans */}
+      <InvestmentPlans />
+
       {/* investment */}
       <Investment />
+
+      {/* stock market */}
+      <StockMarketPage />
 
       {/* client funds security */}
       <ClientFundSecurity />
@@ -43,13 +57,15 @@ const Page = () => {
       {/* about us */}
       <Animate className="center max_width_xl py-10 md:py-20">
         <div className="border-primary border p-10 rounded-md max_width flex-col xs:flex-row gap-10 flex-wrap flex items-start justify-between xs:items-center">
-            <p className="font-bold text-base md:text-lg text-primary-foreground text-left">
-              We are an international financial company engaged in investment
-              activities, which are related to trading on financial markets and
-              cryptocurrency exchanges performed by qualified professional
-              traders.
-            </p>
+          <p className="font-bold text-base md:text-lg text-primary-foreground text-left">
+            We are an international financial company engaged in investment
+            activities, which are related to trading on financial markets and
+            cryptocurrency exchanges performed by qualified professional
+            traders.
+          </p>
+          <Link href="/about-us">
             <Button className="text-white">Learn More</Button>
+          </Link>
         </div>
       </Animate>
 
@@ -63,17 +79,20 @@ const Page = () => {
               alt="building image"
             />
 
-<div className="space-y-4" >
-
-            <h2 className="sm:text-4xl text-3xl font-bold">Do You Have Any Questions?</h2>
-            <p className="sm:text-xl text-lg">
-              We are delighted to help you in getting the best out of our
-              services.
-            </p>
-            <Button className="bg-white text-primary-foreground hover:bg-gray-100 rounded-lg px-6 py-2 font-medium">
-              Ask us a question
-            </Button>
-</div>
+            <div className="space-y-4">
+              <h2 className="sm:text-4xl text-3xl font-bold">
+                Do You Have Any Questions?
+              </h2>
+              <p className="sm:text-xl text-lg">
+                We are delighted to help you in getting the best out of our
+                services.
+              </p>
+              <Link href="/contact-us">
+                <Button className="bg-white text-primary-foreground hover:bg-gray-100 rounded-lg px-6 py-2 font-medium">
+                  Ask us a question
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </Animate>

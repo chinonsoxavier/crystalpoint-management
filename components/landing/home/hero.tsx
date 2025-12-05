@@ -3,7 +3,7 @@ import Animate from "@/components/animation/animate";
 import { Button } from "@/components/ui/button";
 import HoverArrow from "@/components/ui/hover_arrow";
 import Link from "next/link";
-import bgImage from "@/assets/images/crystalpoint-video-placeholder.png";
+//import bgImage from "@/assets/images/crystalpoint-video-placeholder.png";
 import { useEffect, useState } from "react";
 
 const Hero = () => {
@@ -30,22 +30,27 @@ const Hero = () => {
 
     const slides = [
       {
-        linkLabel: "About Visional Wellington",
+        linkLabel: "About Crystalpoint Management Investment",
         label: (
           <h1 className="md:text-[3.5rem] text-[2.2rem] leading-12 md:leading-[68px] max-w-[540px] font-bold">
-            We are experts in financial
+            We are experts in investments
             <span className="underline"> financial </span> services
           </h1>
         ),
         desc: "Our mission is to create wealth for our clients irrespective of market flow.",
         button: (
           <div className="space-x-3 space-y-3">
-            <Button variant="secondary">
+            <Link href="/sign-in">
+              <Button variant="secondary">
               Login <HoverArrow variant="secondary" />
             </Button>
-            <Button className="text-white">
+            </Link>
+            <Link href="/sign-up">
+              <Button className="text-white">
               Create Account <HoverArrow />
             </Button>
+            </Link>
+            
           </div>
         ),
       },
@@ -76,7 +81,7 @@ const Hero = () => {
         button: (
           <div className="space-x-3 space-y-3">
             <Button variant="secondary">
-              Login <HoverArrow variant="secondary" />
+              Login <HoverArrow variant="secondary"  />
             </Button>
             <Button className="text-white">
               Create Account <HoverArrow />

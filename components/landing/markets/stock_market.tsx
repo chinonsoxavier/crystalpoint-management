@@ -269,15 +269,15 @@ export default function StockMarketPage() {
         {/* Statistics */}
         <div className="flex flex-wrap justify-center grid-cols-3 gap-6 pt-20">
           <Animate className="text-center">
-            <div className="text-2xl font-bold mb-1">90+ Million</div>
+            <div className="text-2xl font-bold mb-1">102+ Billion</div>
             <div className="text-gray-400 text-sm">transactions</div>
           </Animate>
           <Animate className="text-center">
-            <div className="text-2xl font-bold mb-1">49.6+ Thousand</div>
+            <div className="text-2xl font-bold mb-1">211+ Thousand</div>
             <div className="text-gray-400 text-sm">active accounts</div>
           </Animate>
           <Animate className="text-center">
-            <div className="text-2xl font-bold mb-1">1.2+ Thousand</div>
+            <div className="text-2xl font-bold mb-1">112+ Thousand</div>
             <div className="text-gray-400 text-sm">running days</div>
           </Animate>
         </div>

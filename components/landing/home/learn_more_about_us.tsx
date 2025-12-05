@@ -10,6 +10,7 @@ import aboutUImage from "@/assets/images/in-equity-16-image.jpg";
 import { Button } from "@/components/ui/button";
 import HoverArrow from "@/components/ui/hover_arrow";
 import Animate from "@/components/animation/animate";
+import Link from "next/link";
 const LearnMoreAboutUs = () => {
   const data = [
     {
@@ -100,9 +101,12 @@ const LearnMoreAboutUs = () => {
               traders.
             </p>
 
-            <Button variant="dark" className="text-white bg-primary">
+            <Link href="/about-us">
+               <Button variant="dark" className="text-white bg-primary">
               Learn More <HoverArrow className="" variant="dark" />
             </Button>
+            </Link>
+           
           </Animate>
         </div>
       </div>

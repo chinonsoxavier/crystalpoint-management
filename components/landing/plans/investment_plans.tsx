@@ -10,6 +10,7 @@ interface InvestmentPlan {
   dailyReturn: string;
   duration: string;
   referralBonus: string;
+  welcomeBonus: string
 }
 
 const investmentPlans: InvestmentPlan[] = [
@@ -21,6 +22,7 @@ const investmentPlans: InvestmentPlan[] = [
     max: 499,
     dailyReturn: "3%",
     duration: "5 days",
+    welcomeBonus: "6%",
     referralBonus: "10%",
   },
   {
@@ -31,6 +33,7 @@ const investmentPlans: InvestmentPlan[] = [
     max: 999,
     dailyReturn: "4%",
     duration: "7 days",
+    welcomeBonus: "6%",
     referralBonus: "10%",
   },
   {
@@ -41,6 +44,7 @@ const investmentPlans: InvestmentPlan[] = [
     max: 1999,
     dailyReturn: "5%",
     duration: "12 days",
+    welcomeBonus: "6%",
     referralBonus: "10%",
   },
   {
@@ -51,6 +55,7 @@ const investmentPlans: InvestmentPlan[] = [
     max: 4999,
     dailyReturn: "8%",
     duration: "20 days",
+    welcomeBonus: "6%",
     referralBonus: "10%",
   },
   {
@@ -58,9 +63,10 @@ const investmentPlans: InvestmentPlan[] = [
     name: "Real Estate Plan",
     icon: "🏢",
     min: 5000,
-    max: 100000,
+    max: 1000000,
     dailyReturn: "10%",
     duration: "28 days",
+    welcomeBonus: "6%",
     referralBonus: "10%",
   },
 ];

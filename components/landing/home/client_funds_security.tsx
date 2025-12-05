@@ -3,6 +3,7 @@ import BgShapeImage from "@/assets/images/in-equity-15-bg.png";
 import { Button } from '@/components/ui/button';
 import HoverArrow from '@/components/ui/hover_arrow';
 import Animate from '@/components/animation/animate';
+import Link from 'next/link';
 
 const ClientFundSecurity = () => {
   return (
@@ -58,14 +59,18 @@ const ClientFundSecurity = () => {
             </span>
             </Animate>
             <Animate type='fadeInRight' className="flex gap-1 md:gap-4">
-              <Button variant='secondary' className='text-sm md:text-base' >
+              <Link href="/sign-in">
+                <Button variant='secondary' className='text-sm md:text-base' >
                 Login
                 <HoverArrow variant='light' className='' />
               </Button>
-              <Button variant="dark" className='text-sm md:text-base text-white bg-primary' >
+              </Link>
+               <Link href="/sign-up">
+                 <Button variant="dark" className='text-sm md:text-base text-white bg-primary' >
                 Create Account
                 <HoverArrow variant='secondary'  />
               </Button>
+              </Link>
             </Animate>
           </div>
         </div>

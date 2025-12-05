@@ -1,7 +1,84 @@
-import { Bitcoin, TrendingUp, Share2, DollarSign, Globe, Gem } from "lucide-react";
+"use client";
+
+
+import { ChevronDown, Gem, Globe } from "lucide-react";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+
+
+// Language options with flags and codes
+const languages = [
+  { code: 'en', name: 'English', flag: '🇺🇸' },
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
+  { code: 'fr', name: 'Français', flag: '🇫🇷' },
+  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+];
+
 
 const Footer=()=> {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedLang, setSelectedLang] = useState(languages[0]);
+  const [isClient, setIsClient] = useState(false);
+
+   useEffect(() => {
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  setIsClient(true);
+}, []);
+
+    useEffect(() => {
+    if (!isClient) return;
+    
+    let mounted = true;
+    
+    const initializeLanguage = () => {
+      try {
+        const savedLang = localStorage.getItem('preferred-language');
+        if (savedLang && mounted) {
+          const lang = languages.find(l => l.code === savedLang);
+          if (lang) setSelectedLang(lang);
+        } else if (mounted) {
+          // Detect browser language
+          const browserLang = navigator.language.split('-')[0];
+          const detectedLang = languages.find(l => l.code === browserLang);
+          if (detectedLang) {
+            setSelectedLang(detectedLang);
+          }
+        }
+      } catch (error) {
+        console.log("Error accessing localStorage:", error);
+      }
+    };
+   // Add a small delay to avoid cascading renders
+    const timer = setTimeout(initializeLanguage, 100);
+    
+    return () => {
+      mounted = false;
+      clearTimeout(timer);
+    };
+  }, [isClient]);
+
+  
+  // Handle language change
+  const handleLanguageChange = (lang: typeof languages[0]) => {
+    setSelectedLang(lang);
+    try {
+      localStorage.setItem('preferred-language', lang.code);
+    } catch (error) {
+      console.log("Error saving to localStorage:", error);
+    }
+    setIsOpen(false);
+    
+    // Show success message
+    console.log(`Language changed to ${lang.name}`);
+    
+    // Dispatch event for other components to update
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('languageChanged', { detail: lang.code }));
+    }
+    
+  };
+
   return (
     <div className="wrapper">
       <div className="max_width_md">
@@ -179,6 +256,49 @@ const Footer=()=> {
                     >
                       Forgot Password?
                     </a>
+                  </li>
+                    {/* Language Selector */}
+                  <li className="mt-6">
+                    <div className="relative">
+                      <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="flex items-center gap-2 text-secondary-foreground hover:text-primary duration-300 text-[17px] md:text-[19px] w-full justify-between"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Globe className="w-4 h-4" />
+                          <span>{selectedLang.flag} {selectedLang.name}</span>
+                        </div>
+                        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                      </button>
+                      
+                      {/* Dropdown Menu */}
+                      {isOpen && (
+                        <>
+                          {/* Backdrop */}
+                          <div 
+                            className="fixed inset-0 z-40" 
+                            onClick={() => setIsOpen(false)}
+                          />
+                          
+                          {/* Dropdown */}
+                          <div className="absolute z-50 mt-2 w-full bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
+                            {languages.map((lang) => (
+                              <button
+                                key={lang.code}
+                                onClick={() => handleLanguageChange(lang)}
+                                className={`flex items-center gap-3 w-full px-4 py-3 hover:bg-gray-50 transition-colors ${selectedLang.code === lang.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700'}`}
+                              >
+                                <span className="text-lg">{lang.flag}</span>
+                                <span className="flex-1 text-left">{lang.name}</span>
+                                {selectedLang.code === lang.code && (
+                                  <div className="w-2 h-2 bg-blue-600 rounded-full" />
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </li>
                 </ul>
               </div>

@@ -4,16 +4,18 @@ import { faServer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Animate from "../../animation/animate";
 import HoverArrow from "../../ui/hover_arrow";
+import { useRouter } from "next/navigation";
 
 interface InvestmentPlan {
   id: string;
   name: string;
   icon: string;
-  min: number;
+  min: number | null;
   max: number | null;
   dailyReturn: string;
   duration: string;
   referralBonus: string;
+  welcomeBonus: string;
 }
 
 interface InvestmentCardProps {
@@ -21,9 +23,9 @@ interface InvestmentCardProps {
 }
 
 export default function InvestmentCard({ plan }: InvestmentCardProps) {
+  const router = useRouter();
   const handleGetStarted = () => {
-    // Navigate to deposit page or open investment modal
-    console.log(`Starting investment with ${plan.name}`);
+    router.push("/sign-up");
   };
 
   return (
@@ -41,9 +43,9 @@ export default function InvestmentCard({ plan }: InvestmentCardProps) {
         <Animate type="fadeInLeft" className="flex items-start gap-2">
           <span className="text-gray-400 mt-0.5">•</span>
           <div>
-            <span className="text-gray-300">Maximum:</span>
+            <span className="text-gray-300">Minimum:</span>
             <span className="ml-2 font-semibold">
-              {plan.max ? `$${plan.max.toLocaleString()}` : "Unlimited"}
+              {plan.min ? `$${plan.min.toLocaleString()}` : "Unlimited"}
             </span>
           </div>
         </Animate>
@@ -51,9 +53,9 @@ export default function InvestmentCard({ plan }: InvestmentCardProps) {
         <Animate type="fadeInLeft" className="flex items-start gap-2">
           <span className="text-gray-400 mt-0.5">•</span>
           <div>
-            <span className="text-gray-300">Minimum:</span>
+            <span className="text-gray-300">Maximum:</span>
             <span className="ml-2 font-semibold">
-              ${plan.min.toLocaleString()}
+             {plan.max ? `$${plan.max.toLocaleString()}` : "Unlimited"}
             </span>
           </div>
         </Animate>
@@ -74,6 +76,17 @@ export default function InvestmentCard({ plan }: InvestmentCardProps) {
           <div>
             <span className="text-gray-300">Duration:</span>
             <span className="ml-2 font-semibold">{plan.duration}</span>
+          </div>
+        </Animate>
+
+         <Animate
+          type="fadeInLeft"
+          className="flex items-start delay-[150] gap-2"
+        >
+          <span className="text-gray-400 mt-0.5">•</span>
+          <div>
+            <span className="text-gray-300">Welcome Bonus:</span>
+            <span className="ml-2 font-semibold">{plan.welcomeBonus}</span>
           </div>
         </Animate>
 
