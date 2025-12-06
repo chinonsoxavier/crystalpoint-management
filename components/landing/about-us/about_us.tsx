@@ -73,8 +73,8 @@ const AboutUs = () => {
               </h3>
               <p className="text-secondary-foreground text-[16px] tracking-wide">
                 CrystalPoint is a private limited liability company
-                established on 24th January 2022, incorporated on 11th December
-                2022 and have gained popular support and trust from worldwide
+                established on 24th of April 2019, incorporated on 11th September 
+                2019 and have gained popular support and trust from worldwide
                 customers and investors owing totally to the teams dedication,
                 hard work and sincerity by using our own in-depth knowledge
                 supported by proven technology and systems already developed to
