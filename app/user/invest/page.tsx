@@ -1,13 +1,13 @@
 "use client";
 
 import LedgerBalance from "@/components/shared/ledger_balance";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { PromoModal } from "@/components/user/user_dashboard/promo_modal";
 import useInvestStore from "./_invest_store";
+import Link from "next/link";
 
 const Page = () => {
-  const [showPromoModal, setShowPromoModal] = useState(false);
+  
 
   const {fetchInvestPlans,investPlans,isFetchingInvestPlans} = useInvestStore();
 
@@ -116,26 +116,24 @@ useEffect(() => {
                 </div> */}
 
                     {/* Invest Button */}
-                    <Button
-                      onClick={() => setShowPromoModal(true)}
-                      className="w-full h-14 md:text-lg mt-2 md:mt-4 font-bold rounded-xl
-                             "
-                    >
-                      Select {plan.name.split(" ")[1]} Package
-                      <svg
-                        className="w-6 h-6 ml-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 7l5 5m0 0l-5 5m5-5H6"
-                        />
-                      </svg>
-                    </Button>
+                    <Link href="/user/deposit" className="w-full" >
+                      <Button variant="outline" className="w-full">
+                        Select {plan.name.split(" ")[1]} Package
+                        <svg
+                          className="w-6 h-6 ml-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 7l5 5m0 0l-5 5m5-5H6"
+                          />
+                        </svg>
+                      </Button>
+                    </Link>
 
                     {/* Trust Badge */}
                     <div className="flex items-center justify-center gap-2 text-xs text-accent-text pt-4 border-t border-gray-800/50">
@@ -162,12 +160,6 @@ useEffect(() => {
           )}
         </div>
       </div>
-
-      {/* Promo Modal */}
-      <PromoModal
-        isOpen={showPromoModal}
-        onClose={() => setShowPromoModal(false)}
-      />
     </div>
   );
 };

@@ -6,10 +6,11 @@ import { SnackbarProvider } from "notistack";
 import { useEffect, useState } from "react";
 import userStore from "@/app/user/user_store"; // your function
 import { baseAxios } from "@/network/axios";
+import useSettingsStore from "@/app/user/settings/_settings_store";
 
 
 export function Providers({ children }: { children: React.ReactNode }) {
-    const {loadUser,authStatus} = userStore();
+    const {loadUser} = userStore();
   useEffect(() => {
     const checkServerHealth = async () => {
       try {
@@ -22,7 +23,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     checkServerHealth();
     loadUser(); 
   }, []);
-  const [queryClient] = useState(
+  const [queryClient] = useState( 
     () =>
       new QueryClient({
         defaultOptions: {

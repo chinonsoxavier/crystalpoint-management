@@ -1,88 +1,48 @@
-import DashboardTransactionsLayout from "@/components/layouts/dashboard_transactions_layout";
-type Transactions = {
-  id: string;
-  amount: number;
-  date: Date;
-  status: "pending" | "processing" | "success" | "failed";
-  recipient: string;
-  type: string;
-    method: string;
-  transactionHash: string; 
-};
+"use client";
+import WithdrawalsTable from "./withdrawal_logs";
+import LedgerBalance from "@/components/shared/ledger_balance";
+import useWithdrawStore from "../../withdraw/_withdraw_store";
+import { useEffect } from "react";
 
+const Page = () => {
+  const { fetchWithdrawalsHistory, withdrawalHistory,approvedWithdrawals,pendingWithdrawals } = useWithdrawStore();
+  const approvedWithdrawalTotal = approvedWithdrawals.reduce(
+    (total, withdrawal) => total + withdrawal,
+    0
+  );
 
+  const pendingWithdrawalTotal = pendingWithdrawals.reduce(
+    (total, withdrawal) => total + withdrawal,
+    0
+  );
+  useEffect(() => {
+    fetchWithdrawalsHistory();
+  }, []);
 
-async function getData(): Promise<Transactions[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      date: new Date(),
-      recipient: "m@example.com",
-      type: "deposit",
-        method: "ETH",
-      transactionHash: "0xabcdef1234567891"
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      date: new Date(),
-      recipient: "m@example.com",
-      type: "deposit",
-      method: "TRON",
-      transactionHash: "0xabcdef1234567892"
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      date: new Date(),
-      recipient: "m@example.com",
-      type: "deposit",
-         method: "BSC",
-      transactionHash: "0xabcdef1234567893"
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      date: new Date(),
-      recipient: "m@example.com",
-      type: "deposit",
-       method: "BTC",
-      transactionHash: "0xabcdef1234567894"
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      date: new Date(),
-      recipient: "m@example.com",
-      type: "deposit",
-       method: "BSC",
-      transactionHash: "0xabcdef1234567895"
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      date: new Date(),
-      recipient: "m@example.com",
-      type: "deposit",
-        method: "TRON",
-      transactionHash: "0xabcdef1234567890"
-    },
-    // ...
-  ];
-}
-
-const Page = async () => {
-  const data = await getData();
-
-  return <DashboardTransactionsLayout data={data} />;
+  return (
+    <div className="bg-accent space-y-4 md:space-y-6 md:p-6 p-4">
+      <LedgerBalance />
+      <div className="grid gap-4 md:grid-cols-2 md:gap-6">
+        <div className="rounded-lg border bg-accent-foreground text-card-foreground shadow-sm p-6">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+            <p className="text-sm font-medium text-muted-foreground">
+              Approved
+            </p>
+          </div>
+          <p className="text-2xl font-bold">$ {approvedWithdrawalTotal}</p>
+        </div>
+        <div className="rounded-lg border bg-accent-foreground text-card-foreground shadow-sm p-6">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+            <p className="text-sm font-medium text-muted-foreground">Pending</p>
+          </div>
+          <p className="text-2xl font-bold">$ {pendingWithdrawalTotal}</p>
+        </div>
+      </div>
+      <WithdrawalsTable />
+    </div>
+  );
 };
 
 export default Page;

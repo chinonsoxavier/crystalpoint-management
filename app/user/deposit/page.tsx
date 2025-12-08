@@ -88,25 +88,7 @@ const Page = () => {
                             </SelectItem>
                           ))}
                         </SelectGroup>
-                        {/* <SelectGroup>
-                          <SelectLabel>Crypto Deposit</SelectLabel>
-
-                          <SelectItem className="" value="Bitcoin">
-                            Bitcoin
-                          </SelectItem>
-                          <SelectItem className="" value="USDT (TRC20)">
-                            USDT (TRC20)
-                          </SelectItem>
-                          <SelectItem className="" value="USDT (ERC20)">
-                            USDT (ERC20)
-                          </SelectItem>
-                          <SelectItem className="" value="BNB">
-                            BNB
-                          </SelectItem>
-                          <SelectItem className="" value="Ethereum">
-                            Ethereum
-                          </SelectItem>
-                        </SelectGroup> */}
+                 
                       </SelectContent>
                     </Select>
                   </div>

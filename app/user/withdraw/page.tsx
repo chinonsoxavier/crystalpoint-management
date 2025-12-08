@@ -15,37 +15,53 @@ import {
 import useWithdrawStore from "./_withdraw_store";
 import useDashboardStore from "../(user)/_dashboard_store";
 import useDepositStore from "../deposit/_deposit_store";
+import { useEffect, useState } from "react";
 
 const Page = () => {
+  const [walletAddress, setWalletAddres] = useState('');
+  const [amount, setAmount] = useState(0);
   const {
     approvedWithdrawals,
     pendingWithdrawals,
     fetchWithdrawalsApproved,
     fetchWithdrawalsPending,
+    requestWithdrawal,
+    loadingWithdrawal
   } = useWithdrawStore();
   const {
     depositMethods,
     fetchDepositMethods,
     setSelectedDepositMethod,
     selectedDepositMethod,
+    
   } = useDepositStore();
 
   const {profile} = useDashboardStore();
   const withdrawalMethods = depositMethods;
   const selectedWithdrawalMethod = selectedDepositMethod;
-  fetchDepositMethods();
-  fetchWithdrawalsApproved();
-  fetchWithdrawalsPending();
+
+  useEffect(() => {
+    fetchDepositMethods();
+    fetchWithdrawalsApproved();
+    fetchWithdrawalsPending();
+  }, [])
+  
 
   const approvedWithdrawalsTotal = approvedWithdrawals.reduce(
-    (total, withdrawal) => total + withdrawal.amount,
+    (total, withdrawal) => total + withdrawal,
     0
   );
 
   const pendingWithdrawalsTotal = pendingWithdrawals.reduce(
-    (total, withdrawal) => total + withdrawal.amount,
+    (total, withdrawal) => total + withdrawal,
     0
   );
+
+  const handleWithdrawal = (e:React.FormEvent)=>{
+    e.preventDefault();
+      requestWithdrawal(walletAddress,amount);
+  }
+
   return (
     <div className="p-4 h-full overflow-y-scroll bg-accent md:p-6">
       <LedgerBalance />
@@ -70,7 +86,7 @@ const Page = () => {
         </div>
       </div>
 
-      <form className=" my-4 bg-accent-foreground p-4 md:p-6 rounded-lg">
+      <form onSubmit={handleWithdrawal} className=" my-4 bg-accent-foreground p-4 md:p-6 rounded-lg">
         <div className="flex gap-2 flex-col mb-6">
           <button className="pb-1 font-semibold text-black dark:text-white text-left text-lg md:text-xl">
             Withdraw
@@ -102,7 +118,7 @@ const Page = () => {
               <Select
                 required
                 onValueChange={(value) => {
-                  const selected = depositMethods.find(
+                  const selected = withdrawalMethods.find(
                     (m) => m.network === value
                   );
                   setSelectedDepositMethod(selected!);
@@ -124,26 +140,7 @@ const Page = () => {
                       </SelectItem>
                     ))}
                   </SelectGroup>
-                  {/* <SelectGroup>
-                          <SelectLabel>Crypto Deposit</SelectLabel>
-
-                          <SelectItem className="" value="Bitcoin">
-                            Bitcoin
-                          </SelectItem>
-                          <SelectItem className="" value="USDT (TRC20)">
-                            USDT (TRC20)
-                          </SelectItem>
-                          <SelectItem className="" value="USDT (ERC20)">
-                            USDT (ERC20)
-                          </SelectItem>
-                          <SelectItem className="" value="BNB">
-                            BNB
-                          </SelectItem>
-                          <SelectItem className="" value="Ethereum">
-                            Ethereum
-                          </SelectItem>
-                        </SelectGroup> */}
-                </SelectContent>
+                 </SelectContent>
               </Select>
             </div>
 
@@ -178,6 +175,8 @@ const Page = () => {
                 Wallet Address
               </Label>
               <Input
+              value={walletAddress}
+              onChange={(e)=>{setWalletAddres(e.target.value)}}
                 required
                 type="text"
                 placeholder=""
@@ -191,6 +190,11 @@ const Page = () => {
                 Amount
               </Label>
               <Input
+              value={amount}
+              onChange={(e)=>{
+                const val = parseInt(e.target.value);
+                        setAmount(val);
+              }}
                 required
                 type="text"
                 placeholder=""

@@ -34,7 +34,7 @@ const DashboardHeader = () => {
                       className={`w-7 h-7 transition-colors duration-300 text-[#0A8A9F]"
                       }`}
                     /></div> */}
-        <div className="flex items-center gap-3">
+        <div className="flex relative z-10 bg-accent-foreground items-center gap-3">
           <div className="relative">
             <Gem
               className={`w-8 h-8 transition-colors duration-300 text-[#0A8A9F]`}
@@ -42,7 +42,7 @@ const DashboardHeader = () => {
             <div className="absolute inset-0 bg-[#0A8A9F]/20 rounded-full blur-sm group-hover:bg-[#0A8A9F]/30 transition-all duration-300"></div>
           </div>
           <div
-            className={`flex flex-col ${
+            className={`md:flex flex-col hidden ${
               !sideMenuOpen ? "w-0" : "w-full"
             } overflow-hidden`}
           >
@@ -57,13 +57,13 @@ const DashboardHeader = () => {
              INVESTMENT MANAGEMENT
             </p>
           </div>
-        </div>{" "}
+        </div>
       </div>
 
       <div className="flex items-center justify-between w-full">
         <div
           onClick={() => toggleSideMenuOpen()}
-          className="flex items-center justify-start gap-7"
+          className="flex z-0 relative items-center justify-start gap-7"
         >
           {sideMenuOpen ? (
             <div className="space-y-1.5 group cursor-pointer">

@@ -31,15 +31,6 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge"; // Import the Badge component
 
-// type Transaction = {
-//   id: string;
-//   amount: number;
-//   date: Date;
-//   recipient: string;
-//   type: string;
-//   status: "pending" | "processing" | "success" | "failed";
-// };
-
 interface Transaction {
   id: string;
   method: string;
@@ -68,29 +59,7 @@ export default function DashboardTransactionsLayout({
         </div>
       ),
     },
-    // {
-    //   accessorKey: "date",
-    //   header: ({ column }) => (
-    //     <Button
-    //     //   variant="secondary"
-    //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-    //       className="font-semibold bg-transparent text-white hover:bg-primary/20"
-    //     >
-    //       Date
-    //       <ArrowUpDown className="ml-2 h-4 w-4" />
-    //     </Button>
-    //   ),
-    //   // Format date to a more readable standard
-    //   cell: ({ row }) => (
-    //     <div className="font-medium">
-    //       {row.original.date.toLocaleDateString("en-US", {
-    //         year: "numeric",
-    //         month: "short",
-    //         day: "numeric",
-    //       })}
-    //     </div>
-    //   ),
-    // },
+   
     {
       accessorKey: "recipient",
       header: "Recipient",
@@ -107,7 +76,6 @@ export default function DashboardTransactionsLayout({
     {
       accessorKey: "amount",
       header: "Amount",
-      // Use Intl.NumberFormat for professional currency formatting
       cell: ({ row }) => {
         const amount = parseFloat(row.getValue("amount"));
         const formatted = new Intl.NumberFormat("en-US", {
@@ -208,7 +176,6 @@ export default function DashboardTransactionsLayout({
               className="max-w-sm"
             />
           </div>
-          {/* Table with improved styling and hover effects */}
           <div className="rounded-md border">
             <Table>
               <TableHeader>

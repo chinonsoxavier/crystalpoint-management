@@ -1,4 +1,3 @@
-
 import useUserStore from "@/app/user/user_store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -32,10 +31,10 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
 
   const handleLogout = async () => {
     // logout returns void (no result to check)
-   const res = await logout();
-   if(res==='success'){
-    router.push("/");
-   }
+    const res = await logout();
+    if (res === "success") {
+      router.push("/");
+    }
   };
   // Close menu whenever route changes
   useEffect(() => {
@@ -48,19 +47,19 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
   const [dropDownOpen, setDropDownOpen] = useState("");
   const isTier2Available = totalDeposit >= 1000;
   const isTier3Available = totalDeposit >= 4000;
-  const isMembershipAvailable = totalDeposit >= 50;
+  const isMembershipAvailable = totalDeposit >= 0;
 
-const tier2Features = [
-  "💰 Large Transaction Capacity",
-  "🔒 Fast Security Attention",
-  "⚡ Priority Account Support",
-  "📊 Advanced Portfolio Tracking",
-  "🌐 Access to Premium Investment Opportunities",
-  "🧾 Flexible Reinvestment Options",
-  "🎖 Investor Loyalty Rewards",
-  "🕒 Accelerated Profit Processing",
-  "📈 High-Yield Return Privileges",
-];
+  const tier2Features = [
+    "💰 Large Transaction Capacity",
+    "🔒 Fast Security Attention",
+    "⚡ Priority Account Support",
+    "📊 Advanced Portfolio Tracking",
+    "🌐 Access to Premium Investment Opportunities",
+    "🧾 Flexible Reinvestment Options",
+    "🎖 Investor Loyalty Rewards",
+    "🕒 Accelerated Profit Processing",
+    "📈 High-Yield Return Privileges",
+  ];
 
   const tier3Features = ["Strong Security Track Record"];
 
@@ -103,32 +102,42 @@ const tier2Features = [
       showDropDown: true,
       eventHandler: () => {
         if (isMembershipAvailable) {
-          setDropDownOpen( dropDownOpen === "Membership" ? "" : "Membership");
+          setDropDownOpen(dropDownOpen === "Membership" ? "" : "Membership");
           return;
         }
       },
       dropDown: (
         <div className="">
           {isMembershipAvailable && sideMenuOpen && (
-        <div className="pl-8 space-y-2 py-2">
-              {membershipCards.map((card) => (
-                <Link
-                  key={card.name}
-                  href={
-                    isMembershipAvailable
-                      ? `/user/membership/${card.cardType}`
-                      : "/user/deposit"
-                  }
-                >
-                  <button className="w-full flex gap-2 items-start text-left text-sm px-4 py-2 rounded cursor-pointer text-accent-text hover:text-accent-text transition-colors">
-                    <div
-                      className={`${card.color} mt-1 rounded-full min-w-3.5 min-h-3.5 h-2.5 w-3.5`}
-                    ></div>
-                    {card.name}
-                  </button>
-                </Link>
-              ))}
-        </div>
+            <div className="pl-8 space-y-2 py-2">
+              {membershipCards.map((card) => {
+                            const isActive = pathname === `/user/membership/${card.cardType}`;
+
+                return (
+                  <Link
+                    key={card.name}
+                    href={
+                      isMembershipAvailable
+                        ? `/user/membership/${card.cardType}`
+                        : "/user/deposit"
+                    }
+                  >
+                    <button
+                      className={`${
+                        isActive
+                          ? "text-primary"
+                          : "text-accent-text hover:text-primary"
+                      } w-full flex gap-2 items-start text-left text-sm px-4 py-2 rounded cursor-pointer transition-colors`}
+                    >
+                      <div
+                        className={`${card.color} mt-1 rounded-full min-w-3.5 min-h-3.5 h-2.5 w-3.5`}
+                      ></div>
+                      {card.name}
+                    </button>
+                  </Link>
+                );
+              })}
+            </div>
           )}
         </div>
       ),
@@ -142,16 +151,25 @@ const tier2Features = [
       },
       dropDown: (
         <div className="pl-8 space-y-2 py-2">
-          {transactionsLinks.map((link) => (
-            <Link key={link.label} href={`${link.link}`}>
-              <button className="w-full flex gap-2 items-start text-left text-sm px-4 py-2 rounded cursor-pointer text-accent-text hover:text-accent-text transition-colors">
-                <div
-                  className={`mt-1 rounded-full min-w-3.5 min-h-3.5 h-2.5 w-3.5`}
-                ></div>
-                {link.label}
-              </button>
-            </Link>
-          ))}
+          {transactionsLinks.map((link) => {
+            const isActive = pathname === link.link;
+            return (
+              <Link key={link.label} href={`${link.link}`}>
+                <button
+                  className={`${
+                    isActive
+                      ? "text-primary"
+                      : "text-accent-text hover:text-primary"
+                  } w-full flex gap-2 items-start text-left text-sm px-4 py-2 rounded cursor-pointer  transition-colors`}
+                >
+                  <div
+                    className={`mt-1 rounded-full min-w-3.5 min-h-3.5 h-2.5 w-3.5`}
+                  ></div>
+                  {link.label}
+                </button>
+              </Link>
+            );
+          })}
         </div>
       ),
     },
@@ -223,14 +241,14 @@ const tier2Features = [
                   Get access to advanced features and tools
                 </p>
                 <Link href="/user/deposit">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="w-full min-w-0 bg-blue-500 hover:bg-blue-600 text-white border-blue-500/30 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/20"
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="w-full min-w-0 bg-blue-500 hover:bg-blue-600 text-white border-blue-500/30 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/20"
                   >
-                  Upgrade to Tier 2
-                </Button>
-                  </Link>
+                    Upgrade to Tier 2
+                  </Button>
+                </Link>
               </div>
             </div>
           )}
@@ -301,14 +319,14 @@ const tier2Features = [
                   Get exclusive access to all premium features
                 </p>
                 <Link href="/user/deposit">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-purple-500/30 transition-all duration-200 hover:shadow-lg hover:shadow-purple-500/20"
-                >
-                  Upgrade to Tier 3
-                </Button>
-                  </Link>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-purple-500/30 transition-all duration-200 hover:shadow-lg hover:shadow-purple-500/20"
+                  >
+                    Upgrade to Tier 3
+                  </Button>
+                </Link>
               </div>
             </div>
           )}
@@ -322,14 +340,16 @@ const tier2Features = [
       eventHandler: () => setPromodalModalOpen(true),
     },
     { label: "Help & Support", icon: faHeadphones, link: "/user/support" },
-    { label: "Logout", icon: faDoorOpen,eventHandler: handleLogout },
+    { label: "Logout", icon: faDoorOpen, eventHandler: handleLogout },
   ];
 
   return (
     <div className="relative z-20">
       <div
         className={`${
-          sideMenuOpen ? "w-dvw h-dvh md:w-0 md:bg-transparent bg-[rgba(0,0,0,0.6)]" : "w-0 h-0"
+          sideMenuOpen
+            ? "w-dvw h-dvh md:w-0 md:bg-transparent bg-[rgba(0,0,0,0.6)]"
+            : "w-0 h-0"
         } absolute inset-0`}
         onClick={() => {
           closeSideMenu();

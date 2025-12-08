@@ -1,6 +1,6 @@
 // stores/useUserStore.ts
 import { create } from "zustand";
-import { baseAxios } from "@/network/axios";
+import { axiosError, baseAxios } from "@/network/axios";
 import { AxiosResponse, isAxiosError } from "axios";
 import { enqueueSnackbar } from "notistack";
 import { NextResponse } from "next/server";
@@ -71,7 +71,7 @@ interface UserStore {
 // Create store
 const useUserStore = create<UserStore>((set) => ({
   user: null,
-  authStatus: "idle",
+  authStatus: 'idle',
   errorMessage: undefined,
   sideMenuOpen: true,
   showBalance: true,
@@ -130,33 +130,14 @@ const useUserStore = create<UserStore>((set) => ({
         phone,
         confirmPassword,
       });
-
-      if (res.status === 409 || res.data?.message?.includes("exists")) {
-        enqueueSnackbar("Email already registered. Please login.", {
-          variant: "info",
-        });
-        return "email-exists";
-      }
-
-      enqueueSnackbar("Account created! Please log in.", {
+      console.log(res.data)
+      enqueueSnackbar(res.data.message, {
         variant: "success",
       });
       set({ authStatus: "email-sent" });
       return "success";
     } catch (error) {
-      set({ authStatus: "error" });
-
-      if (isAxiosError(error) && error.response) {
-        const msg = error.response.data?.error || "Registration failed";
-        console.log(error.response.data);
-        enqueueSnackbar(msg, { variant: "error" });
-        set({ errorMessage: msg });
-      } else {
-        enqueueSnackbar("Network error. Please try again.", {
-          variant: "error",
-        });
-        set({ errorMessage: "Network error" });
-      }
+      set({ errorMessage: axiosError(error), authStatus: "error" });
     } finally {
       set({ authStatus: "idle" });
     }
@@ -178,43 +159,35 @@ const useUserStore = create<UserStore>((set) => ({
         authStatus: "authenticated",
       });
 
-      enqueueSnackbar(`Welcome back, ${user?.username}!`, {
+      enqueueSnackbar(res.data.message, {
         variant: "success",
       });
 
       console.log("Login response:", res.data);
       return "success";
     } catch (error) {
-      set({ authStatus: "error" });
-
-      if (isAxiosError(error) && error.response) {
-        const msg =
-          error.response.data?.error || "Invalid username or password";
-        set({ errorMessage: msg });
-        enqueueSnackbar(msg, { variant: "error" });
-      } else {
-        enqueueSnackbar("Login failed. Check your connection.", {
-          variant: "error",
-        });
-      }
+      set({ errorMessage: axiosError(error), authStatus: "error" });
     }
   },
 
   // LOGOUT
   logout:async () => {
     try {
-
-      await baseAxios.post("/auth/logout", {}, { withCredentials: true });
+      const res = await baseAxios.post(
+        "/auth/logout",
+        {},
+        { withCredentials: true }
+      );
       delete baseAxios.defaults.headers.common["Authorization"];
       set({
         user: null,
         authStatus: "idle",
         sideMenuOpen: false,
       });
-      enqueueSnackbar("Logged out successfully", { variant: "info" });
+      enqueueSnackbar(res.data.message, { variant: "success" });
       return "success";
     } catch (error) {
-      enqueueSnackbar("Logout failed. Please try again.", { variant: "error" });
+      axiosError(error);
       console.log("Logout error:", error);
     }
   },
@@ -223,8 +196,7 @@ loadUser: async () => {
 
   // Prevent parallel fetching
   if (authStatus === "loading") return;
-
-  set({ authStatus: "loading" });
+  // set({ authStatus: "loading" });
 
   try {
     const res = await baseAxios.get("/auth/me", { withCredentials: true });
@@ -244,21 +216,13 @@ loadUser: async () => {
       });
     }
   } catch (error: unknown) {
+    console.log(error)
     // Expected UNAUTH states (e.g. 401, 404)
-    if (isAxiosError(error) && (error.response?.status === 401 || error.response?.status === 404)) {
-      set({
-        user: null,
-        authStatus: "idle",
-      });
-      return;
-    }
-
-    // Unexpected errors only
-    console.error("Unexpected error loading user:", error);
-    set({
-      user: null,
-      authStatus: "idle",
-    });
+  // axiosError(error)
+  //     set({
+  //       user: null,
+  //       authStatus: "idle",
+  //     });
   }
 },
 

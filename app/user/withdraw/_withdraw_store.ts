@@ -1,6 +1,6 @@
 "use client";
 import { create } from "zustand";
-import { baseAxios } from "@/network/axios";
+import { axiosError, baseAxios } from "@/network/axios";
 
 interface IWithdrawals {
   id: string;
@@ -13,15 +13,44 @@ interface IWithdrawals {
 }
 
 interface IWithdrawStore {
-  approvedWithdrawals: IWithdrawals[];
-    pendingWithdrawals: IWithdrawals[];
-    fetchWithdrawalsApproved: () => Promise<void>;
-    fetchWithdrawalsPending: () => Promise<void>;
+  approvedWithdrawals: [];
+  pendingWithdrawals: [];
+  loadingWithdrawal:boolean;
+  withdrawalHistory: IWithdrawals[];
+  fetchWithdrawalsHistory: () => Promise<void>;
+  fetchWithdrawalsApproved: () => Promise<void>;
+  fetchWithdrawalsPending: () => Promise<void>;
+  requestWithdrawal: (walletAddress: string, amount: number) => Promise<void>;
 }
 
 const useWithdrawStore = create<IWithdrawStore>((set) => ({
   approvedWithdrawals: [],
+  loadingWithdrawal:false,
+  withdrawalHistory:[] as IWithdrawals[],
     pendingWithdrawals: [],
+    fetchWithdrawalsHistory:async()=>{
+      try {
+        const res = baseAxios.get("/withdrawal/logs",{})
+      } catch (error) {
+        console.log("failed to fetch withdrawal history",error);
+      }
+    },
+    requestWithdrawal: async (walletAddress, amount)=> {
+      set({ loadingWithdrawal :true});
+try {
+  const res = await baseAxios.post("/withdraw/create",{
+    amount:amount,
+    walletAddress:walletAddress
+  },
+{
+  withCredentials:true
+})
+} catch (error) {
+  axiosError(error);
+}finally{
+  set({ loadingWithdrawal :false});
+}
+    },
     fetchWithdrawalsApproved: async () => {
       try {
         const res = await baseAxios.get("/withdraw/approved", {

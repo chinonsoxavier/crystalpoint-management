@@ -6,14 +6,10 @@ interface IDepositMethod {
   id: string;
   method: string;
   amount: number;
-  transactionHash: string;
-  status: string;
+  transactionHarsh: string;
+  status: "pending" | "processing" | "success" | "failed";
+  walletAddress: string;
 }
-
-// interface IDepositHistory {
-//   page: number;
-// //   limit: number;
-// }
 
 interface IDepositMethods {
   id: string;
@@ -23,13 +19,15 @@ interface IDepositMethods {
 }
 
 interface DepositStore {
-    selectedDepositMethod?: IDepositMethods;
+  selectedDepositMethod?: IDepositMethods;
   depositMethods: IDepositMethods[];
   depositMethod: IDepositMethod;
   depositHistory: IDepositMethod[];
+  pendingDeposits: [];
+  approvedDeposits: [];
   setSelectedDepositMethod: (method: IDepositMethods) => void;
   fetchDepositMethods: () => Promise<void>;
-  fetchDepositHistory: ( page : number) => Promise<void>;
+  fetchDepositHistory: (page: number) => Promise<void>;
   createDepositMethods: () => Promise<void>;
 }
 
@@ -37,14 +35,72 @@ interface DepositStore {
 
 const useDepositStore = create<DepositStore>((set) => ({
   depositMethods: [] as IDepositMethods[],
+  approvedDeposits:[],
+  pendingDeposits:[],
   depositMethod: undefined as unknown as IDepositMethod,
-  depositHistory: [] as IDepositMethod[],
+  depositHistory: [
+    {
+      id: "728ed52f",
+      method: "Btc",
+      amount: 100,
+      status: "pending",
+      transactionHarsh: "nc jhc",
+      walletAddress: "bbcuhc gh hckdgh",
+    },
 
-    setSelectedDepositMethod: (method: IDepositMethods) => {
+    {
+      id: "728ed52f",
+      method: "Btc",
+      amount: 100,
+      status: "pending",
+      transactionHarsh: "nc jhc",
+      walletAddress: "bbcuhc gh hckdgh",
+    },
+
+    {
+      id: "728ed52f",
+      method: "Btc",
+      amount: 100,
+      status: "pending",
+      transactionHarsh: "nc jhc",
+      walletAddress: "bbcuhc gh hckdgh",
+    },
+
+    {
+      id: "728ed52f",
+      method: "Btc",
+      amount: 100,
+      status: "pending",
+      transactionHarsh: "nc jhc",
+      walletAddress: "bbcuhc gh hckdgh",
+    },
+
+    {
+      id: "728ed52f",
+      method: "Btc",
+      amount: 100,
+      status: "pending",
+      transactionHarsh: "nc jhc",
+      walletAddress: "bbcuhc gh hckdgh",
+    },
+
+    {
+      id: "728ed52f",
+      method: "Btc",
+      amount: 100,
+      status: "pending",
+      transactionHarsh: "nc jhc",
+      walletAddress: "bbcuhc gh hckdgh",
+    },
+
+    // ...
+  ],
+
+  setSelectedDepositMethod: (method: IDepositMethods) => {
     set({ selectedDepositMethod: method });
   },
 
-  fetchDepositHistory: async ( page : number) => {
+  fetchDepositHistory: async (page: number) => {
     try {
       const res = await baseAxios.get(
         `/deposit/logs?page=${page}&limit=${20}`,
@@ -82,17 +138,39 @@ const useDepositStore = create<DepositStore>((set) => ({
     }
   },
 
-  getDepositById :async (id: string) => { 
+  getDepositById: async (id: string) => {
     try {
       const res = await baseAxios.get(`/deposit/${id}`, {
         withCredentials: true,
       });
       set({ depositMethod: res.data?.data || "" });
       console.log("Deposit Method by ID:", res.data.data);
-    }catch (error) {
+    } catch (error) {
       console.log("Error loading deposit method by ID:", error);
     }
-  }
+  },
+  fetchApprovedDeposits: async () => {
+    try {
+      const res = await baseAxios.get("/deposit/approved", {
+        withCredentials: true,
+      });
+      set({ approvedDeposits: res.data?.data || [] });
+      // console.log("Approved Withdrawals:", res.data.data);
+    } catch (error) {
+      console.log("Error loading approved deposits:", error);
+    }
+  },
+  fetchPendingWithdrawals: async () => {
+    try {
+      const res = await baseAxios.get("/deposit/pending", {
+        withCredentials: true,
+      });
+      set({ pendingDeposits: res.data?.data || [] });
+      // console.log("Pending Withdrawals:", res.data.data);
+    } catch (error) {
+      console.log("Error loading pending deposits:", error);
+    }
+  },
 }));
 
 export default useDepositStore;

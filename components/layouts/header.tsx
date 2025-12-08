@@ -2,7 +2,7 @@
 import { ArrowUp, ChevronDown, Gem, Menu } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import {  useState } from "react";
+import { useState } from "react";
 import landingStore from "@/app/(landing)/landing_store";
 import Animate from "../animation/animate";
 import { usePathname } from "next/navigation";

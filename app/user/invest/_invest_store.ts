@@ -17,6 +17,8 @@ interface IInvestPlans {
 interface IInvestStore {
   investPlans: IInvestPlans[];
   investHistory: [];
+  completedInvestment:[],
+  activeInvestment:[],
   isFetchingInvestPlans: boolean;
   isFetchingInvestHistory: boolean;
   fetchInvestPlans: () => Promise<void>;
@@ -26,6 +28,8 @@ interface IInvestStore {
 const useInvestStore = create<IInvestStore>((set) => ({
   investPlans: [] as IInvestPlans[],
   investHistory: [],
+  completedInvestment: [],
+  activeInvestment: [],
   isFetchingInvestPlans: false,
   isFetchingInvestHistory: false,
   fetchInvestPlans: async () => {
@@ -55,8 +59,30 @@ const useInvestStore = create<IInvestStore>((set) => ({
       console.log("Invest History:", res.data.data);
     } catch (error) {
       console.log("Error loading invest history:", error);
-    }finally {
+    } finally {
       set({ isFetchingInvestHistory: false });
+    }
+  },
+  fetchActiveInvestments: async () => {
+    try {
+      const res = await baseAxios.get("/investment/active", {
+        withCredentials: true,
+      });
+      set({ activeInvestment: res.data?.data || [] });
+      // console.log("Approved Withdrawals:", res.data.data);
+    } catch (error) {
+      console.log("Error get active investment:", error);
+    }
+  },
+  fetchWithdrawalsPending: async () => {
+    try {
+      const res = await baseAxios.get("/investment/completed", {
+        withCredentials: true,
+      });
+      set({ completedInvestment: res.data?.data || [] });
+      // console.log("Pending Withdrawals:", res.data.data);
+    } catch (error) {
+      console.log("Error get completed investment:", error);
     }
   },
 }));
