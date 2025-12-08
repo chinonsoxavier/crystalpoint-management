@@ -5,6 +5,7 @@ import mockupsImage from "@/assets/images/in-equity-12-mockup.png"
 import Image from "next/image";
 import React from "react";
 import Animate from "@/components/animation/animate";
+import Link from "next/link";
 
 export default function BeginTrading() {
     const [hovered,setHovered] = React.useState(1);
@@ -26,9 +27,11 @@ export default function BeginTrading() {
             </h1>
           </Animate>
           <Animate type="fadeInRight">
-            <Button className="bg-white text-primary-foreground hover:bg-gray-100 rounded-lg px-6 py-2 font-medium">
+            <Link href="sign-in">
+               <Button className="bg-white text-primary-foreground hover:bg-gray-100 rounded-lg px-6 py-2 font-medium">
               Open account
             </Button>
+            </Link>
           </Animate>
         </div>
 

@@ -4,6 +4,7 @@ import "./globals.css";
 //import GlobalLoader from "@/components/animation/loader/global_loader";
 import { Providers } from "@/providers/provider";
 import BackToTop from "@/components/shared/back-to-top";
+import WhatsAppFloat from "@/components/shared/whatsapp-float";
 import { AuthGuard } from "@/components/auth_guard";
 const archivoSans = Archivo({
   variable: "--font-archivo-sans",
@@ -44,6 +45,8 @@ export default function RootLayout({
       <body
         className={`${archivoSans.variable} ${archivoMono.variable} antialiased`}
       >
+         {/* WhatsApp float */}
+      <WhatsAppFloat/>
         {/* <LoadingProvider> */}
         {/* <AuthGuard> */}
         <Providers>{children}</Providers>
