@@ -3,7 +3,7 @@ import React from "react";
 import DashboardHeader from "./dashboard_header";
 import DashboardSidemenu from "./dashboard_sidemenu";
 import useUserStore from "@/app/user/user_store";
-import {AuthGuard} from "../auth_guard";
+import { AuthGuard } from "../auth_guard";
 // import { AuthGuard } from "../auth_guard";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
@@ -11,7 +11,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   //   const menuOpen = useStore((state: any) => state.menuOpen);
 
   return (
-    <AuthGuard requireAuth={true} >
+    <AuthGuard requireAuth={true}>
       <main className={`relative bg-accent overflow-hidden`}>
         {/* header */}
         <DashboardHeader />
@@ -19,13 +19,13 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           <aside className="">
             <DashboardSidemenu totalDeposit={user?.balance?.deposit ?? 0} />
           </aside>
-          <section className="w-full overflow-y-auto">{children}</section>
+          <section className="w-full mb-5 overflow-y-auto">{children}</section>
         </section>
 
         {/* footer */}
         <footer className="center z-20 relative w-full bg-accent-foreground h-12 text-white ">
           <p className="sm:text-[15px] text-accent-text text-sm text-center px-4">
-            Copyright © 2019 - 2025 | CrystalPoint Management. All Right
+            Copyright © 2019 - 2025 | CristalPoint Management. All Right
             Reserved.
           </p>
         </footer>

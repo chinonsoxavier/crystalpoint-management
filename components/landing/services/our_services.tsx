@@ -29,7 +29,7 @@ const OurServices = () => {
     {
       image: service1,
       label: "Retirement Planning",
-      desc: "Saving for retirement can be a daunting task, but with a sound strategy, it’s well within reach.  Crystalpoint investment management is here to bring clarity to retirement...",
+      desc: "Saving for retirement can be a daunting task, but with a sound strategy, it’s well within reach.  Cristalpoint investment management is here to bring clarity to retirement...",
       link: "/services/retirement-planning",
     },
     {

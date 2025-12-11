@@ -1,11 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Send, X, ArrowLeft, ArchiveX } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import TicketType from "@/components/support/ticket_type";
-import { SupportStats } from "@/components/support/support_stats";
+import TicketType from "@/components/user/support/ticket_type";
+import { SupportStats } from "@/components/user/support/support_stats";
 import { useSupportStore } from "./_support";
 import formatTimeAgo from "@/utility/format_time";
 
@@ -116,6 +116,7 @@ export default function Page() {
     activeTab,
     isCreatingTicket,
     createNewTicket,
+    fetchTickets,
   } = useSupportStore();
   const [activeTabs, setActiveTab] = useState<"messages" | "compose">(
     "messages"
@@ -125,21 +126,27 @@ export default function Page() {
   const [message, setMessage] = useState("");
   const [showTicketDetails, setShowTicketDetails] = useState<boolean>(false);
 
+  useEffect(() => {
+    console.log(activeTab);
+    fetchTickets({ status: activeTab, page: 1, limit: 100 });
+  }, [activeTab]);
+
   const handleTicketClick = (id: string) => {
     setShowTicketDetails(true);
     fetchTicketById(id);
   };
 
-  const handleSend = () => {
-    if (subject.trim() && message.trim()) {
+  const handleSend = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const res = await createNewTicket({
+      subject: subject,
+      description: message,
+      priority: "low",
+    });
+    if (res) {
       setSubject("");
       setMessage("");
       setShowCompose(false);
-      createNewTicket({
-        subject: subject,
-        description: message,
-        priority: "low",
-      });
     }
   };
 
@@ -188,12 +195,16 @@ export default function Page() {
             {/* Main Content */}
             <div className="lg:col-span-3">
               {activeTabs === "compose" ? (
-                <div className="bg-accent-foreground rounded-lg p-4 md:p-6 border border-border">
+                <form
+                  onSubmit={handleSend}
+                  className="bg-accent-foreground rounded-lg p-4 md:p-6 border border-border"
+                >
                   <h2 className="text-xl font-bold text-black dark:text-white mb-4">
                     Create New Support Ticket
                   </h2>
                   <div className="space-y-4">
                     <Input
+                      required
                       type="text"
                       placeholder="Subject:"
                       value={subject}
@@ -207,6 +218,7 @@ export default function Page() {
                     <textarea
                       placeholder="Enter text ..."
                       value={message}
+                      required
                       onChange={(e) => setMessage(e.target.value)}
                       className={cn(
                         "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-accent border-input  w-full min-w-0 rounded-md border bg-accent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
@@ -216,17 +228,18 @@ export default function Page() {
                     />
                     <div className="flex gap-3">
                       <Button
-                        onClick={handleSend}
-                        className="flex text-white max-w-xs w-full items-center gap-2"
+                        type="submit"
+                        // onClick={handleSend}
+                        className="flex text-white md:min-w-[150px] min-w-[120px] max-w-xs flex-1 items-center gap-2"
                         disabled={isCreatingTicket}
                       >
                         {isCreatingTicket ? (
-                          <div className="center gap-2" >
+                          <div className="center gap-2">
                             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
                             SENDING...
                           </div>
                         ) : (
-                          <div className="center gap-2  " >
+                          <div className="center gap-2  ">
                             <Send className="w-4 h-4" />
                             SEND
                           </div>
@@ -234,13 +247,13 @@ export default function Page() {
                       </Button>
                       <Button
                         onClick={handleDiscard}
-                        className="bg-destructive hover:bg-destructive/90 text-white w-full max-w-xs flex items-center gap-2"
+                        className="bg-destructive flex-1 hover:bg-destructive/90 min-w-[100px] text-white md:min-w-[150px] max-w-xs flex items-center gap-2"
                       >
                         <X className="w-4 h-4" /> Discard
                       </Button>
                     </div>
                   </div>
-                </div>
+                </form>
               ) : showTicketDetails ? (
                 <div className="bg-accent-foreground rounded-lg p-6 border border-border">
                   <Button
@@ -293,9 +306,9 @@ export default function Page() {
                   </div>
                 </div>
               ) : (
-                <div className="space-y-3 h-full rounded-md bg-accent-foreground">
+                <div className="space-y-3 h-full rounded-md bg-accent">
                   {tickets.length < 1 ? (
-                    <div className="center-col md:text-lg h-full space-y-3">
+                    <div className="center-col md:text-lg h-full py-10 space-y-3">
                       <p className="">
                         You do not have any{" "}
                         {activeTab === "in_progress"

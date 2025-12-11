@@ -3,7 +3,6 @@ import Animate from "@/components/animation/animate";
 import { Button } from "@/components/ui/button";
 import HoverArrow from "@/components/ui/hover_arrow";
 import Link from "next/link";
-//import bgImage from "@/assets/images/crystalpoint-video-placeholder.png";
 import { useEffect, useState } from "react";
 
 const Hero = () => {
@@ -30,7 +29,7 @@ const Hero = () => {
 
     const slides = [
       {
-        linkLabel: "About Crystalpoint Management",
+        linkLabel: "About Cristalpoint Management",
         label: (
           <h1 className="md:text-[3.5rem] text-[2.2rem] leading-12 md:leading-[68px] max-w-[540px] font-bold">
             We are experts in investments

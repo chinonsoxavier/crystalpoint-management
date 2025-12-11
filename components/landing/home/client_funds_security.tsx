@@ -19,7 +19,7 @@ const ClientFundSecurity = () => {
               Security of Client`s Funds
             </h1>
             <p className="text-xl sm:text-2xl my-3 text-white max-w-2xl">
-              Your funds are fully secured when you invest with Crystalpoint management.
+              Your funds are fully secured when you invest with Cristalpoint management.
             </p>
             </Animate>
 

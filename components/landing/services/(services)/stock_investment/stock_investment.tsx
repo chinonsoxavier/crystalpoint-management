@@ -1,8 +1,8 @@
-import Animate from '@/components/animation/animate';
+import Animate from "@/components/animation/animate";
 import stockImage from "@/assets/images/stock-2.png";
-import Image from 'next/image';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faList } from '@fortawesome/free-solid-svg-icons';
+import Image from "next/image";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faList } from "@fortawesome/free-solid-svg-icons";
 const StockInvestment = () => {
   return (
     <div className="wrapper md:py20 py-12">
@@ -30,7 +30,7 @@ const StockInvestment = () => {
             </div>
             <div className="flex-1 space-y-5">
               <h3 className="sm:text-2xl text-xl font-bold text-primary-foreground mb-4">
-                Trading Stock or Share on CrystalPoint
+                Trading Stock or Share on CristalPoint
               </h3>
               <p className="text-secondary-foreground text-[16px] md:text-lg tracking-wide">
                 A stock or share (also known as a company`s equity) is a
@@ -113,6 +113,6 @@ const StockInvestment = () => {
       </div>
     </div>
   );
-}
+};
 
-export default StockInvestment
+export default StockInvestment;

@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect } from "react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { useSupportStore } from "@/app/user/support/_support";
 import { Mail, Clock, CheckCircle, XCircle } from "lucide-react";
 
@@ -56,11 +56,11 @@ const statusConfig: Record<
   },
 };
 
-const TicketType = ({setActiveTabs}: TicketTypeProps) => {
+const TicketType = ({ setActiveTabs }: TicketTypeProps) => {
   const { activeTab, setActiveTab, tickets, fetchTickets } = useSupportStore();
 
   useEffect(() => {
-    fetchTickets({ status: activeTab, page: 10, limit: 100 });
+    fetchTickets({ status: activeTab, page: 1, limit: 100 });
   }, [activeTab, fetchTickets]);
 
   // Get ticket count for each status

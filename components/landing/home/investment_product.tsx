@@ -52,7 +52,7 @@ const InvestmentProduct = () => {
             </h2>
 
             <p className="text-primary-foreground text-lg md:text-[24px] tracking-wider">
-              crystalpoint-management
+              cristalpoint-management
             </p>
           </Animate>
 

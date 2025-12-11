@@ -108,7 +108,7 @@ const Page = () => {
                 </div>
 
                 <h2 className="md:text-3xl text-2xl font-bold text-white tracking-wide">
-                  CrystalPoint
+                  CristalPoint
                 </h2>
                 <h3 className="md:text-2xl text-xl font-bold text-white tracking-wide">
                   MEMBERSHIP

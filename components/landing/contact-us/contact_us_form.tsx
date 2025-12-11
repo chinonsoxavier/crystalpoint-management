@@ -76,7 +76,7 @@ export default function ContactForm() {
               </div>
               <div>
                 <p className="text-secondary-foreground">
-                  support@crystalpointmanagement.org
+                  cristalpointmanagement@gmail.com
                 </p>
               </div>
             </Animate>

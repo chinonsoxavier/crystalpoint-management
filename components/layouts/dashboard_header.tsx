@@ -51,10 +51,10 @@ const DashboardHeader = () => {
                           
                         }`}
             >
-              CrystalPoint
+              CristalPoint
             </p>
             <p className="text-[10px] text-gray-400 font-medium tracking-widest whitespace-nowrap group-hover:text-gray-300 transition-colors duration-300">
-             INVESTMENT MANAGEMENT
+              INVESTMENT MANAGEMENT
             </p>
           </div>
         </div>

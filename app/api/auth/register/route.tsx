@@ -2,13 +2,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 
-const CRYSTALPOINT_API = "https://onezerocorp.com/auth/register";
+const CRISTALPOINT_API = "https://onezerocorp.com/auth/register";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const response = await axios.post(CRYSTALPOINT_API, body, {
+    const response = await axios.post(CRISTALPOINT_API, body, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -22,7 +22,6 @@ export async function POST(request: NextRequest) {
       console.error("[Register Proxy] Error:", error.message);
 
       if (error.response) {
-        // Forward exact error from CrystalPoint API
         return NextResponse.json(
           error.response.data || { message: "Registration failed" },
           { status: error.response.status ?? 502 }

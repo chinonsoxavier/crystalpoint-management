@@ -35,13 +35,13 @@ const FinancialPlanning = () => {
               <div className="flex-1 space-y-5">
                 <p className="text-secondary-foreground text-[16px] md:text-lg tracking-wide">
                   Saving for retirement can be a daunting task, but with a sound
-                  strategy, it’s well within reach.  Crystalpoint investment management is here
-                  to bring clarity to retirement planning and set you on your
-                  path to success. Here you’ll better understand your options
-                  and find the right investment. If you had the chance to
-                  double—or even quadruple—your retirement savings, you’d
-                  probably jump at that opportunity, right? Well, there’s one
-                  simple change you can make today that’s sure to boost your
+                  strategy, it’s well within reach. Cristalpoint investment
+                  management is here to bring clarity to retirement planning and
+                  set you on your path to success. Here you’ll better understand
+                  your options and find the right investment. If you had the
+                  chance to double—or even quadruple—your retirement savings,
+                  you’d probably jump at that opportunity, right? Well, there’s
+                  one simple change you can make today that’s sure to boost your
                   retirement savings.
                 </p>
               </div>

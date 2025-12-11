@@ -2,21 +2,17 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, TrendingUp, Users, Clock } from "lucide-react";
+import { useEffect } from "react";
+import {  TrendingUp, Users, Clock } from "lucide-react";
 import { StatCard } from "./stat_card";
 import { useSupportStore } from "@/app/user/support/_support";
 
-// Define the structure of the data from the API
 type StatsData = {
   total_tickets: number;
   open_tickets: number;
   response_time: string; // e.g., "2 hours 30 minutes"
 };
 
-// Define the full API response structure
 type StatsResponse = {
   success: boolean;
   message: string;

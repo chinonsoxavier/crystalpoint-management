@@ -18,7 +18,7 @@ const archivoMono = Archivo({
 });
 
 export const metadata: Metadata = {
-  title: "CrystalPoint - Investment Management",
+  title: "CristalPoint - Investment Management",
   description: "Professional investment management services",
 };
 

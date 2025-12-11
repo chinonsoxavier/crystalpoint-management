@@ -1,46 +1,43 @@
 "use client";
 
-
 import { ChevronDown, Gem, Globe } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-
 // Language options with flags and codes
 const languages = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
-  { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+  { code: "en", name: "English", flag: "🇺🇸" },
+  { code: "es", name: "Español", flag: "🇪🇸" },
+  { code: "fr", name: "Français", flag: "🇫🇷" },
+  { code: "de", name: "Deutsch", flag: "🇩🇪" },
+  { code: "ar", name: "العربية", flag: "🇸🇦" },
 ];
 
-
-const Footer=()=> {
+const Footer = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState(languages[0]);
   const [isClient, setIsClient] = useState(false);
 
-   useEffect(() => {
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  setIsClient(true);
-}, []);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsClient(true);
+  }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     if (!isClient) return;
-    
+
     let mounted = true;
-    
+
     const initializeLanguage = () => {
       try {
-        const savedLang = localStorage.getItem('preferred-language');
+        const savedLang = localStorage.getItem("preferred-language");
         if (savedLang && mounted) {
-          const lang = languages.find(l => l.code === savedLang);
+          const lang = languages.find((l) => l.code === savedLang);
           if (lang) setSelectedLang(lang);
         } else if (mounted) {
           // Detect browser language
-          const browserLang = navigator.language.split('-')[0];
-          const detectedLang = languages.find(l => l.code === browserLang);
+          const browserLang = navigator.language.split("-")[0];
+          const detectedLang = languages.find((l) => l.code === browserLang);
           if (detectedLang) {
             setSelectedLang(detectedLang);
           }
@@ -49,34 +46,34 @@ const Footer=()=> {
         console.log("Error accessing localStorage:", error);
       }
     };
-   // Add a small delay to avoid cascading renders
+    // Add a small delay to avoid cascading renders
     const timer = setTimeout(initializeLanguage, 100);
-    
+
     return () => {
       mounted = false;
       clearTimeout(timer);
     };
   }, [isClient]);
 
-  
   // Handle language change
-  const handleLanguageChange = (lang: typeof languages[0]) => {
+  const handleLanguageChange = (lang: (typeof languages)[0]) => {
     setSelectedLang(lang);
     try {
-      localStorage.setItem('preferred-language', lang.code);
+      localStorage.setItem("preferred-language", lang.code);
     } catch (error) {
       console.log("Error saving to localStorage:", error);
     }
     setIsOpen(false);
-    
+
     // Show success message
     console.log(`Language changed to ${lang.name}`);
-    
+
     // Dispatch event for other components to update
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('languageChanged', { detail: lang.code }));
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("languageChanged", { detail: lang.code })
+      );
     }
-    
   };
 
   return (
@@ -85,7 +82,7 @@ const Footer=()=> {
         {/* Logo Section */}
         <div className="py-12 px-4 md:px-8">
           <div className="flex-1">
-           <Link href="/" className="group">
+            <Link href="/" className="group">
               <div className="w-min whitespace-nowrap">
                 <div className="flex items-center gap-3">
                   <div className="relative">
@@ -94,7 +91,7 @@ const Footer=()=> {
                   </div>
                   <div className="flex flex-col">
                     <p className="text-xl font-bold bg-linear-to-r from-black to-cyan-[#1a365d] bg-clip-text text-transparent group-hover:from-primary-200 group-hover:to-white transition-all duration-500">
-                      CrystalPoint
+                      CristalPoint
                     </p>
                     <p className="text-xs text-gray-800 font-medium tracking-widest group-hover:text-gray-300 transition-colors duration-300">
                       INVESTMENT MANAGEMENT
@@ -257,7 +254,7 @@ const Footer=()=> {
                       Forgot Password?
                     </a>
                   </li>
-                    {/* Language Selector */}
+                  {/* Language Selector */}
                   <li className="mt-6">
                     <div className="relative">
                       <button
@@ -266,30 +263,42 @@ const Footer=()=> {
                       >
                         <div className="flex items-center gap-2">
                           <Globe className="w-4 h-4" />
-                          <span>{selectedLang.flag} {selectedLang.name}</span>
+                          <span>
+                            {selectedLang.flag} {selectedLang.name}
+                          </span>
                         </div>
-                        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                        <ChevronDown
+                          className={`w-4 h-4 transition-transform ${
+                            isOpen ? "rotate-180" : ""
+                          }`}
+                        />
                       </button>
-                      
+
                       {/* Dropdown Menu */}
                       {isOpen && (
                         <>
                           {/* Backdrop */}
-                          <div 
-                            className="fixed inset-0 z-40" 
+                          <div
+                            className="fixed inset-0 z-40"
                             onClick={() => setIsOpen(false)}
                           />
-                          
+
                           {/* Dropdown */}
                           <div className="absolute z-50 mt-2 w-full bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
                             {languages.map((lang) => (
                               <button
                                 key={lang.code}
                                 onClick={() => handleLanguageChange(lang)}
-                                className={`flex items-center gap-3 w-full px-4 py-3 hover:bg-gray-50 transition-colors ${selectedLang.code === lang.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700'}`}
+                                className={`flex items-center gap-3 w-full px-4 py-3 hover:bg-gray-50 transition-colors ${
+                                  selectedLang.code === lang.code
+                                    ? "bg-blue-50 text-blue-600"
+                                    : "text-gray-700"
+                                }`}
                               >
                                 <span className="text-lg">{lang.flag}</span>
-                                <span className="flex-1 text-left">{lang.name}</span>
+                                <span className="flex-1 text-left">
+                                  {lang.name}
+                                </span>
                                 {selectedLang.code === lang.code && (
                                   <div className="w-2 h-2 bg-blue-600 rounded-full" />
                                 )}
@@ -328,7 +337,7 @@ const Footer=()=> {
                   <span className="text-base">
                     ©2019 - 2025
                     <span className="border-r border-secondary-foreground  mx-2 h-3 w-1"></span>
-                    CrystalPoint Management. All Rights Reserved.
+                    CristalPoint Management. All Rights Reserved.
                   </span>
                 </div>
               </div>
@@ -338,7 +347,6 @@ const Footer=()=> {
       </div>
     </div>
   );
-}
-
+};
 
 export default Footer;

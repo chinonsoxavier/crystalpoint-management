@@ -32,11 +32,11 @@ const LearnMoreAboutUs = () => {
 
   return (
     <div className="wrapper py-20 bg-white">
-      <div className="max_width" >
+      <div className="max_width">
         <Animate>
           <h2 className="text-[#333] text-center text-[1.8rem] Archivo font-semibold md:text-[2.625rem]">
             Learn more about
-            <span className="underline"> CrystalPoint Management </span>
+            <span className="underline"> CristalPoint Management </span>
           </h2>
         </Animate>
 
@@ -102,11 +102,10 @@ const LearnMoreAboutUs = () => {
             </p>
 
             <Link href="/about-us">
-               <Button variant="dark" className="text-white bg-primary">
-              Learn More <HoverArrow className="" variant="dark" />
-            </Button>
+              <Button variant="dark" className="text-white bg-primary">
+                Learn More <HoverArrow className="" variant="dark" />
+              </Button>
             </Link>
-           
           </Animate>
         </div>
       </div>

@@ -1,9 +1,6 @@
-// stores/useUserStore.ts
 import { create } from "zustand";
 import { axiosError, baseAxios } from "@/network/axios";
-import { AxiosResponse, isAxiosError } from "axios";
 import { enqueueSnackbar } from "notistack";
-import { NextResponse } from "next/server";
 
 interface IUserProfile {
   firstName: string;
@@ -32,9 +29,6 @@ interface ILogin {
   password: string;
 }
 
-interface IResetPassword {
-  email: string;
-}
 
 interface UserStore {
   // State

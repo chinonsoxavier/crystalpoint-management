@@ -11,7 +11,7 @@ interface InvestmentPlan {
   frequency: string;
   duration: string;
   referralBonus: string;
-  welcomeBonus: string
+  welcomeBonus: string;
 }
 
 const investmentPlans: InvestmentPlan[] = [
@@ -34,7 +34,7 @@ const investmentPlans: InvestmentPlan[] = [
     min: 500,
     max: 999,
     return: "4%",
-     frequency: "Daily",
+    frequency: "Daily",
     duration: "7 days",
     welcomeBonus: "6%",
     referralBonus: "10%",
@@ -46,7 +46,7 @@ const investmentPlans: InvestmentPlan[] = [
     min: 1000,
     max: 1999,
     return: "5%",
-     frequency: "Every 3 days",
+    frequency: "Every 3 days",
     duration: "12 days",
     welcomeBonus: "6%",
     referralBonus: "10%",
@@ -58,7 +58,7 @@ const investmentPlans: InvestmentPlan[] = [
     min: 2000,
     max: 4999,
     return: "8%",
-     frequency: "Every 4 days",
+    frequency: "Every 4 days",
     duration: "20 days",
     welcomeBonus: "6%",
     referralBonus: "10%",
@@ -85,7 +85,7 @@ export default function InvestmentPlans() {
         <Animate className="text-center mb-12">
           <h1 className="text-4xl sm:text-5xl font-bold text-primary-foreground mb-2">
             Invest on
-            <span className="underline pl-2">crystalpoint</span>
+            <span className="underline pl-2">cristalpoint</span>
           </h1>
         </Animate>
 

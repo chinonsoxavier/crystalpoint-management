@@ -34,26 +34,26 @@ const LoansAndGrants = () => {
               </div>
               <div className="flex-1 space-y-5">
                 <h3 className="sm:text-2xl text-xl font-bold text-primary-foreground mb-4">
-                  Easy with CrystalPoint Management
+                  Easy with CristalPoint Management
                 </h3>
                 <p className="text-secondary-foreground text-[16px] md:text-lg tracking-wide">
                   Getting a loan doesn’t have to be intimidating, with the right
                   lender it can be a simple process. You only need a lender
                   committed to taking the mystery out of the mortgage loan
-                  process! At Crystalpoint Investment Management, we understand!
+                  process! At Cristalpoint Investment Management, we understand!
                   Our investors want simple facts, honest answers and
                   competitive products. DGS automatically offers loan services
                   to investors with over $50,000 investment either in our normal
-                  Crystalpoint Investment Management financial Services packages
+                  Cristalpoint Investment Management financial Services packages
                   or the NFP plans. Investors over $50,000 are entitled to loans
                   of $200,000-1millon dollars yearly with 5% paid monthly, or
                   the investor could wish to compound the interest till the time
                   limit, provided all required information and identity of the
-                  investor are duly confirmed by Crystalpoint loan board. Every
+                  investor are duly confirmed by Cristalpoint loan board. Every
                   investor above $50,000 is provided with a personal account
                   manager and the investor has a direct communication with the
                   manager in order to see that our loan offers are secured.
-                  GREAT INVESTING WITH Crystalpoint FAMILY
+                  GREAT INVESTING WITH Cristalpoint FAMILY
                 </p>
               </div>
             </Animate>

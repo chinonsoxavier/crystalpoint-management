@@ -16,7 +16,7 @@ interface ITicket {
 }
 
 interface IReply {
-  message:string
+  message: string;
 }
 
 interface ISupportStats {
@@ -53,7 +53,7 @@ interface SupportState {
     subject: string;
     description: string;
     priority: string;
-  }) => Promise<void>;
+  }) => Promise<boolean>;
   replyToCurrentTicket: (message: string) => Promise<void>;
   closeCurrentTicket: () => Promise<void>;
   reopenCurrentTicket: (reason: string) => Promise<void>;
@@ -87,6 +87,7 @@ export const useSupportStore = create<SupportState>()(
             `/support/tickets?page=${params?.page}&limit=${params?.limit}&status=${params?.status}`,
             { withCredentials: true }
           );
+          console.log(response);
           set({
             tickets: response.data.data.tickets,
             // pagination: response.data.data.pagination,
@@ -101,7 +102,9 @@ export const useSupportStore = create<SupportState>()(
       fetchTicketById: async (id) => {
         set({ isLoading: true });
         try {
-          const response = await baseAxios.get(`/support/${id}`,{withCredentials:true});
+          const response = await baseAxios.get(`/support/${id}`, {
+            withCredentials: true,
+          });
           set({
             currentTicket: response.data.data.ticket,
             replies: response.data.data.replies,
@@ -116,9 +119,20 @@ export const useSupportStore = create<SupportState>()(
       createNewTicket: async (data) => {
         set({ isCreatingTicket: true });
         try {
+          const dt = {
+            subject: "testing",
+            description: "testing description",
+            priority: "low",
+          };
+          console.log(data);
           const res = await baseAxios.post(
             "/support/create-ticket",
-            { data },
+
+            {
+              subject: data.subject,
+              description: data.description,
+              priority: "low",
+            },
             { withCredentials: true }
           );
           enqueueSnackbar(res.data.message, {
@@ -126,6 +140,8 @@ export const useSupportStore = create<SupportState>()(
           });
 
           set({ isCreatingTicket: false });
+
+          return res.data.success;
           // Refetch tickets to show the new one
           get().fetchTickets();
         } catch (error) {

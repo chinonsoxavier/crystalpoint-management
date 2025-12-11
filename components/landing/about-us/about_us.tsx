@@ -72,7 +72,7 @@ const AboutUs = () => {
                 History
               </h3>
               <p className="text-secondary-foreground text-[16px] tracking-wide">
-                CrystalPoint is a private limited liability company
+                CristalPoint is a private limited liability company
                 established on 24th of April 2019, incorporated on 11th September 
                 2019 and have gained popular support and trust from worldwide
                 customers and investors owing totally to the teams dedication,
@@ -113,7 +113,7 @@ const AboutUs = () => {
                 traders that will create high trading and investment volume for
                 we are proud to help many customers to make revenue as we
                 provide real-time market data from leading analytical agencies.
-                Crystalpoint investment management have had a very strong relationship with
+                Cristalpoint investment management have had a very strong relationship with
                 equity and funding providers since our inception, we have also
                 had experience of working across multiple sectors and offering
                 variety of full partner led services from experienced and

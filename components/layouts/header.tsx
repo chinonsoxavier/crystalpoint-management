@@ -48,7 +48,7 @@ const Header = () => {
                           : "text-white group-hover:text-[#1a365d]"
                       }`}
                     >
-                      CrystalPoint
+                      CristalPoint
                     </p>
                     <p className="text-xs text-gray-400 font-medium tracking-widest group-hover:text-gray-300 transition-colors duration-300">
                       INVESTMENT MANAGEMENT
