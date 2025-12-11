@@ -40,11 +40,6 @@ const Page = () => {
    }, [selectedCard]);
 
 
-
-
-
-
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -78,10 +73,10 @@ const Page = () => {
         {/* Membership Card */}
         <div
           // key={card.id}
-          className="bg-white rounded-lg shadow-md overflow-hidden"
+          className="bg-[red] rounded-lg shadow-md overflow-hidden"
         >
           {/* Card Header */}
-          <div className="relative h-40 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-800">
+          <div className="relative bg-gradient-to-r from-amber-500 via-amber-600 to-amber-800">
             {/* Background pattern */}
             <div className="absolute inset-0 opacity-10">
               <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_25%,rgba(0,0,0,.1)_25%,rgba(0,0,0,.1)_50%,transparent_50%,rgba(0,0,0,.1)_75%,rgba(0,0,0,.1)_100%,transparent_75%,rgba(0,0,0,.1)_50%,transparent_25%,rgba(0,0,0,.1)_0%)] bg-size-[40px_40px]"></div>
@@ -114,7 +109,7 @@ const Page = () => {
                 </div>
 
                 <h2 className="md:text-3xl text-2xl font-bold text-white tracking-wide">
-                  CrsytalPoint
+                  CrystalPoint
                 </h2>
                 <h3 className="md:text-2xl text-xl font-bold text-white tracking-wide">
                   MEMBERSHIP

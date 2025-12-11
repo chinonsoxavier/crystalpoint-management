@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -15,10 +15,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useMembershipStore from "../_membership_store";
 const Page = () => {
   const [cryptocurrency, setCryptocurrency] = useState("");
+  const { getMembershipCards, membershipCards } = useMembershipStore();
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
+  useEffect(() => {
+    getMembershipCards();
+  }, []);
+
+  // Select Gold card once membershipCards is available
+  const selectedCard = useMemo(() => {
+    return (
+      membershipCards.find(
+        (m) => m.name.toLowerCase() === "silver member".toLowerCase()
+      ) || null
+    );
+  }, [membershipCards]);
+
+  // Debug (runs only after selectedCard updates)
+  useEffect(() => {
+    console.log("Selected:", selectedCard);
+  }, [selectedCard]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,25 +70,30 @@ const Page = () => {
       </h1>
       <main className="text-white rounded-lg bg-accent-foreground w-full p-4 md:p-6 space-y-10">
         {/* Membership Card */}
-        <div className="flex justify-center">
-          <div className="w-full max-w-xl py-7 md:py-12 bg-linear-to-br from-zinc-500 via-zinc-600 to-zinc-800 rounded-3xl p-8 shadow-2xl border border-zinc-400 relative overflow-hidden">
+        <div
+          // key={card.id}
+          className="bg-[red] rounded-lg shadow-md overflow-hidden"
+        >
+          {/* Card Header */}
+          <div className="relative bg-linear-to-r from-zinc-500 via-zinc-600 to-zinc-800">
             {/* Background pattern */}
             <div className="absolute inset-0 opacity-10">
-              <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_25%,rgba(0,0,0,.1)_25%,rgba(0,0,0,.1)_50%,transparent_50%,transparent_75%,rgba(0,0,0,.1)_75%,rgba(0,0,0,.1))] bg-size-[40px_40px]"></div>
+              <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_25%,rgba(0,0,0,.1)_25%,rgba(0,0,0,.1)_50%,transparent_50%,rgba(0,0,0,.1)_75%,rgba(0,0,0,.1)_100%,transparent_75%,rgba(0,0,0,.1)_50%,transparent_25%,rgba(0,0,0,.1)_0%)] bg-size-[40px_40px]"></div>
             </div>
 
-            <div className="relative z-10">
+            {/* Card Content */}
+            <div className="relative z-10 h-full flex flex-col items-center justify-center p-4">
               {/* Medal Icon and Title */}
-              <div className="flex items-center gap-4 mb-8">
+              <div className="flex items-center gap-4 mb-4">
                 {/* Medal Icon */}
                 <div className="relative md:w-16 md:h-16 w-12 h-12 shrink-0">
                   <div className="absolute inset-0 bg-white rounded-full flex items-center justify-center shadow-lg">
                     <svg
-                      className="md:w-8 md:h-8 h-5 w-5 text-blue-500"
+                      className="md:w-8 md:h-8 w-5 h-5 text-blue-500"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L12 14z" />
                     </svg>
                   </div>
                   {/* Ribbon */}
@@ -84,8 +108,11 @@ const Page = () => {
                 </div>
 
                 <h2 className="md:text-3xl text-2xl font-bold text-white tracking-wide">
-                  CrsytalPoint
+                  CrystalPoint
                 </h2>
+                <h3 className="md:text-2xl text-xl font-bold text-white tracking-wide">
+                  MEMBERSHIP
+                </h3>
               </div>
 
               {/* Card Text */}
@@ -99,12 +126,67 @@ const Page = () => {
               </div>
             </div>
           </div>
+
+          {/* Card Details */}
+          <div className="p-6 bg-white">
+            <h3 className="text-xl font-semibold mb-4 text-gray-800">
+              {/* {card.name} */}
+            </h3>
+
+            <div className="space-y-3 mb-6">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Tier:</span>
+                <span className="font-medium text-gray-800">
+                  Tier {selectedCard?.tier}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Required Deposit:</span>
+                <span className="font-medium text-gray-800">
+                  ${selectedCard?.requiredDeposit}
+                </span>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h4 className="text-lg font-medium mb-2 text-gray-800">
+                Benefits:
+              </h4>
+              <ul className="space-y-2">
+                {selectedCard?.benefits.map((benefit, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="text-green-500 mr-2">✓</span>
+                    <span className="text-gray-700">{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* <div className="flex justify-between items-center">
+              <div>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    card.isActive
+                      ? "bg-green-100 text-green-800"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
+                >
+                  {card.isActive ? "Active" : "Inactive"}
+                </span>
+              </div>
+              {card.canUpgrade && (
+                <Button className="text-blue-600 hover:text-blue-700">
+                  Upgrade
+                </Button>
+              )}
+            </div> */}
+          </div>
         </div>
 
         {/* Description */}
         <p className="text-left md:text-lg text-gray-100 ">
           You are in this page because you requested to make payment for the
-          investor`s Silver memebereship Card.
+          investor`s Gold memebereship Card.
         </p>
 
         {/* Form */}

@@ -1,16 +1,39 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { supportApi } from "@/network/support";
-import { Ticket, Reply, SupportStats, PaginationInfo } from "@/types/support";
+// import { Ticket, Reply, SupportStats, PaginationInfo } from "@/types/support";
 import { enqueueSnackbar } from "notistack";
+import { baseAxios } from "@/network/axios";
 
+interface ITicket {
+  id: string;
+  user: string;
+  subject: string;
+  description: string;
+  priority: "low" | "medium" | "high" | "urgent";
+  status: "open" | "in_progress" | "resolved" | "closed";
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface IReply {
+  message:string
+}
+
+interface ISupportStats {
+  total_tickets: number;
+  open_tickets: number;
+  response_time: string;
+}
+
+// interface IPaginationInfo {}
 interface SupportState {
   // State
-  tickets: Ticket[];
-  currentTicket: Ticket | null;
-  replies: Reply[];
-  stats: SupportStats | null;
-  pagination: PaginationInfo | null;
+  activeTab: "open" | "in_progress" | "resolved" | "closed";
+  tickets: ITicket[];
+  currentTicket: ITicket | null;
+  replies: IReply[];
+  stats: ISupportStats | null;
+  // pagination: IPaginationInfo | null;
 
   // Loading States
   isLoading: boolean;
@@ -19,6 +42,7 @@ interface SupportState {
   isUpdatingTicket: boolean;
 
   // Actions
+  setActiveTab: (tab: "open" | "in_progress" | "resolved" | "closed") => void;
   fetchTickets: (params?: {
     page?: number;
     limit?: number;
@@ -34,7 +58,7 @@ interface SupportState {
   closeCurrentTicket: () => Promise<void>;
   reopenCurrentTicket: (reason: string) => Promise<void>;
   fetchStats: () => Promise<void>;
-  setCurrentTicket: (ticket: Ticket | null) => void;
+  setCurrentTicket: (ticket: ITicket | null) => void;
 }
 
 export const useSupportStore = create<SupportState>()(
@@ -42,35 +66,42 @@ export const useSupportStore = create<SupportState>()(
     (set, get) => ({
       // Initial State
       tickets: [],
+      activeTab: "open",
       currentTicket: null,
       replies: [],
       stats: null,
-      pagination: null,
+      // pagination: null,
       isLoading: false,
       isCreatingTicket: false,
       isReplying: false,
       isUpdatingTicket: false,
 
       // Actions
+      setActiveTab: (tab: "open" | "in_progress" | "resolved" | "closed") => {
+        set({ activeTab: tab });
+      },
       fetchTickets: async (params) => {
         set({ isLoading: true });
         try {
-          const response = await supportApi.getTickets(params);
+          const response = await baseAxios.get(
+            `/support/tickets?page=${params?.page}&limit=${params?.limit}&status=${params?.status}`,
+            { withCredentials: true }
+          );
           set({
             tickets: response.data.data.tickets,
-            pagination: response.data.data.pagination,
+            // pagination: response.data.data.pagination,
             isLoading: false,
           });
         } catch (error) {
           set({ isLoading: false });
-          enqueueSnackbar("Failed to fetch tickets.", { variant: "error" });
+          console.log("failed too fetch tickets", error);
         }
       },
 
       fetchTicketById: async (id) => {
         set({ isLoading: true });
         try {
-          const response = await supportApi.getTicketById(id);
+          const response = await baseAxios.get(`/support/${id}`,{withCredentials:true});
           set({
             currentTicket: response.data.data.ticket,
             replies: response.data.data.replies,
@@ -78,25 +109,28 @@ export const useSupportStore = create<SupportState>()(
           });
         } catch (error) {
           set({ isLoading: false });
-          enqueueSnackbar("Failed to fetch ticket details.", {
-            variant: "error",
-          });
+          console.log("failed to get ticket details", error);
         }
       },
 
       createNewTicket: async (data) => {
         set({ isCreatingTicket: true });
         try {
-          await supportApi.createTicket(data);
-          enqueueSnackbar("Ticket created successfully!", {
+          const res = await baseAxios.post(
+            "/support/create-ticket",
+            { data },
+            { withCredentials: true }
+          );
+          enqueueSnackbar(res.data.message, {
             variant: "success",
           });
+
           set({ isCreatingTicket: false });
           // Refetch tickets to show the new one
           get().fetchTickets();
         } catch (error) {
           set({ isCreatingTicket: false });
-          enqueueSnackbar("Failed to create ticket.", { variant: "error" });
+          console.log("failed to create new ticket", error);
         }
       },
 
@@ -104,14 +138,17 @@ export const useSupportStore = create<SupportState>()(
         if (!get().currentTicket) return;
         set({ isReplying: true });
         try {
-          await supportApi.replyToTicket(get().currentTicket!.id, message);
-          enqueueSnackbar("Reply sent!", { variant: "success" });
+          const res = await baseAxios.post(
+            `/support/ticket/${get().currentTicket!.id}/${message}/reply`,
+            { withCredentials: true }
+          );
+          enqueueSnackbar(res.data.message, { variant: "success" });
           // Refetch to show the new reply
           get().fetchTicketById(get().currentTicket!.id);
           set({ isReplying: false });
         } catch (error) {
           set({ isReplying: false });
-          enqueueSnackbar("Failed to send reply.", { variant: "error" });
+          console.log("failed to send reply to ticket", error);
         }
       },
 
@@ -119,8 +156,11 @@ export const useSupportStore = create<SupportState>()(
         if (!get().currentTicket) return;
         set({ isUpdatingTicket: true });
         try {
-          await supportApi.closeTicket(get().currentTicket!.id);
-          enqueueSnackbar("Ticket closed.", { variant: "success" });
+          const res = await baseAxios.patch(
+            `/support/ticket/${get().currentTicket!.id}/close`,
+            { withCredentials: true }
+          );
+          enqueueSnackbar(res.data.message, { variant: "success" });
           // Update the local state to reflect the change
           set({
             currentTicket: { ...get().currentTicket!, status: "closed" },
@@ -129,7 +169,7 @@ export const useSupportStore = create<SupportState>()(
           get().fetchTickets(); // Update the list
         } catch (error) {
           set({ isUpdatingTicket: false });
-          enqueueSnackbar("Failed to close ticket.", { variant: "error" });
+          console.log("failed to close current ticket", error);
         }
       },
 
@@ -137,8 +177,11 @@ export const useSupportStore = create<SupportState>()(
         if (!get().currentTicket) return;
         set({ isUpdatingTicket: true });
         try {
-          await supportApi.reopenTicket(get().currentTicket!.id, reason);
-          enqueueSnackbar("Ticket reopened.", { variant: "success" });
+          const res = await baseAxios(
+            `/support/ticket/${get().currentTicket!.id}, ${reason}`,
+            { withCredentials: true }
+          );
+          enqueueSnackbar(res.data.message, { variant: "success" });
           set({
             currentTicket: { ...get().currentTicket!, status: "open" },
             isUpdatingTicket: false,
@@ -146,16 +189,18 @@ export const useSupportStore = create<SupportState>()(
           get().fetchTickets(); // Update the list
         } catch (error) {
           set({ isUpdatingTicket: false });
-          enqueueSnackbar("Failed to reopen ticket.", { variant: "error" });
+          console.log("Failed to reopen ticket.", error);
         }
       },
 
       fetchStats: async () => {
         try {
-          const response = await supportApi.getStats();
+          const response = await baseAxios.get(`/support/stats`, {
+            withCredentials: true,
+          });
           set({ stats: response.data.data });
         } catch (error) {
-          enqueueSnackbar("Failed to fetch stats.", { variant: "error" });
+          console.log("Failed to fetch stats.", error);
         }
       },
 
