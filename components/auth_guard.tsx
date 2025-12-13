@@ -4,16 +4,19 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import useUserStore from "@/app/user/user_store";
+import useAdminStore from "@/app/admin/_admin_store";
 
 interface AuthWrapperProps {
   children: React.ReactNode;
   requireAuth?: boolean;
 }
 
-const AuthGuard = ({ children, requireAuth = true }: AuthWrapperProps)=> {
+const AuthGuard = ({ children, requireAuth = true }: AuthWrapperProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const { authStatus, loadUser } = useUserStore();
+  const adminAuthStatus = useAdminStore().authStatus;
+  const loadAdmin = useAdminStore().loadUser;
   const [isInitialized, setIsInitialized] = useState(false);
 
   // List of public routes that don't require authentication
@@ -25,6 +28,7 @@ const AuthGuard = ({ children, requireAuth = true }: AuthWrapperProps)=> {
     let mounted = true;
     (async () => {
       try {
+        await loadAdmin();
         await loadUser();
       } finally {
         if (mounted) setIsInitialized(true);
@@ -42,12 +46,21 @@ const AuthGuard = ({ children, requireAuth = true }: AuthWrapperProps)=> {
     // Redirect unauthenticated users from protected routes
     if (authStatus === "idle" && requireAuth && !isPublicRoute) {
       console.log("User not authenticated, redirecting to sign-in...");
+
+      if (adminAuthStatus === "authenticated") {
+        router.push("/admin");
+        return;
+      }
       router.push("/sign-in");
     }
 
     // Redirect authenticated users from auth pages
     if (authStatus === "authenticated" && isPublicRoute) {
       console.log("User authenticated, redirecting to dashboard...");
+       if (adminAuthStatus === "authenticated") {
+         router.push("/admin");
+         return;
+       }
       router.push("/user");
     }
   }, [authStatus, isInitialized, isPublicRoute, requireAuth, router]);
@@ -71,7 +84,6 @@ const AuthGuard = ({ children, requireAuth = true }: AuthWrapperProps)=> {
   }
 
   return <>{children}</>;
-}
+};
 
-
-export {AuthGuard};
+export { AuthGuard };

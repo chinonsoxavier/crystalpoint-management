@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -33,28 +33,29 @@ import {
 import { StatCard } from "@/components/admin/stat_card";
 import { formatNumber } from "@/utility/format_number";
 import { formatCurrency } from "@/utility/format_currency";
+import { useAdminDashboardStore } from "./_admin_dashboard_store";
 
-const mockOverview = {
-  total_users: 15234,
-  total_deposits: 2150000,
-  total_withdrawals: 1850000,
-  total_investments: 5230000,
-  pending_withdrawals: 42,
-  open_tickets: 8,
-  new_users_today: 145,
-  total_deposit_amount: 125000,
-  total_withdrawal_amount: 98000,
-  total_investment_amount: 320000,
-};
+// const mockoverview = {
+//   total_users: 15234,
+//   total_deposits: 2150000,
+//   total_withdrawals: 1850000,
+//   total_investments: 5230000,
+//   pending_withdrawals: 42,
+//   open_tickets: 8,
+//   new_users_today: 145,
+//   total_deposit_amount: 125000,
+//   total_withdrawal_amount: 98000,
+//   total_investment_amount: 320000,
+// };
 
 const mockChartData = [
-  { date: "Jan 1", deposits: 4000, withdrawals: 2400, investments: 2400 },
-  { date: "Jan 2", deposits: 3000, withdrawals: 1398, investments: 2210 },
-  { date: "Jan 3", deposits: 2000, withdrawals: 9800, investments: 2290 },
-  { date: "Jan 4", deposits: 2780, withdrawals: 3908, investments: 2000 },
-  { date: "Jan 5", deposits: 1890, withdrawals: 4800, investments: 2181 },
-  { date: "Jan 6", deposits: 2390, withdrawals: 3800, investments: 2500 },
-  { date: "Jan 7", deposits: 3490, withdrawals: 4300, investments: 2100 },
+  { _id: "Jan 1", deposits: 4000, withdrawals: 2400, investments: 2400 },
+  { _id: "Jan 2", deposits: 3000, withdrawals: 1398, investments: 2210 },
+  { _id: "Jan 3", deposits: 2000, withdrawals: 9800, investments: 2290 },
+  { _id: "Jan 4", deposits: 2780, withdrawals: 3908, investments: 2000 },
+  { _id: "Jan 5", deposits: 1890, withdrawals: 4800, investments: 2181 },
+  { _id: "Jan 6", deposits: 2390, withdrawals: 3800, investments: 2500 },
+  { _id: "Jan 7", deposits: 3490, withdrawals: 4300, investments: 2100 },
 ];
 
 // Define a consistent color palette for charts
@@ -66,6 +67,12 @@ const chartColors = {
 
 export default function DashboardPage() {
   const [period, setPeriod] = useState("7d");
+  const { fetchDashboardOverview, overview, fetchAnalytics,analytics } =
+    useAdminDashboardStore();
+  useEffect(() => {
+    fetchDashboardOverview();
+    fetchAnalytics("1y");
+  }, []);
 
   return (
     <div className="flex flex-col gap-6">
@@ -83,38 +90,38 @@ export default function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Total Users"
-          value={formatNumber(mockOverview.total_users)}
+          value={formatNumber(overview?.total_users || 0)}
           icon={Users}
           trend={{ value: 12, isPositive: true }}
         />
         <StatCard
           title="Total Deposits"
-          value={formatCurrency(mockOverview.total_deposits)}
+          value={formatCurrency(overview?.total_deposits || 0)}
           icon={DollarSign}
           trend={{ value: 8, isPositive: true }}
         />
         <StatCard
           title="Total Withdrawals"
-          value={formatCurrency(mockOverview.total_withdrawals)}
+          value={formatCurrency(overview?.total_withdrawals || 0)}
           icon={Wallet}
           trend={{ value: 3, isPositive: false }}
         />
         <StatCard
           title="Pending Withdrawals"
-          value={formatNumber(mockOverview.pending_withdrawals)}
+          value={formatNumber(overview?.pending_withdrawals || 0)}
           description="Requires action"
           icon={AlertCircle}
         />
       </div>
 
       {/* Charts and Details Section */}
-      <Tabs defaultValue="overview" className="space-y-4">
+      <Tabs defaultValue="overview?" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="overview?">Overview</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-4">
+        <TabsContent value="overview?" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Financial Activity</CardTitle>
@@ -124,7 +131,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={350}>
-                <AreaChart data={mockChartData}>
+                <AreaChart data={analytics}>
                   <defs>
                     <linearGradient
                       id="colorDeposits"
@@ -167,7 +174,7 @@ export default function DashboardPage() {
                     strokeDasharray="3 3"
                     className="stroke-muted"
                   />
-                  <XAxis dataKey="date" className="text-xs" />
+                  <XAxis dataKey="_id" className="text-xs" />
                   <YAxis className="text-xs" />
                   <Tooltip
                     contentStyle={{
@@ -205,7 +212,7 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {formatNumber(mockOverview.new_users_today)}
+                  {formatNumber(overview?.new_users_today || 0)}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   +20.1% from yesterday
@@ -221,7 +228,7 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {formatCurrency(mockOverview.total_deposit_amount)}
+                  {formatCurrency(overview?.total_deposit_amount || 0)}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   +5% from last week
@@ -237,7 +244,7 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {formatNumber(mockOverview.open_tickets)}
+                  {formatNumber(overview?.open_tickets || 0)}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   -2 from yesterday
@@ -275,12 +282,12 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={350}>
-                <BarChart data={mockChartData}>
+                <BarChart data={analytics}>
                   <CartesianGrid
                     strokeDasharray="3 3"
                     className="stroke-muted"
                   />
-                  <XAxis dataKey="date" className="text-xs" />
+                  <XAxis dataKey="_id" className="text-xs" />
                   <YAxis className="text-xs" />
                   <Tooltip
                     contentStyle={{

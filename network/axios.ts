@@ -1,7 +1,7 @@
 // axios.ts
 import axios, { AxiosError, isAxiosError } from "axios";
 import { enqueueSnackbar } from "notistack";
-export const baseUrl = "https://cristalpoint-api.onrender.com";
+export const baseUrl = "https://crystalpoint-api.onrender.com";
 interface customError {
   response: {
     data: {
@@ -12,12 +12,10 @@ interface customError {
 
 export const baseAxios = axios.create({
   baseURL: baseUrl,
+  withCredentials:true
 });
 
 baseAxios.interceptors.request.use((config) => {
-  // if (token) {
-  //    config.headers.Authorization = `Bearer ${token}`;
-  // }
   return config;
 });
 

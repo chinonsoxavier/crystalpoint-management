@@ -57,7 +57,7 @@ const statusConfig: Record<
 };
 
 const TicketType = ({ setActiveTabs }: TicketTypeProps) => {
-  const { activeTab, setActiveTab, tickets, fetchTickets } = useSupportStore();
+  const { activeTab, setActiveTab, tickets, fetchTickets,setShowTicketDetails } = useSupportStore();
 
   useEffect(() => {
     fetchTickets({ status: activeTab, page: 1, limit: 100 });
@@ -81,6 +81,7 @@ const TicketType = ({ setActiveTabs }: TicketTypeProps) => {
               onClick={() => {
                 setActiveTab(status as TicketStatus);
                 setActiveTabs("messages");
+                setShowTicketDetails(false);
               }}
               className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
                 isActive
@@ -93,15 +94,7 @@ const TicketType = ({ setActiveTabs }: TicketTypeProps) => {
                 {config.icon}
                 <span className="font-medium">{config.label}</span>
               </div>
-              <span
-                className={`px-2 py-1 rounded-full text-xs font-bold transition-all ${
-                  isActive
-                    ? `${config.badgeBg} ${config.badgeText}`
-                    : "bg-secondary text-secondary-foreground"
-                }`}
-              >
-                {count}
-              </span>
+            
             </Button>
           );
         })}
