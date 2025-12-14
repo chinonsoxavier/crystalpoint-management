@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { baseAxios } from "@/network/axios";
+import { axiosError, baseAxios } from "@/network/axios";
 import { enqueueSnackbar } from "notistack";
 
 interface IAdmin {
@@ -25,6 +25,7 @@ interface AdminManagementStore {
     email: string;
     username: string;
     password: string;
+    role: string;
   }) => Promise<void>;
   updateAdminStatus: (adminId: string, isActive: boolean) => Promise<void>;
 }
@@ -50,21 +51,23 @@ export const useAdminManagementStore = create<AdminManagementStore>()(
             admins: response.data?.data?.admins || [],
             isLoadingAdmins: false,
           });
+          console.log(response.data.data);
         } catch (error) {
           set({ isLoadingAdmins: false });
           console.log("Failed to fetch admins:", error);
-          enqueueSnackbar("Failed to fetch admins", { variant: "error" });
+        
         }
       },
 
       createAdmin: async (data) => {
         set({ isCreatingAdmin: true });
+        console.log(data);
         try {
           const response = await baseAxios.post("/admin/auth/create", data, {
             withCredentials: true,
           });
 
-          enqueueSnackbar("Admin created successfully", { variant: "success" });
+          enqueueSnackbar(response.data.message, { variant: "success" });
 
           // Refresh admins list
           get().fetchAdmins();
@@ -72,7 +75,7 @@ export const useAdminManagementStore = create<AdminManagementStore>()(
         } catch (error) {
           set({ isCreatingAdmin: false });
           console.log("Failed to create admin:", error);
-          enqueueSnackbar("Failed to create admin", { variant: "error" });
+          axiosError(error);
         }
       },
 
@@ -85,7 +88,7 @@ export const useAdminManagementStore = create<AdminManagementStore>()(
             { withCredentials: true }
           );
 
-          enqueueSnackbar("Admin status updated successfully", {
+          enqueueSnackbar(response.data.message, {
             variant: "success",
           });
 

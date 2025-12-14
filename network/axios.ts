@@ -5,14 +5,14 @@ export const baseUrl = "https://crystalpoint-api.onrender.com";
 interface customError {
   response: {
     data: {
-      message: string;
+      error: string;
     };
   };
 }
 
 export const baseAxios = axios.create({
   baseURL: baseUrl,
-  withCredentials:true
+  // withCredentials:true
 });
 
 baseAxios.interceptors.request.use((config) => {
@@ -20,7 +20,7 @@ baseAxios.interceptors.request.use((config) => {
 });
 
 const axiosError = (error: customError | unknown) => {
-  const msg = (error as customError)?.response?.data?.message;
+  const msg = (error as customError)?.response?.data?.error;
   console.log((error as customError)?.response?.data);
   enqueueSnackbar(msg, { variant: "error" });
   return msg;

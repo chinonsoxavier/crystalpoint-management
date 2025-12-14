@@ -6,6 +6,7 @@ import {
   faGear,
   faHeadphones,
   faMoneyCheckDollar,
+  faPerson,
   faShield,
   faWallet,
 } from "@fortawesome/free-solid-svg-icons";
@@ -30,12 +31,11 @@ const AdminSidemenu = () => {
   const navItems = [
     { label: "Dashboard", icon: faDashboard, link: "/admin" },
     { label: "Admin Management", icon: faShield, link: "/admin/management" },
-    { label: "Deposit", icon: faWallet, link: "/admin/deposit" },
-    { label: "Invest", icon: faDonate, link: "/admin/invest" },
+    { label: "Users", icon: faPerson, link: "/admin/users" },
+    { label: "Deposit", icon: faWallet, link: "/admin/deposits" },
     { label: "Withdraw", icon: faMoneyCheckDollar, link: "/admin/withdraw" },
-    { label: "Logout", icon: faDoorOpen },
     { label: "Help & Support", icon: faHeadphones, link: "/admin/support" },
-    { label: "Settings", icon: faGear, link: "/admin/settings" },
+    { label: "Logout", icon: faDoorOpen },
   ];
 
   return (

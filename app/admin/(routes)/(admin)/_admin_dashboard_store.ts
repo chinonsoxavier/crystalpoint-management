@@ -20,10 +20,20 @@ interface IDashboardOverview {
 //   [key: string]: ;
 // }
 
-// interface IAnalytics {
-//   period: string;
-//   [key: string]: any;
-// }
+interface IDeposit {
+    _id: string;
+    count: number;
+    totalAmount: number;
+}
+interface IAnalytics {
+  period: string;
+  user_registrations: {
+    _id: string;
+    count: number;
+  }[],
+  deposits:IDeposit [];
+  investments : IDeposit[];
+}
 
 interface IFinancialSummary {
   total_revenue: number;
@@ -41,7 +51,7 @@ interface AdminDashboardStore {
   // State
   overview: IDashboardOverview | null;
   recentActivities: [] | null;
-  analytics: [];
+  analytics: IAnalytics;
   financialSummary: IFinancialSummary | null;
   isLoadingOverview: boolean;
   isLoadingAnalytics: boolean;
@@ -53,13 +63,11 @@ interface AdminDashboardStore {
   fetchFinancialSummary: (startDate: string, endDate: string) => Promise<void>;
 }
 
-export const useAdminDashboardStore = create<AdminDashboardStore>()(
-  devtools(
-    (set) => ({
+export const useAdminDashboardStore = create<AdminDashboardStore>((set) => ({
       // Initial State
       overview: null,
       recentActivities: null,
-      analytics: [],
+      analytics: {} as IAnalytics,
       financialSummary: null,
       isLoadingOverview: false,
       isLoadingAnalytics: false,
@@ -70,7 +78,7 @@ export const useAdminDashboardStore = create<AdminDashboardStore>()(
         set({ isLoadingOverview: true });
         try {
           const response = await baseAxios.get("/admin/dashboard/overview", {
-            withCredentials: true
+            withCredentials: true,
           });
           set({
             overview: response.data?.data?.overview,
@@ -95,9 +103,12 @@ export const useAdminDashboardStore = create<AdminDashboardStore>()(
           );
           console.log(response.data.data);
           set({
-            analytics: response.data?.data,
+            analytics:response.data?.data,
             isLoadingAnalytics: false,
           });
+          return response.data.data;
+          console.log(response.data.data);
+
         } catch (error) {
           set({ isLoadingAnalytics: false });
           console.log("Failed to fetch analytics:", error);
@@ -124,7 +135,5 @@ export const useAdminDashboardStore = create<AdminDashboardStore>()(
           });
         }
       },
-    }),
-    { name: "admin-dashboard-store" }
-  )
-);
+    }  
+));
