@@ -6,6 +6,8 @@ import {
   faGear,
   faHeadphones,
   faMoneyCheckDollar,
+  faPerson,
+  faShield,
   faWallet,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
@@ -27,13 +29,13 @@ const AdminSidemenu = () => {
   }, [pathname]);
 
   const navItems = [
-    { label: "Dashboard", icon: faDashboard, link: "/user" },
-    { label: "Deposit", icon: faWallet, link: "/user/deposit" },
-    { label: "Invest", icon: faDonate, link: "/user/invest" },
-    { label: "Withdraw", icon: faMoneyCheckDollar, link: "/user/withdraw" },
+    { label: "Dashboard", icon: faDashboard, link: "/admin" },
+    { label: "Admin Management", icon: faShield, link: "/admin/management" },
+    { label: "Users", icon: faPerson, link: "/admin/users" },
+    { label: "Deposit", icon: faWallet, link: "/admin/deposits" },
+    { label: "Withdraw", icon: faMoneyCheckDollar, link: "/admin/withdraw" },
+    { label: "Help & Support", icon: faHeadphones, link: "/admin/support" },
     { label: "Logout", icon: faDoorOpen },
-    { label: "Help & Support", icon: faHeadphones, link: "/user/support" },
-    { label: "Settings", icon: faGear, link: "/user/settings" },
   ];
 
   return (
@@ -65,7 +67,7 @@ const AdminSidemenu = () => {
                   className={`w-full cursor-pointer flex items-center justify-between md:justify-between large:justify-start gap-3 px-4 py-2 rounded-lg transition-colors ${
                     isActive
                       ? "bg-transparent flex items-center justify-start w-full text-black dark:text-white"
-                      : "text-accent-text hover:text-primary"
+                      : "text-accent-text hover:text-[#0A8A9F]"
                   } ${!sideMenuOpen && "center"}`}
                 >
                   <div className="flex items-center gap-3 justify-start">

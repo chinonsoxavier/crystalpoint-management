@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-// import { Ticket, Reply, SupportStats, PaginationInfo } from "@/types/support";
 import { enqueueSnackbar } from "notistack";
 import { baseAxios } from "@/network/axios";
 
+
 interface ITicket {
-  id: string;
+  _id: string;
   user: string;
   subject: string;
   description: string;
@@ -16,6 +16,11 @@ interface ITicket {
 }
 
 interface IReply {
+  id: string;
+  ticket: string;
+  user: string;
+  isAdmin: true;
+  createdAt:string;
   message: string;
 }
 
@@ -25,15 +30,14 @@ interface ISupportStats {
   response_time: string;
 }
 
-// interface IPaginationInfo {}
 interface SupportState {
   // State
+  showTicketDetails: boolean;
   activeTab: "open" | "in_progress" | "resolved" | "closed";
   tickets: ITicket[];
   currentTicket: ITicket | null;
   replies: IReply[];
   stats: ISupportStats | null;
-  // pagination: IPaginationInfo | null;
 
   // Loading States
   isLoading: boolean;
@@ -48,12 +52,14 @@ interface SupportState {
     limit?: number;
     status?: string;
   }) => Promise<void>;
+  setShowTicketDetails: (showDetails:boolean) => Promise<void>;
   fetchTicketById: (id: string) => Promise<void>;
   createNewTicket: (data: {
     subject: string;
     description: string;
     priority: string;
   }) => Promise<boolean>;
+  handleTicketClick: (id: string) => void;
   replyToCurrentTicket: (message: string) => Promise<void>;
   closeCurrentTicket: () => Promise<void>;
   reopenCurrentTicket: (reason: string) => Promise<void>;
@@ -70,6 +76,7 @@ export const useSupportStore = create<SupportState>()(
       currentTicket: null,
       replies: [],
       stats: null,
+      showTicketDetails:false,
       // pagination: null,
       isLoading: false,
       isCreatingTicket: false,
@@ -77,8 +84,15 @@ export const useSupportStore = create<SupportState>()(
       isUpdatingTicket: false,
 
       // Actions
+      setShowTicketDetails:(showDetails)=>{
+          set({ showTicketDetails:showDetails});
+      },
       setActiveTab: (tab: "open" | "in_progress" | "resolved" | "closed") => {
         set({ activeTab: tab });
+      },
+      handleTicketClick: (id) => {
+        set({showTicketDetails:true});
+       useSupportStore.getState().fetchTicketById(id);
       },
       fetchTickets: async (params) => {
         set({ isLoading: true });
@@ -95,14 +109,14 @@ export const useSupportStore = create<SupportState>()(
           });
         } catch (error) {
           set({ isLoading: false });
-          console.log("failed too fetch tickets", error);
+          console.log("failed to fetch tickets", error);
         }
       },
 
       fetchTicketById: async (id) => {
         set({ isLoading: true });
         try {
-          const response = await baseAxios.get(`/support/${id}`, {
+          const response = await baseAxios.get(`/support/ticket/${id}`, {
             withCredentials: true,
           });
           set({
@@ -119,11 +133,6 @@ export const useSupportStore = create<SupportState>()(
       createNewTicket: async (data) => {
         set({ isCreatingTicket: true });
         try {
-          const dt = {
-            subject: "testing",
-            description: "testing description",
-            priority: "low",
-          };
           console.log(data);
           const res = await baseAxios.post(
             "/support/create-ticket",
@@ -155,12 +164,13 @@ export const useSupportStore = create<SupportState>()(
         set({ isReplying: true });
         try {
           const res = await baseAxios.post(
-            `/support/ticket/${get().currentTicket!.id}/${message}/reply`,
+            `/support/ticket/${get().currentTicket!._id}/reply`,
+            { message },
             { withCredentials: true }
           );
           enqueueSnackbar(res.data.message, { variant: "success" });
           // Refetch to show the new reply
-          get().fetchTicketById(get().currentTicket!.id);
+          get().fetchTicketById(get().currentTicket!._id);
           set({ isReplying: false });
         } catch (error) {
           set({ isReplying: false });
@@ -173,7 +183,8 @@ export const useSupportStore = create<SupportState>()(
         set({ isUpdatingTicket: true });
         try {
           const res = await baseAxios.patch(
-            `/support/ticket/${get().currentTicket!.id}/close`,
+            `/support/ticket/${get().currentTicket!._id}/close`,
+            {},
             { withCredentials: true }
           );
           enqueueSnackbar(res.data.message, { variant: "success" });
@@ -194,7 +205,7 @@ export const useSupportStore = create<SupportState>()(
         set({ isUpdatingTicket: true });
         try {
           const res = await baseAxios(
-            `/support/ticket/${get().currentTicket!.id}, ${reason}`,
+            `/support/ticket/${get().currentTicket!._id}, ${reason}`,
             { withCredentials: true }
           );
           enqueueSnackbar(res.data.message, { variant: "success" });

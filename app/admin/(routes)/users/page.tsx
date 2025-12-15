@@ -1,93 +1,104 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Search, ChevronLeft, ChevronRight, Edit, Eye } from "lucide-react"
-
-const mockUsers = [
-  {
-    id: "1",
-    username: "john_doe",
-    email: "john@example.com",
-    tier: 1,
-    balance: 5000,
-    status: "active",
-    joinDate: "2024-01-15",
-  },
-  {
-    id: "2",
-    username: "jane_smith",
-    email: "jane@example.com",
-    tier: 2,
-    balance: 15000,
-    status: "active",
-    joinDate: "2024-02-20",
-  },
-  {
-    id: "3",
-    username: "mike_wilson",
-    email: "mike@example.com",
-    tier: 3,
-    balance: 50000,
-    status: "active",
-    joinDate: "2024-01-05",
-  },
-  {
-    id: "4",
-    username: "sarah_jones",
-    email: "sarah@example.com",
-    tier: 1,
-    balance: 2500,
-    status: "inactive",
-    joinDate: "2024-03-10",
-  },
-  {
-    id: "5",
-    username: "alex_brown",
-    email: "alex@example.com",
-    tier: 2,
-    balance: 12000,
-    status: "active",
-    joinDate: "2024-02-28",
-  },
-]
-
+import { useEffect, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Search, ChevronLeft, ChevronRight, Edit, Eye } from "lucide-react";
+import { useAdminUsersStore } from "./admin_users_store";
+import { formatDate } from "@/utility/format_date";
+type IDepositType = "deposit" | 'withdraw';
+type ITier = "tier1" | "tier2" | "tier3";
 export default function UsersPage() {
-  const [search, setSearch] = useState("")
-  const [tierFilter, setTierFilter] = useState("all")
-  const [selectedUser, setSelectedUser] = useState<(typeof mockUsers)[0] | null>(null)
-  const [showUserModal, setShowUserModal] = useState(false)
-  const [showEditModal, setShowEditModal] = useState(false)
-
-  const filteredUsers = mockUsers.filter(
+  const { updateUserBalance,updateUserTier,updateUserStatus,isUpdatingBalance,isUpdatingTier,isUpdatingStatus, users, fetchUsers } = useAdminUsersStore();
+  const [search, setSearch] = useState("");
+  const [selectedUser, setSelectedUser] = useState<(typeof users)[0] | null>(
+    null
+  );
+  const [tierFilter, setTierFilter] = useState<ITier>('tier1');
+  const [depositType, setDepositType] = useState<IDepositType>("deposit");
+  const [showUserModal, setShowUserModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [page, setPage] = useState();
+  const filteredUsers = users.filter(
     (user) =>
       (user.username.toLowerCase().includes(search.toLowerCase()) ||
         user.email.toLowerCase().includes(search.toLowerCase())) &&
-      (tierFilter === "all" || user.tier.toString() === tierFilter),
-  )
+      (tierFilter === "tier1" || user.tier.toString() === tierFilter)
+  );
+
+  
+  useEffect(() => {
+    fetchUsers({ page: page, limit: 100 });
+  }, []);
+
+const handleSubmit = (e:React.FormEvent)=>{
+  e.preventDefault();
+}
+
+        const handleTierFilterChange = (value: string) => {
+          // Type assertion to ensure the value is of the correct type
+          setTierFilter(value as ITier);
+        };
+
+        const handleDepositTypeChange = (value: string) => {
+          // Type assertion to ensure the value is of the correct type
+          setDepositType(value as IDepositType);
+        };
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Users Management</h1>
-        <p className="text-muted-foreground mt-1">Manage user accounts, balance, and tier settings</p>
+        <p className="text-muted-foreground mt-1">
+          Manage user accounts, balance, and tier settings
+        </p>
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle>Users</CardTitle>
-          <CardDescription>View and manage all registered users</CardDescription>
+          <CardDescription>
+            View and manage all registered users
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Filters */}
           <div className="flex gap-4 flex-col sm:flex-row">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
+              <Search
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
+                size={18}
+              />
               <Input
                 placeholder="Search by username or email..."
                 value={search}
@@ -95,7 +106,7 @@ export default function UsersPage() {
                 className="pl-10"
               />
             </div>
-            <Select value={tierFilter} onValueChange={setTierFilter}>
+            <Select value={tierFilter} onValueChange={handleTierFilterChange}>
               <SelectTrigger className="w-full sm:w-40">
                 <SelectValue placeholder="Filter by tier" />
               </SelectTrigger>
@@ -116,41 +127,34 @@ export default function UsersPage() {
                   <TableHead>Username</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Tier</TableHead>
-                  <TableHead>Balance</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>Deposited</TableHead>
                   <TableHead>Join Date</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredUsers.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell className="font-medium">{user.username}</TableCell>
+                {filteredUsers.map((user,index) => (
+                  <TableRow key={index}>
+                    <TableCell className="font-medium">
+                      {user.username}
+                    </TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>
                       <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold">
                         Tier {user.tier}
                       </span>
                     </TableCell>
-                    <TableCell>${user.balance.toLocaleString()}</TableCell>
-                    <TableCell>
-                      <span
-                        className={`px-2 py-1 rounded text-xs font-semibold ${
-                          user.status === "active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
-                        }`}
-                      >
-                        {user.status}
-                      </span>
-                    </TableCell>
-                    <TableCell>{user.joinDate}</TableCell>
+                    <TableCell>${user.balance.deposit ?? 0}</TableCell>
+
+                    <TableCell>{user.createdAt}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => {
-                            setSelectedUser(user)
-                            setShowUserModal(true)
+                            setSelectedUser(user);
+                            setShowUserModal(true);
                           }}
                         >
                           <Eye size={16} />
@@ -159,8 +163,8 @@ export default function UsersPage() {
                           size="sm"
                           variant="outline"
                           onClick={() => {
-                            setSelectedUser(user)
-                            setShowEditModal(true)
+                            setSelectedUser(user);
+                            setShowEditModal(true);
                           }}
                         >
                           <Edit size={16} />
@@ -175,12 +179,18 @@ export default function UsersPage() {
 
           {/* Pagination */}
           <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">Showing {filteredUsers.length} users</p>
+            <p className="text-sm text-muted-foreground">
+              Showing {filteredUsers.length} users
+            </p>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" disabled>
                 <ChevronLeft size={16} />
               </Button>
-              <Button variant="outline" size="sm">
+              <Button
+                // onClick={() => setPage(page + 1)}
+                variant="outline"
+                size="sm"
+              >
                 <ChevronRight size={16} />
               </Button>
             </div>
@@ -193,7 +203,9 @@ export default function UsersPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>User Details</DialogTitle>
-            <DialogDescription>View user information and statistics</DialogDescription>
+            <DialogDescription>
+              View user information and statistics
+            </DialogDescription>
           </DialogHeader>
           {selectedUser && (
             <div className="space-y-4">
@@ -210,20 +222,21 @@ export default function UsersPage() {
                 <p className="font-semibold">Tier {selectedUser.tier}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Balance</p>
-                <p className="font-semibold">${selectedUser.balance.toLocaleString()}</p>
+                <p className="text-sm text-muted-foreground">Deposited</p>
+                <p className="font-semibold">${selectedUser.balance.deposit}</p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Total Deposits</p>
-                <p className="font-semibold">${(selectedUser.balance * 1.5).toLocaleString()}</p>
+                <p className="font-semibold">
+                  ${selectedUser.balance.deposit ?? 0}
+                </p>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Total Withdrawals</p>
-                <p className="font-semibold">${Math.round(selectedUser.balance * 0.5).toLocaleString()}</p>
-              </div>
+
               <div>
                 <p className="text-sm text-muted-foreground">Member Since</p>
-                <p className="font-semibold">{selectedUser.joinDate}</p>
+                <p className="font-semibold">
+                  {formatDate(selectedUser.createdAt)}
+                </p>
               </div>
             </div>
           )}
@@ -235,15 +248,23 @@ export default function UsersPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit User</DialogTitle>
-            <DialogDescription>Update user balance, status, or tier</DialogDescription>
+            <DialogDescription>
+              Update user balance, status, or tier
+            </DialogDescription>
           </DialogHeader>
           {selectedUser && (
-            <div className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit} >  
               <div>
-                <label className="text-sm font-medium">Add/Remove Balance</label>
+                <label className="text-sm font-medium">
+                  Add/Remove Balance
+                </label>
                 <div className="flex gap-2 mt-2">
-                  <Input type="number" placeholder="Amount" className="flex-1" />
-                  <Select defaultValue="deposit">
+                  <Input
+                    type="number"
+                    placeholder="Amount"
+                    className="flex-1"
+                  />
+                  <Select value={depositType} onValueChange={handleDepositTypeChange}>
                     <SelectTrigger className="w-40">
                       <SelectValue />
                     </SelectTrigger>
@@ -258,41 +279,35 @@ export default function UsersPage() {
 
               <div>
                 <label className="text-sm font-medium">Update Tier</label>
-                <Select defaultValue={selectedUser.tier.toString()}>
+                <Select onValueChange={handleTierFilterChange} value={selectedUser.tier.toString()}>
                   <SelectTrigger className="mt-2">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="1">Tier 1</SelectItem>
-                    <SelectItem value="2">Tier 2</SelectItem>
-                    <SelectItem value="3">Tier 3</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium">Status</label>
-                <Select defaultValue={selectedUser.status}>
-                  <SelectTrigger className="mt-2">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
+                    <SelectItem value="tier1">Tier 1</SelectItem>
+                    <SelectItem value="tier2">Tier 2</SelectItem>
+                    <SelectItem value="tier3">Tier 3</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="flex gap-2 pt-4">
-                <Button variant="outline" onClick={() => setShowEditModal(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={() => setShowEditModal(false)}>Save Changes</Button>
+                <DialogClose>
+                  <Button
+                    variant="outline"
+                  >
+                    Cancel
+                  </Button>
+                </DialogClose>
+
+                  <Button>
+                    Save Changes
+                  </Button>
               </div>
-            </div>
+            </form>
           )}
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

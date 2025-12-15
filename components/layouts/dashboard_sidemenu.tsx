@@ -406,7 +406,7 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
                     className={`w-full cursor-pointer flex items-center justify-between md:justify-between large:justify-start gap-3 px-4 py-2 rounded-lg transition-colors ${
                       isActive
                         ? "bg-transparent flex items-center justify-start w-full text-black dark:text-white"
-                        : "text-accent-text hover:text-primary"
+                        : "text-accent-text hover:text-[#0A8A9F]"
                     } ${!sideMenuOpen && "center"}`}
                   >
                     {linkContent}

@@ -11,7 +11,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   //   const menuOpen = useStore((state: any) => state.menuOpen);
 
   return (
-    <AuthGuard requireAuth={true}>
+    <AuthGuard>
       <main className={`relative bg-accent overflow-hidden`}>
         {/* header */}
         <DashboardHeader />

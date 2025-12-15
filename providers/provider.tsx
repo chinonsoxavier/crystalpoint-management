@@ -10,7 +10,7 @@ import useSettingsStore from "@/app/user/settings/_settings_store";
 
 
 export function Providers({ children }: { children: React.ReactNode }) {
-    const {loadUser} = userStore();
+    // const {loadUser} = userStore();
   useEffect(() => {
     const checkServerHealth = async () => {
       try {
@@ -21,7 +21,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       }
     }
     checkServerHealth();
-    loadUser(); 
+    // loadUser(); 
   }, []);
   const [queryClient] = useState( 
     () =>
