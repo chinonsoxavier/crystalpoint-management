@@ -4,7 +4,7 @@ import { axiosError, baseAxios } from "@/network/axios";
 import { enqueueSnackbar } from "notistack";
 import { isAxiosError } from "axios";
 
-interface IUserProfile {
+interface IAdminProfile {
   username: string;
   email: string;
   tier: number;
@@ -22,11 +22,8 @@ interface IUserProfile {
 }
 
 interface IProfile {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  country: string;
-  dateOfBirth: string;
+  username: string;
+  email: string;
 }
 
 interface IPrefrences {
@@ -39,42 +36,40 @@ interface IPrefrences {
 
 
 
-interface ISettingsStore {
-  profile:IUserProfile;
+interface IAdminSettingsStore {
+  profile:IAdminProfile | null;
     isLoading:boolean;
     isUpdateLoading:boolean;
-    getUserDetails:()=>Promise<void>;
-    updateUserDetail:({firstName,lastName,phone,dateOfBirth,country}:IProfile)=>Promise<void>;
+    getAdminDetails:()=>Promise<void>;
+    updateAdminDetail:({email,username}:IProfile)=>Promise<void>;
     updatePassword: (currentPassword:string,newPassword: string, comfirmPassword: string) => Promise<void>;
 }
 
-const useSettingsStore = create<ISettingsStore>((set) => ({
+const useAdminSettingsStore = create<IAdminSettingsStore>((set) => ({
   isLoading: false,
   isUpdateLoading:false,
-  profile: {} as IUserProfile,
-  getUserDetails: async () => {
+  profile: null,
+  getAdminDetails: async () => {
     try {
-      const res = await baseAxios.get("/settings/profile", {
+      const res = await baseAxios.get("/admin/auth/me", {
         withCredentials: true,
       });
-      set({profile:res.data.data.user});
-      return res.data.data.user;
+      set({profile:res.data.data.admin});
+      console.log(res.data.data.admin);
+      return res.data.data.admin;
     } catch (error) {
       console.log(error);
     }
   },
-  updateUserDetail: async ({
-    firstName,
-    lastName,
-    phone,
-    dateOfBirth,
-    country,
+  updateAdminDetail: async ({
+    email,
+    username,
   }: IProfile) => {
     set({isUpdateLoading:true});
     try {
-      const res = await baseAxios.patch(
-        "/settings/profile",
-        {firstName,lastName,phone,country,dateOfBirth},
+      const res = await baseAxios.put(
+        "/admin/auth/profile",
+        {email,username},
         { withCredentials: true }
       );
       enqueueSnackbar(res?.data.message, { variant: "success" });
@@ -93,8 +88,8 @@ const useSettingsStore = create<ISettingsStore>((set) => ({
   ) => {
     set({ isLoading: true });
     try {
-      const res = await baseAxios.post(
-        `/auth/change-password`,
+      const res = await baseAxios.put(
+        `/admin/auth/change-password`,
         {
           currentPassword: currentPassword,
           newPassword: newPassword,
@@ -123,4 +118,4 @@ const useSettingsStore = create<ISettingsStore>((set) => ({
     }
   },
 }));
-export default useSettingsStore;
+export default useAdminSettingsStore;

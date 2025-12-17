@@ -4,7 +4,7 @@ import { axiosError, baseAxios } from "@/network/axios";
 import { enqueueSnackbar } from "notistack";
 
 interface IAdmin {
-  id: string;
+  _id: string;
   email: string;
   username: string;
   role: string;
@@ -84,7 +84,7 @@ export const useAdminManagementStore = create<AdminManagementStore>()(
         try {
           const response = await baseAxios.put(
             `/admin/auth/${adminId}/status`,
-            { isActive },
+            {isActive:isActive },
             { withCredentials: true }
           );
 
@@ -95,16 +95,14 @@ export const useAdminManagementStore = create<AdminManagementStore>()(
           // Update local state
           set((state) => ({
             admins: state.admins.map((admin) =>
-              admin.id === adminId ? { ...admin, isActive } : admin
+              admin._id === adminId ? { ...admin, isActive } : admin
             ),
             isUpdatingAdminStatus: false,
           }));
         } catch (error) {
           set({ isUpdatingAdminStatus: false });
           console.log("Failed to update admin status:", error);
-          enqueueSnackbar("Failed to update admin status", {
-            variant: "error",
-          });
+         axiosError(error);
         }
       },
     }),

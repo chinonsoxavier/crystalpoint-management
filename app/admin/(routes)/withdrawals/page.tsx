@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,6 +9,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Search, ChevronLeft, ChevronRight, Check, X } from "lucide-react"
+import { useAdminWithdrawalsStore } from "./admin_withdrawals_store";
+type Period = "7d" | "30d" | "90d" | "1y";
+
 
 const mockWithdrawals = [
   {
@@ -60,17 +63,31 @@ const mockWithdrawals = [
 ]
 
 export default function WithdrawalsPage() {
+  const {fetchWithdrawalStats,fetchWithdrawals,withdrawalStats,withdrawals} = useAdminWithdrawalsStore();
   const [search, setSearch] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [selectedWithdrawal, setSelectedWithdrawal] = useState<(typeof mockWithdrawals)[0] | null>(null)
+  const [page, setPage] = useState(1);
+      const [period, setPeriod] = useState<Period>("1y");
+  const [methodFilter, setMethodFilter] = useState<
+    "bitcoin" | "ethereum" | "usdt" | "bank_transfer" | undefined
+  >();
+  const [statusFilter, setStatusFilter] = useState<
+    "pending" | "approved" | "processed" | "rejected" | undefined
+  >();
+  const [selectedWithdrawal, setSelectedWithdrawal] = useState<(typeof withdrawals)[0] | null>(null)
   const [showActionModal, setShowActionModal] = useState(false)
-  const [action, setAction] = useState<"approve" | "reject" | "process" | null>(null)
+  const [action, setAction] = useState<"approve" | "reject" | "process" | null>(null);
 
-  const filteredWithdrawals = mockWithdrawals.filter(
-    (withdrawal) =>
-      (withdrawal.username.toLowerCase().includes(search.toLowerCase()) || withdrawal.id.includes(search)) &&
-      (statusFilter === "all" || withdrawal.status === statusFilter),
-  )
+  useEffect(() => {
+fetchWithdrawalStats(period);
+fetchWithdrawals({page:1,status:statusFilter,method:methodFilter})
+  }, [action,statusFilter])
+  
+
+  // const filteredWithdrawals = mockWithdrawals.filter(
+  //   (withdrawal) =>
+  //     (withdrawal.username.toLowerCase().includes(search.toLowerCase()) || withdrawal.id.includes(search)) &&
+  //     (statusFilter === "all" || withdrawal.status === statusFilter),
+  // )
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -91,32 +108,75 @@ export default function WithdrawalsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Withdrawals Management</h1>
-        <p className="text-muted-foreground mt-1">Process and manage user withdrawal requests</p>
+        <p className="text-muted-foreground mt-1">
+          Process and manage user withdrawal requests
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
+      <Select
+        value={period}
+        onValueChange={(value) => setPeriod(value as Period)}
+      >
+        <SelectTrigger className="w-full sm:w-40">
+          <SelectValue placeholder="Filter by periods" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Periods</SelectItem>
+          <SelectItem value="7d">7 Days</SelectItem>
+          <SelectItem value="30d">30 Days</SelectItem>
+          <SelectItem value="90d">90 Days</SelectItem>
+          <SelectItem value="1y">1 Year</SelectItem>
+        </SelectContent>
+      </Select>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-5 w-full">
+        <Card className="">
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground">Total Withdrawals</p>
-            <p className="text-2xl font-bold mt-2">$27,800</p>
+            <p className="text-2xl font-bold mt-2">
+              ${withdrawalStats?.overview.total_withdrawals ?? 0}
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground">Pending</p>
-            <p className="text-2xl font-bold mt-2">$3,800</p>
+            <p className="text-2xl font-bold mt-2">
+              ${withdrawalStats?.overview.pending_withdrawals}
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground">Approved</p>
-            <p className="text-2xl font-bold mt-2">$5,000</p>
+            <p className="text-2xl font-bold mt-2">
+              ${withdrawalStats?.overview.approved_withdrawals}
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground">Processed</p>
-            <p className="text-2xl font-bold mt-2">$15,000</p>
+            <p className="text-2xl font-bold mt-2">
+              ${withdrawalStats?.overview?.processed_withdrawals}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-sm text-muted-foreground">Average</p>
+            <p className="text-2xl font-bold mt-2">
+              ${withdrawalStats?.overview?.average_withdrawal}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-sm text-muted-foreground">Total Processed</p>
+            <p className="text-2xl font-bold mt-2">
+              ${withdrawalStats?.overview?.total_processed_amount}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -130,7 +190,10 @@ export default function WithdrawalsPage() {
           {/* Filters */}
           <div className="flex gap-4 flex-col sm:flex-row">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
+              <Search
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
+                size={18}
+              />
               <Input
                 placeholder="Search by username or withdrawal ID..."
                 value={search}
@@ -138,7 +201,19 @@ export default function WithdrawalsPage() {
                 className="pl-10"
               />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <Select
+              value={statusFilter}
+              onValueChange={(value) =>
+                setStatusFilter(
+                  value as
+                    | "pending"
+                    | "approved"
+                    | "processed"
+                    | "rejected"
+                    | undefined
+                )
+              }
+            >
               <SelectTrigger className="w-full sm:w-40">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
@@ -150,6 +225,31 @@ export default function WithdrawalsPage() {
                 <SelectItem value="rejected">Rejected</SelectItem>
               </SelectContent>
             </Select>
+
+            <Select
+              value={methodFilter}
+              onValueChange={(value) =>
+                setMethodFilter(
+                  value as
+                    | "bitcoin"
+                    | "ethereum"
+                    | "usdt"
+                    | "bank_transfer"
+                    | undefined
+                )
+              }
+            >
+              <SelectTrigger className="w-full sm:w-40">
+                <SelectValue placeholder="Filter by method" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Methods</SelectItem>
+                <SelectItem value="bitcoin">Bitcoin</SelectItem>
+                <SelectItem value="ethereum">Ethereum</SelectItem>
+                <SelectItem value="usdt">Usdt</SelectItem>
+                <SelectItem value="bank_transfer">Bank Transfer</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Table */}
@@ -158,25 +258,32 @@ export default function WithdrawalsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Withdrawal ID</TableHead>
+                  <TableHead>Wallet address</TableHead>
                   <TableHead>User</TableHead>
                   <TableHead>Amount</TableHead>
-                  <TableHead>Method</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredWithdrawals.map((withdrawal) => (
-                  <TableRow key={withdrawal.id}>
-                    <TableCell className="font-mono text-sm">{withdrawal.id}</TableCell>
-                    <TableCell>{withdrawal.username}</TableCell>
-                    <TableCell className="font-bold">${withdrawal.amount.toLocaleString()}</TableCell>
-                    <TableCell className="capitalize">{withdrawal.method.replace("_", " ")}</TableCell>
-                    <TableCell>
-                      <Badge className={getStatusColor(withdrawal.status)}>{withdrawal.status}</Badge>
+                {withdrawals.map((withdrawal) => (
+                  <TableRow key={withdrawal._id}>
+                    <TableCell className="font-mono text-sm">
+                      {withdrawal._id}
                     </TableCell>
-                    <TableCell>{withdrawal.date}</TableCell>
+                    <TableCell>{withdrawal.walletAddress}</TableCell>
+                    <TableCell>{withdrawal.user.username}</TableCell>
+                    <TableCell className="font-bold">
+                      ${withdrawal.amount.toLocaleString()}
+                    </TableCell>
+
+                    <TableCell>
+                      <Badge className={getStatusColor(withdrawal.status)}>
+                        {withdrawal.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{withdrawal.processedAt}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
                         {withdrawal.status === "pending" && (
@@ -186,9 +293,9 @@ export default function WithdrawalsPage() {
                               variant="outline"
                               className="text-green-600 hover:text-green-700 bg-transparent"
                               onClick={() => {
-                                setSelectedWithdrawal(withdrawal)
-                                setAction("approve")
-                                setShowActionModal(true)
+                                setSelectedWithdrawal(withdrawal);
+                                setAction("approve");
+                                setShowActionModal(true);
                               }}
                             >
                               <Check size={16} />
@@ -198,9 +305,9 @@ export default function WithdrawalsPage() {
                               variant="outline"
                               className="text-red-600 hover:text-red-700 bg-transparent"
                               onClick={() => {
-                                setSelectedWithdrawal(withdrawal)
-                                setAction("reject")
-                                setShowActionModal(true)
+                                setSelectedWithdrawal(withdrawal);
+                                setAction("reject");
+                                setShowActionModal(true);
                               }}
                             >
                               <X size={16} />
@@ -212,9 +319,9 @@ export default function WithdrawalsPage() {
                             size="sm"
                             variant="outline"
                             onClick={() => {
-                              setSelectedWithdrawal(withdrawal)
-                              setAction("process")
-                              setShowActionModal(true)
+                              setSelectedWithdrawal(withdrawal);
+                              setAction("process");
+                              setShowActionModal(true);
                             }}
                           >
                             Mark Processed
@@ -230,12 +337,27 @@ export default function WithdrawalsPage() {
 
           {/* Pagination */}
           <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">Showing {filteredWithdrawals.length} withdrawals</p>
+            <p className="text-sm text-muted-foreground">
+              Showing {withdrawals.length} withdrawals
+            </p>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" disabled>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page < 2}
+                onClick={() => {
+                  setPage(page - 1);
+                }}
+              >
                 <ChevronLeft size={16} />
               </Button>
-              <Button variant="outline" size="sm">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setPage(page + 1);
+                }}
+              >
                 <ChevronRight size={16} />
               </Button>
             </div>
@@ -251,33 +373,36 @@ export default function WithdrawalsPage() {
               {action === "approve"
                 ? "Approve Withdrawal"
                 : action === "reject"
-                  ? "Reject Withdrawal"
-                  : "Process Withdrawal"}
+                ? "Reject Withdrawal"
+                : "Process Withdrawal"}
             </DialogTitle>
             <DialogDescription>
               {action === "approve"
                 ? "Approve this withdrawal request"
                 : action === "reject"
-                  ? "Reject this withdrawal request"
-                  : "Mark withdrawal as processed"}
+                ? "Reject this withdrawal request"
+                : "Mark withdrawal as processed"}
             </DialogDescription>
           </DialogHeader>
           {selectedWithdrawal && (
             <div className="space-y-4">
               <div className="bg-secondary p-4 rounded">
-                <p className="text-sm text-muted-foreground">Withdrawal Amount</p>
-                <p className="text-2xl font-bold">${selectedWithdrawal.amount.toLocaleString()}</p>
+                <p className="text-sm text-muted-foreground">
+                  Withdrawal Amount
+                </p>
+                <p className="text-2xl font-bold">
+                  ${selectedWithdrawal.amount.toLocaleString()}
+                </p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">User</p>
-                <p className="font-semibold">{selectedWithdrawal.username}</p>
+                <p className="font-semibold">{selectedWithdrawal.user.username}</p>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Method</p>
-                <p className="font-semibold capitalize">{selectedWithdrawal.method.replace("_", " ")}</p>
-              </div>
+            
 
-              {action === "reject" && <Input placeholder="Reason for rejection" />}
+              {action === "reject" && (
+                <Input placeholder="Reason for rejection" />
+              )}
               {action === "process" && (
                 <>
                   <Input placeholder="Transaction Hash" />
@@ -286,7 +411,10 @@ export default function WithdrawalsPage() {
               )}
 
               <div className="flex gap-2 pt-4">
-                <Button variant="outline" onClick={() => setShowActionModal(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowActionModal(false)}
+                >
                   Cancel
                 </Button>
                 <Button
@@ -295,11 +423,16 @@ export default function WithdrawalsPage() {
                     action === "approve"
                       ? "bg-green-600 hover:bg-green-700"
                       : action === "reject"
-                        ? "bg-red-600 hover:bg-red-700"
-                        : "bg-blue-600 hover:bg-blue-700"
+                      ? "bg-red-600 hover:bg-red-700"
+                      : "bg-blue-600 hover:bg-blue-700"
                   }
                 >
-                  {action === "approve" ? "Approve" : action === "reject" ? "Reject" : "Process"} Withdrawal
+                  {action === "approve"
+                    ? "Approve"
+                    : action === "reject"
+                    ? "Reject"
+                    : "Process"}{" "}
+                  Withdrawal
                 </Button>
               </div>
             </div>
@@ -307,5 +440,5 @@ export default function WithdrawalsPage() {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

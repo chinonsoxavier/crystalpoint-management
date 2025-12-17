@@ -96,9 +96,7 @@ export default function SettingsPage() {
   const handlePasswordUpdate = (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      enqueueSnackbar("New password and confirm password do not match!", {
-        variant: "error",
-      });
+    
       return;
     }
     updatePassword(
@@ -109,7 +107,6 @@ export default function SettingsPage() {
   };
 
   const handleAccountUpdate = async () => {
-    try {
       const { firstName, lastName, phone, country, dateOfBirth } = accountData;
 
       await updateUserDetail({
@@ -120,15 +117,6 @@ export default function SettingsPage() {
         dateOfBirth,
       });
 
-      enqueueSnackbar("Account updated successfully!", {
-        variant: "success",
-      });
-    } catch (error) {
-      console.error("Error updating account:", error);
-      enqueueSnackbar("Failed to update account. Please try again.", {
-        variant: "error",
-      });
-    }
   };
 
 

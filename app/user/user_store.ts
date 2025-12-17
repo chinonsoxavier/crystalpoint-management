@@ -16,12 +16,12 @@ interface IUserBalance {
   bonus: number;
 }
 // Types
-interface IUser {
+export interface IUser {
   email: string;
   username: string;
   profile: IUserProfile;
   balance: IUserBalance;
-  id: string;
+  _id: string;
 }
 
 interface ILogin {

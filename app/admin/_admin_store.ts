@@ -23,10 +23,13 @@ interface UserStore {
   errorMessage?: string;
 
   // Actions
+  updateAdminUsername: (username: string) => void;
+  updateAdminEmail: (email: string) => void;
   toggleSideMenuOpen: () => void;
   closeSideMenu: () => void;
   loadUser: () => Promise<void>;
 
+  
   login: ({ username, password }: ILogin) => Promise<string | undefined>;
 
   logout: () => Promise<string | undefined>;
@@ -44,6 +47,19 @@ const useAdminStore = create<UserStore>((set) => ({
     set((state) => ({ sideMenuOpen: !state.sideMenuOpen })),
 
   closeSideMenu: () => set({ sideMenuOpen: false }),
+
+  updateAdminEmail: (email) => {
+    set((state) => ({
+      admin: state.admin ? { ...state.admin, email } : undefined,
+    }));
+  },
+
+  updateAdminUsername: (username) => {
+    set((state) => ({
+      admin: state.admin ? { ...state.admin, username } : undefined,
+    }));
+  },
+
   // LOGIN
   login: async ({ username, password }: ILogin) => {
     try {

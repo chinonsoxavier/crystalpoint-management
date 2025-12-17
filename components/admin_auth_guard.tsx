@@ -1,26 +1,52 @@
-// components/admin-auth-wrapper.tsx
+// In admin-auth-wrapper.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import useAdminStore from "@/app/admin/_admin_store";
+import { enqueueSnackbar } from "notistack";
+
+// Define a role hierarchy for easy comparison
+const ROLE_HIERARCHY = {
+  super_admin: 3,
+  admin: 2,
+  moderator: 1,
+} as const;
+
+type AdminRole = keyof typeof ROLE_HIERARCHY;
 
 interface AdminAuthWrapperProps {
   children: React.ReactNode;
+  // Add a prop to specify the required role for this route
+  requiredRole?: AdminRole;
 }
 
-const AdminAuthGuard = ({ children }: AdminAuthWrapperProps) => {
+const AdminAuthGuard = ({ children, requiredRole }: AdminAuthWrapperProps) => {
   const router = useRouter();
   const pathname = usePathname();
-  const { authStatus, loadUser } = useAdminStore();
+  const { authStatus, loadUser, admin } = useAdminStore();
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Define the public route for admin authentication
   const adminAuthRoute = "/admin/auth";
   const isPublicRoute = pathname.startsWith(adminAuthRoute);
 
+  // Helper function to check if the user has the required role
+  const hasRequiredRole = () => {
+    // If no role is required, any authenticated user can access
+    if (!requiredRole) return true;
+
+    // If user is not logged in, they don't have the role
+    if (!admin) return false;
+
+    // Compare the user's role level with the required role level
+    const userRoleLevel = ROLE_HIERARCHY[admin.role as AdminRole];
+    const requiredRoleLevel = ROLE_HIERARCHY[requiredRole];
+
+    return userRoleLevel >= requiredRoleLevel;
+  };
+
   useEffect(() => {
-    // This effect runs once on component mount to initialize the user session.
     let mounted = true;
     const initializeAuth = async () => {
       try {
@@ -28,7 +54,6 @@ const AdminAuthGuard = ({ children }: AdminAuthWrapperProps) => {
       } catch (error) {
         console.error("Failed to load admin user:", error);
       } finally {
-        // Mark as initialized regardless of success or failure
         if (mounted) {
           setIsInitialized(true);
         }
@@ -38,48 +63,46 @@ const AdminAuthGuard = ({ children }: AdminAuthWrapperProps) => {
     initializeAuth();
 
     return () => {
-      mounted = false; // Cleanup to prevent state updates on unmounted component
+      mounted = false;
     };
   }, [loadUser]);
 
   useEffect(() => {
-    // This effect handles redirections based on auth status.
-    // It only runs after the initial auth check is complete.
-    if (!isInitialized) {
-      return;
-    }
+    if (!isInitialized) return;
 
-    // If the user is authenticated and trying to access the login page...
+    // Redirect authenticated user from login page
     if (authStatus === "authenticated" && isPublicRoute) {
-      console.log(
-        "Admin is authenticated, redirecting from auth page to dashboard..."
-      );
-      console.log(authStatus)
-      router.push("/admin"); // Redirect to the main admin dashboard
+      router.push("/admin");
       return;
     }
 
-    // If the user is NOT authenticated and trying to access a protected admin route...
+    // Redirect unauthenticated user from protected routes
     if (authStatus !== "authenticated" && !isPublicRoute) {
-      console.log("Admin is not authenticated, redirecting to login page...");
-      router.push(adminAuthRoute); // Redirect to the admin login page
+      router.push(adminAuthRoute);
       return;
     }
-  }, [authStatus, isInitialized, isPublicRoute, router]);
 
-  // 2. If the user is authenticated, render the children (the protected admin page).
-  if (authStatus === "authenticated") {
+    // NEW: Redirect user if they don't have the required role
+    if (authStatus === "authenticated" && requiredRole && !hasRequiredRole()) {
+      enqueueSnackbar("You do not have permission to access this page.", {
+        variant: "error",
+      });
+      router.push("/admin"); // Redirect to a default page they can access
+      return;
+    }
+  }, [authStatus, isInitialized, isPublicRoute, router, admin, requiredRole]);
+
+  // Render children only if authenticated and has the required role
+  if (authStatus === "authenticated" && hasRequiredRole()) {
     return <>{children}</>;
   }
 
-  // 3. If the user is not authenticated, render the children (the public login page).
-  // This case is specifically for the `/admin/auth` route.
+  // Render public pages (like login)
   if (isPublicRoute) {
     return <>{children}</>;
   }
 
-  // 4. Fallback: If none of the above conditions are met (e.g., an unauthenticated user
-  // on a protected route waiting for redirect), show the loader.
+  // Fallback for unauthorized users on protected routes
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>

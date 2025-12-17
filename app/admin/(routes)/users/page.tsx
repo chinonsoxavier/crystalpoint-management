@@ -33,47 +33,147 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Search, ChevronLeft, ChevronRight, Edit, Eye } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import {
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  Edit,
+  Eye,
+  Crown,
+  Star,
+  Shield,
+} from "lucide-react";
 import { useAdminUsersStore } from "./admin_users_store";
 import { formatDate } from "@/utility/format_date";
-type IDepositType = "deposit" | 'withdraw';
-type ITier = "tier1" | "tier2" | "tier3";
+
+type IDepositType = "deposit" | "bonus";
+type ITierFilter = "all" | "1" | "2" | "3";
+type ITierString = "1" | "2" | "3" | undefined;
+
+// Tier information for display
+const tierInfo = {
+  "1": {
+    name: "Tier 1",
+    icon: Shield,
+    color: "bg-gray-100 text-gray-800",
+    borderColor: "border-gray-300",
+  },
+  "2": {
+    name: "Tier 2",
+    icon: Star,
+    color: "bg-blue-100 text-blue-800",
+    borderColor: "border-blue-300",
+  },
+  "3": {
+    name: "Tier 3",
+    icon: Crown,
+    color: "bg-purple-100 text-purple-800",
+    borderColor: "border-purple-300",
+  },
+};
+
 export default function UsersPage() {
-  const { updateUserBalance,updateUserTier,updateUserStatus,isUpdatingBalance,isUpdatingTier,isUpdatingStatus, users, fetchUsers } = useAdminUsersStore();
+  const {
+    updateUserBalance,
+    updateUserTier,
+    updateUserStatus,
+    isUpdatingBalance,
+    isUpdatingTier,
+    isUpdatingStatus,
+    users,
+    fetchUsers,
+  } = useAdminUsersStore();
+
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState<(typeof users)[0] | null>(
     null
   );
-  const [tierFilter, setTierFilter] = useState<ITier>('tier1');
-  const [depositType, setDepositType] = useState<IDepositType>("deposit");
+  const [tierFilter, setTierFilter] = useState<ITierFilter>("all");
   const [showUserModal, setShowUserModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [page, setPage] = useState();
-  const filteredUsers = users.filter(
-    (user) =>
-      (user.username.toLowerCase().includes(search.toLowerCase()) ||
-        user.email.toLowerCase().includes(search.toLowerCase())) &&
-      (tierFilter === "tier1" || user.tier.toString() === tierFilter)
-  );
+  const [page, setPage] = useState(1);
 
-  
+  // State for balance update
+  const [balanceAmount, setBalanceAmount] = useState<number>(0);
+  const [balanceReason, setBalanceReason] = useState<string>("");
+  const [depositType, setDepositType] = useState<IDepositType>("deposit");
+
+  // State for tier update
+  const [newTier, setNewTier] = useState<ITierString>("1");
+
   useEffect(() => {
-    fetchUsers({ page: page, limit: 100 });
-  }, []);
+    fetchUsers({
+      page,
+      limit: 100,
+      tier: tierFilter === "all" ? undefined : tierFilter,
+    });
+  }, [page, tierFilter]);
 
-const handleSubmit = (e:React.FormEvent)=>{
-  e.preventDefault();
-}
+  // Reset form when a new user is selected
+  useEffect(() => {
+    if (selectedUser) {
+      setBalanceAmount(selectedUser.balance?.deposit ?? 0);
+      setBalanceReason("");
+      setDepositType("deposit");
+      setNewTier(selectedUser.tier?.toString() as ITierString);
+    }
+  }, [selectedUser]);
 
-        const handleTierFilterChange = (value: string) => {
-          // Type assertion to ensure the value is of the correct type
-          setTierFilter(value as ITier);
-        };
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "approved":
+        return "bg-blue-100 text-blue-800";
+      case "processed":
+        return "bg-green-100 text-green-800";
+      case "rejected":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
 
-        const handleDepositTypeChange = (value: string) => {
-          // Type assertion to ensure the value is of the correct type
-          setDepositType(value as IDepositType);
-        };
+  // Handler for updating balance
+  const handleBalanceUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedUser) return;
+
+    const amount = Number(balanceAmount);
+    if (isNaN(amount) || amount <= 0) {
+      // You can add a snackbar notification here
+      console.error("Invalid amount");
+      return;
+    }
+
+    await updateUserBalance(
+      selectedUser._id,
+      depositType,
+      amount,
+      balanceReason || "Balance adjustment"
+    );
+    setShowEditModal(false); // Close modal after successful update
+  };
+
+  // Handler for updating tier
+  const handleTierUpdate = async () => {
+    if (!selectedUser || !newTier) return;
+
+    await updateUserTier(selectedUser._id, parseInt(newTier));
+    setShowEditModal(false); // Close modal after successful update
+  };
+
+  const handlePreviousPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    setPage(page + 1);
+  };
 
   return (
     <div className="space-y-6">
@@ -106,7 +206,10 @@ const handleSubmit = (e:React.FormEvent)=>{
                 className="pl-10"
               />
             </div>
-            <Select value={tierFilter} onValueChange={handleTierFilterChange}>
+            <Select
+              value={tierFilter}
+              onValueChange={(value: ITierFilter) => setTierFilter(value)}
+            >
               <SelectTrigger className="w-full sm:w-40">
                 <SelectValue placeholder="Filter by tier" />
               </SelectTrigger>
@@ -133,20 +236,24 @@ const handleSubmit = (e:React.FormEvent)=>{
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredUsers.map((user,index) => (
-                  <TableRow key={index}>
+                {users.map((user) => (
+                  <TableRow key={user._id}>
                     <TableCell className="font-medium">
                       {user.username}
                     </TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold">
-                        Tier {user.tier}
-                      </span>
+                      <Badge
+                        className={
+                          tierInfo[user.tier ?? 1]?.color ||
+                          "bg-gray-100 text-gray-800"
+                        }
+                      >
+                        {user.tier ? `Tier ${user.tier}` : "No Tier"}
+                      </Badge>
                     </TableCell>
                     <TableCell>${user.balance.deposit ?? 0}</TableCell>
-
-                    <TableCell>{user.createdAt}</TableCell>
+                    <TableCell>{formatDate(user.createdAt)}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
                         <Button
@@ -180,17 +287,18 @@ const handleSubmit = (e:React.FormEvent)=>{
           {/* Pagination */}
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              Showing {filteredUsers.length} users
+              Showing {users.length} users
             </p>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" disabled>
-                <ChevronLeft size={16} />
-              </Button>
               <Button
-                // onClick={() => setPage(page + 1)}
                 variant="outline"
                 size="sm"
+                onClick={handlePreviousPage}
+                disabled={page === 1}
               >
+                <ChevronLeft size={16} />
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleNextPage}>
                 <ChevronRight size={16} />
               </Button>
             </div>
@@ -219,7 +327,14 @@ const handleSubmit = (e:React.FormEvent)=>{
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Tier</p>
-                <p className="font-semibold">Tier {selectedUser.tier}</p>
+                <Badge
+                  className={
+                    tierInfo[selectedUser.tier ?? 1]?.color ||
+                    "bg-gray-100 text-gray-800"
+                  }
+                >
+                  {selectedUser.tier ? `Tier ${selectedUser.tier}` : "No Tier"}
+                </Badge>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Deposited</p>
@@ -231,7 +346,6 @@ const handleSubmit = (e:React.FormEvent)=>{
                   ${selectedUser.balance.deposit ?? 0}
                 </p>
               </div>
-
               <div>
                 <p className="text-sm text-muted-foreground">Member Since</p>
                 <p className="font-semibold">
@@ -243,9 +357,9 @@ const handleSubmit = (e:React.FormEvent)=>{
         </DialogContent>
       </Dialog>
 
-      {/* Edit User Modal */}
+      {/* Edit User Modal with Separated Sections */}
       <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
-        <DialogContent>
+        <DialogContent className="max-w-4xl">
           <DialogHeader>
             <DialogTitle>Edit User</DialogTitle>
             <DialogDescription>
@@ -253,58 +367,147 @@ const handleSubmit = (e:React.FormEvent)=>{
             </DialogDescription>
           </DialogHeader>
           {selectedUser && (
-            <form className="space-y-4" onSubmit={handleSubmit} >  
-              <div>
-                <label className="text-sm font-medium">
-                  Add/Remove Balance
-                </label>
-                <div className="flex gap-2 mt-2">
-                  <Input
-                    type="number"
-                    placeholder="Amount"
-                    className="flex-1"
-                  />
-                  <Select value={depositType} onValueChange={handleDepositTypeChange}>
-                    <SelectTrigger className="w-40">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="deposit">Deposit</SelectItem>
-                      <SelectItem value="withdraw">Withdraw</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Input placeholder="Reason for adjustment" className="mt-2" />
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Balance Management Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Balance Management</CardTitle>
+                  <CardDescription>
+                    Add or remove funds from the user`s account
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleBalanceUpdate} className="space-y-2">
+                    <div className="flex w-full">
+                      <div className="w-full" >
+                        <Label htmlFor="deposit-type">Transaction Type</Label>
+                        <Select
+                          value={depositType}
+                          onValueChange={(value: IDepositType) =>
+                            setDepositType(value)
+                          }
+                        >
+                          <SelectTrigger id="deposit-type">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="deposit">Deposit</SelectItem>
+                            <SelectItem value="bonus">Bonus</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="w-full" >
+                        <Label htmlFor="amount">Amount</Label>
+                        <Input
+                          id="amount"
+                          type="number"
+                          value={balanceAmount}
+                          onChange={(e) =>
+                            setBalanceAmount(Number(e.target.value))
+                          }
+                          placeholder="Enter amount"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label htmlFor="reason">Reason</Label>
+                      <Input
+                        id="reason"
+                        value={balanceReason}
+                        onChange={(e) => setBalanceReason(e.target.value)}
+                        placeholder="Reason for adjustment"
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      className="w-full mt-4"
+                      disabled={isUpdatingBalance}
+                    >
+                      {isUpdatingBalance ? "Updating..." : "Update Balance"}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
 
-              <div>
-                <label className="text-sm font-medium">Update Tier</label>
-                <Select onValueChange={handleTierFilterChange} value={selectedUser.tier.toString()}>
-                  <SelectTrigger className="mt-2">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="tier1">Tier 1</SelectItem>
-                    <SelectItem value="tier2">Tier 2</SelectItem>
-                    <SelectItem value="tier3">Tier 3</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="flex gap-2 pt-4">
-                <DialogClose>
-                  <Button
-                    variant="outline"
+              {/* Tier Management Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Tier Management</CardTitle>
+                  <CardDescription>
+                    Change the user`s access level and benefits
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Current Tier Display */}
+                  <div
+                    className={`p-4 rounded-lg border ${
+                      tierInfo[selectedUser.tier ?? "1"]?.borderColor ||
+                      "border-gray-300"
+                    }`}
                   >
-                    Cancel
-                  </Button>
-                </DialogClose>
+                    <div className="flex items-center gap-3">
+                      {/* Extract Icon safely */}
+                      {(() => {
+                        const Icon =
+                          tierInfo[selectedUser.tier ?? "1"]?.icon || Shield;
+                        return <Icon className="h-6 w-6" />;
+                      })()}
 
-                  <Button>
-                    Save Changes
+                      <div>
+                        <h3 className="font-semibold text-sm">
+                          Current Tier:{" "}
+                          {tierInfo[selectedUser.tier ?? "1"]?.name ||
+                            "No Tier"}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          User has access to features for this tier
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tier Selection Cards */}
+                  <div>
+                    <Label>Select New Tier</Label>
+                    <div className="grid grid-cols-3 gap-4 mt-4">
+                      {Object.entries(tierInfo).map(([tierNum, info]) => {
+                        const isSelected = newTier === tierNum;
+                        const Icon = info.icon;
+
+                        return (
+                          <div
+                            key={tierNum}
+                            onClick={() => setNewTier(tierNum as ITierString)}
+                            className={`p-3 rounded-xl border-2 cursor-pointer transition-all text-center
+                    ${
+                      isSelected
+                        ? `${info.borderColor} ${info.color} bg-opacity-20 shadow-md`
+                        : "border-gray-200 hover:border-gray-400 hover:shadow-sm"
+                    }`}
+                          >
+                            <Icon className="h-6 w-6 mx-auto mb-3" />
+                            <p className="font-semibold text-base">
+                              {info.name}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <Button
+                    onClick={handleTierUpdate}
+                    className="w-full mt-6"
+                    disabled={
+                      isUpdatingTier ||
+                      newTier === (selectedUser.tier?.toString() as ITierString)
+                    }
+                  >
+                    {isUpdatingTier ? "Updating Tier..." : "Update Tier"}
                   </Button>
-              </div>
-            </form>
+                </CardContent>
+              </Card>
+            </div>
           )}
         </DialogContent>
       </Dialog>

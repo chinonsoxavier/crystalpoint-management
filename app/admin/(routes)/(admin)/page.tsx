@@ -34,7 +34,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats Cards Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 grid-cols-2">
         <StatCard
           title="Total Users"
           value={formatNumber(overview?.total_users || 0)}

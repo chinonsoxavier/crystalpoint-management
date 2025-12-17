@@ -213,9 +213,10 @@ const SupportDialog = ({
                     disabled={!statusChanged || !status}
                     variant="secondary" // Optional: use a different variant for status
                   >
-                    {isUpdatingTicketStatus
-                      ? "Saving status change..."
-                      : "Save Status Change"}
+                    {
+                        isUpdatingTicketStatus ? 'Saving status change...' : 'Save Status Change'
+                    }
+                    
                   </Button>
                 </div>
               </div>

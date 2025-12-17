@@ -18,10 +18,10 @@ interface IUserBalance {
 }
 
 interface IAdminUser {
-  id: string;
+  _id: string;
   email: string;
   username: string;
-  tier: string;
+  tier: "1" | "2" | "3" | undefined;
   profile: IUserProfile;
   balance: IUserBalance;
   isActive: boolean;
@@ -35,7 +35,6 @@ interface IPagination {
   total: number;
   pages: number;
 }
-
 
 interface AdminUsersStore {
   // State
@@ -55,12 +54,12 @@ interface AdminUsersStore {
     page?: number;
     limit?: number;
     search?: string;
-    tier?: number;
+    tier?: undefined | "1" | "2" | "3";
   }) => Promise<void>;
   fetchUserDetails: (userId: string) => Promise<void>;
   updateUserBalance: (
     userId: string,
-    type: "deposit" | "withdraw",
+    type: "deposit" | "bonus",
     amount: number,
     reason: string
   ) => Promise<void>;
@@ -175,7 +174,7 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
           // Update local state
           set((state) => ({
             users: state.users.map((user) =>
-              user.id === userId ? { ...user, isActive } : user
+              user._id === userId ? { ...user, isActive } : user
             ),
             isUpdatingStatus: false,
           }));
@@ -204,7 +203,7 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
           // Update local state
           set((state) => ({
             users: state.users.map((user) =>
-              user.id === userId
+              user._id === userId
                 ? { ...user, profile: { ...user.profile, tier } }
                 : user
             ),

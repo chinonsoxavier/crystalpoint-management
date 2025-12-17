@@ -1,7 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faDashboard,
-  faDonate,
   faDoorOpen,
   faGear,
   faHeadphones,
@@ -18,7 +17,7 @@ import useAdminStore from "@/app/admin/_admin_store";
 
 const AdminSidemenu = () => {
   const router = useRouter();
-  const { sideMenuOpen, closeSideMenu } = useAdminStore();
+  const { sideMenuOpen, closeSideMenu,admin } = useAdminStore();
   const pathname = usePathname(); // ← Track current route
 
   // Close menu whenever route changes
@@ -33,7 +32,16 @@ const AdminSidemenu = () => {
     { label: "Admin Management", icon: faShield, link: "/admin/management" },
     { label: "Users", icon: faPerson, link: "/admin/users" },
     { label: "Deposit", icon: faWallet, link: "/admin/deposits" },
-    { label: "Withdraw", icon: faMoneyCheckDollar, link: "/admin/withdraw" },
+    {
+      label: "Withdrawals",
+      icon: faMoneyCheckDollar,
+      link: "/admin/withdrawals",
+    },
+    {
+      label: "Settings",
+      icon: faGear,
+      link: "/admin/settings",
+    },
     { label: "Help & Support", icon: faHeadphones, link: "/admin/support" },
     { label: "Logout", icon: faDoorOpen },
   ];
@@ -60,6 +68,7 @@ const AdminSidemenu = () => {
         <nav className="flex-1 p-1 text-white space-y-">
           {navItems.map((item) => {
             const isActive = item.link && pathname === item.link;
+            if(admin.role !== 'super_admin' && item.link==='/admin/management') return;
             return (
               <div key={item.label}>
                 <Link

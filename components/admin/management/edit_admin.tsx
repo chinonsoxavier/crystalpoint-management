@@ -20,10 +20,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Edit } from "lucide-react";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface IAdmin {
-  id: string;
+  _id: string;
   email: string;
   username: string;
   role: string;
@@ -33,68 +33,125 @@ interface IAdmin {
 
 interface IEditAdmin {
   selectedAdmin: IAdmin | null;
-  setSelectedAdmin:Dispatch<SetStateAction<IAdmin | null>>;
-  admin:IAdmin
+  setSelectedAdmin: Dispatch<SetStateAction<IAdmin | null>>;
+  admin: IAdmin;
 }
-const EditAdmin = ({ selectedAdmin, setSelectedAdmin,admin }: IEditAdmin) => {
+
+const EditAdmin = ({ selectedAdmin, setSelectedAdmin, admin }: IEditAdmin) => {
+    const {updateAdminStatus,isUpdatingAdminStatus} = useAdminManagementStore();
+  // Local state to track the editable status
+  const [localStatus, setLocalStatus] = useState<boolean>(admin.isActive);
+
+  // Sync local state whenever selectedAdmin changes (i.e., when modal opens with a new admin)
+  useEffect(() => {
+    if (selectedAdmin) {
+      setLocalStatus(selectedAdmin.isActive);
+    }
+  }, [selectedAdmin]);
+
+  // Determine if status has changed
+  const hasStatusChanged = selectedAdmin
+    ? localStatus !== selectedAdmin.isActive
+    : false;
+
+  const handleSave = () => {
+    if (!selectedAdmin || !hasStatusChanged) return;
+    updateAdminStatus(selectedAdmin._id, localStatus);
+  };
+
   return (
     <div>
       <Dialog>
-        <DialogTrigger >
-          <Button asChild
+        <DialogTrigger asChild>
+          <Button
             size="sm"
             variant="outline"
-            onClick={() => {
-              setSelectedAdmin(admin);
-            }}
+            onClick={() => setSelectedAdmin(admin)}
           >
             <Edit size={16} />
           </Button>
         </DialogTrigger>
-        <DialogContent>
+
+        <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>Edit Admin</DialogTitle>
-            <DialogDescription>
-              Update administrator role or status
-            </DialogDescription>
+            <DialogDescription>Update administrator status</DialogDescription>
           </DialogHeader>
+
           {selectedAdmin && (
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Username</label>
-                <Input
-                  value={selectedAdmin.username}
-                  disabled
-                  className="mt-2"
-                />
+            <div className="space-y-6 pt-4">
+              {/* Read-only fields */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">
+                    Username
+                  </label>
+                  <Input
+                    value={selectedAdmin.username}
+                    disabled
+                    className="mt-2"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">
+                    Email
+                  </label>
+                  <Input
+                    value={selectedAdmin.email}
+                    disabled
+                    className="mt-2"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="text-sm font-medium">Email</label>
-                <Input value={selectedAdmin.email} disabled className="mt-2" />
+              {/* Role and Status */}
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="text-sm font-medium">Role</label>
+                  <Select defaultValue={selectedAdmin.role} disabled>
+                    <SelectTrigger className="mt-2">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="super_admin">Super Admin</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                      <SelectItem value="moderator">Moderator</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium">Status</label>
+                  <Select
+                    value={localStatus ? "true" : "false"}
+                    onValueChange={(value) => setLocalStatus(value === "true")}
+                  >
+                    <SelectTrigger className="mt-2">
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="true">Active</SelectItem>
+                      <SelectItem value="false">Inactive</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
-              <div>
-                <label className="text-sm font-medium">Role</label>
-                <Select defaultValue={selectedAdmin.role}>
-                  <SelectTrigger className="mt-2">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="super_admin">Super Admin</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
-                    <SelectItem value="moderator">Moderator</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="flex gap-2 pt-4">
-                <DialogClose>
-                  <Button variant="outline" className="flex-1">
-                    Cancel
-                  </Button>
+              {/* Action Buttons */}
+              <div className="flex justify-end gap-3 pt-4 border-t">
+                <DialogClose asChild>
+                  <Button variant="outline">Cancel</Button>
                 </DialogClose>
-                <Button className="flex-1">Save Changes</Button>
+
+                <Button
+                  onClick={handleSave}
+                  disabled={!hasStatusChanged || isUpdatingAdminStatus}
+                  className="min-w-32"
+                >
+                    {
+                        isUpdatingAdminStatus ? "SAVING CHANGES ": 'SAVE CHANGES'
+                    }
+                </Button>
               </div>
             </div>
           )}

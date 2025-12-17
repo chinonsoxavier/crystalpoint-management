@@ -48,7 +48,7 @@ export function StatCard({
             )}
           </div>
           <div className="rounded-full bg-primary/10 p-3">
-            <Icon className="h-6 w-6 text-primary" />
+            <Icon className="h-6 w-6" />
           </div>
         </div>
         {/* Subtle background decoration */}
