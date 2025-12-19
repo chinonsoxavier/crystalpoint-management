@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useMembershipStore from "../_membership_store";
+import useMembershipStore from "../../_membership_store";
 const Page = () => {
   const [cryptocurrency, setCryptocurrency] = useState("");
   const { getMembershipCards, membershipCards } = useMembershipStore();
@@ -29,7 +29,7 @@ const Page = () => {
   const selectedCard = useMemo(() => {
     return (
       membershipCards.find(
-        (m) => m.name.toLowerCase() === "silver member".toLowerCase()
+        (m) => m.name.toLowerCase() === "gold member".toLowerCase()
       ) || null
     );
   }, [membershipCards]);
@@ -66,7 +66,7 @@ const Page = () => {
     <div className="bg-accent p-4 md:p-6 h-full overflow-y-auto">
       {/* Header */}
       <h1 className="md:text-4xl text-3xl py-3 font-bold mb-4 md:mb-6">
-        Investor`s Silver Card Request
+        Investor`s Gold Card Request
       </h1>
       <main className="text-white rounded-lg bg-accent-foreground w-full p-4 md:p-6 space-y-10">
         {/* Membership Card */}
@@ -75,7 +75,7 @@ const Page = () => {
           className="bg-[red] rounded-lg shadow-md overflow-hidden"
         >
           {/* Card Header */}
-          <div className="relative bg-linear-to-r from-zinc-500 via-zinc-600 to-zinc-800">
+          <div className="relative bg-gradient-to-r from-amber-500 via-amber-600 to-amber-800">
             {/* Background pattern */}
             <div className="absolute inset-0 opacity-10">
               <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_25%,rgba(0,0,0,.1)_25%,rgba(0,0,0,.1)_50%,transparent_50%,rgba(0,0,0,.1)_75%,rgba(0,0,0,.1)_100%,transparent_75%,rgba(0,0,0,.1)_50%,transparent_25%,rgba(0,0,0,.1)_0%)] bg-size-[40px_40px]"></div>

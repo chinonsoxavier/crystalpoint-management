@@ -47,6 +47,7 @@ import {
 } from "lucide-react";
 import { useAdminUsersStore } from "./admin_users_store";
 import { formatDate } from "@/utility/format_date";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type IDepositType = "deposit" | "bonus";
 type ITierFilter = "all" | "1" | "2" | "3";
@@ -109,7 +110,7 @@ export default function UsersPage() {
       limit: 100,
       tier: tierFilter === "all" ? undefined : tierFilter,
     });
-  }, [page, tierFilter]);
+  }, [page, tierFilter,selectedUser]);
 
   // Reset form when a new user is selected
   useEffect(() => {
@@ -154,7 +155,6 @@ export default function UsersPage() {
       amount,
       balanceReason || "Balance adjustment"
     );
-    setShowEditModal(false); // Close modal after successful update
   };
 
   // Handler for updating tier
@@ -162,7 +162,6 @@ export default function UsersPage() {
     if (!selectedUser || !newTier) return;
 
     await updateUserTier(selectedUser._id, parseInt(newTier));
-    setShowEditModal(false); // Close modal after successful update
   };
 
   const handlePreviousPage = () => {
@@ -368,145 +367,167 @@ export default function UsersPage() {
           </DialogHeader>
           {selectedUser && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Balance Management Section */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Balance Management</CardTitle>
-                  <CardDescription>
-                    Add or remove funds from the user`s account
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleBalanceUpdate} className="space-y-2">
-                    <div className="flex w-full">
-                      <div className="w-full" >
-                        <Label htmlFor="deposit-type">Transaction Type</Label>
-                        <Select
-                          value={depositType}
-                          onValueChange={(value: IDepositType) =>
-                            setDepositType(value)
-                          }
+              <Tabs defaultValue="balance?">
+                <TabsList>
+                  <TabsTrigger value="balance?">Balance Management</TabsTrigger>
+                  <TabsTrigger value="tier">Tier Management</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="balance?">
+                  {/* Balance Management Section */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">
+                        Balance Management
+                      </CardTitle>
+                      <CardDescription>
+                        Add or remove funds from the user`s account
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <form
+                        onSubmit={handleBalanceUpdate}
+                        className="space-y-4"
+                      >
+                        <div className="flex gap-4 w-full">
+                          <div className="w-full space-y-2">
+                            <Label htmlFor="deposit-type">
+                              Transaction Type
+                            </Label>
+                            <Select
+                              value={depositType}
+                              onValueChange={(value: IDepositType) =>
+                                setDepositType(value)
+                              }
+                            >
+                              <SelectTrigger className="w-full" id="deposit-type">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="deposit">Deposit</SelectItem>
+                                <SelectItem value="bonus">Bonus</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="w-full space-y-2">
+                            <Label htmlFor="amount">Amount</Label>
+                            <Input
+                              id="amount"
+                              type="number"
+                              value={balanceAmount}
+                              onChange={(e) =>
+                                setBalanceAmount(Number(e.target.value))
+                              }
+                              placeholder="Enter amount"
+                            />
+                          </div>
+                        </div>
+                        <div className="w-full space-y-2">
+                          <Label htmlFor="reason">Reason</Label>
+                          <Input
+                            id="reason"
+                            value={balanceReason}
+                            onChange={(e) => setBalanceReason(e.target.value)}
+                            placeholder="Reason for adjustment"
+                          />
+                        </div>
+                        <Button
+                          type="submit"
+                          className="w-full mt-4"
+                          disabled={isUpdatingBalance}
                         >
-                          <SelectTrigger id="deposit-type">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="deposit">Deposit</SelectItem>
-                            <SelectItem value="bonus">Bonus</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="w-full" >
-                        <Label htmlFor="amount">Amount</Label>
-                        <Input
-                          id="amount"
-                          type="number"
-                          value={balanceAmount}
-                          onChange={(e) =>
-                            setBalanceAmount(Number(e.target.value))
-                          }
-                          placeholder="Enter amount"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <Label htmlFor="reason">Reason</Label>
-                      <Input
-                        id="reason"
-                        value={balanceReason}
-                        onChange={(e) => setBalanceReason(e.target.value)}
-                        placeholder="Reason for adjustment"
-                      />
-                    </div>
-                    <Button
-                      type="submit"
-                      className="w-full mt-4"
-                      disabled={isUpdatingBalance}
-                    >
-                      {isUpdatingBalance ? "Updating..." : "Update Balance"}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
+                          {isUpdatingBalance ? "Updating..." : "Update Balance"}
+                        </Button>
+                      </form>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
 
-              {/* Tier Management Section */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Tier Management</CardTitle>
-                  <CardDescription>
-                    Change the user`s access level and benefits
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {/* Current Tier Display */}
-                  <div
-                    className={`p-4 rounded-lg border ${
-                      tierInfo[selectedUser.tier ?? "1"]?.borderColor ||
-                      "border-gray-300"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      {/* Extract Icon safely */}
-                      {(() => {
-                        const Icon =
-                          tierInfo[selectedUser.tier ?? "1"]?.icon || Shield;
-                        return <Icon className="h-6 w-6" />;
-                      })()}
+                <TabsContent value="tier">
+                  {/* Tier Management Section */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">Tier Management</CardTitle>
+                      <CardDescription>
+                        Change the user`s access level and benefits
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {/* Current Tier Display */}
+                      <div
+                        className={`p-4 rounded-lg border ${
+                          tierInfo[selectedUser.tier ?? "1"]?.borderColor ||
+                          "border-gray-300"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          {/* Extract Icon safely */}
+                          {(() => {
+                            const Icon =
+                              tierInfo[selectedUser.tier ?? "1"]?.icon ||
+                              Shield;
+                            return <Icon className="h-6 w-6" />;
+                          })()}
 
+                          <div>
+                            <h3 className="font-semibold text-sm">
+                              Current Tier:{" "}
+                              {tierInfo[selectedUser.tier ?? "1"]?.name ||
+                                "No Tier"}
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                              User has access to features for this tier
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Tier Selection Cards */}
                       <div>
-                        <h3 className="font-semibold text-sm">
-                          Current Tier:{" "}
-                          {tierInfo[selectedUser.tier ?? "1"]?.name ||
-                            "No Tier"}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                          User has access to features for this tier
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                        <Label>Select New Tier</Label>
+                        <div className="grid grid-cols-3 gap-4 mt-4">
+                          {Object.entries(tierInfo).map(([tierNum, info]) => {
+                            const isSelected = newTier === tierNum;
+                            const Icon = info.icon;
 
-                  {/* Tier Selection Cards */}
-                  <div>
-                    <Label>Select New Tier</Label>
-                    <div className="grid grid-cols-3 gap-4 mt-4">
-                      {Object.entries(tierInfo).map(([tierNum, info]) => {
-                        const isSelected = newTier === tierNum;
-                        const Icon = info.icon;
-
-                        return (
-                          <div
-                            key={tierNum}
-                            onClick={() => setNewTier(tierNum as ITierString)}
-                            className={`p-3 rounded-xl border-2 cursor-pointer transition-all text-center
+                            return (
+                              <div
+                                key={tierNum}
+                                onClick={() =>
+                                  setNewTier(tierNum as ITierString)
+                                }
+                                className={`p-3 rounded-xl border-2 cursor-pointer transition-all text-center
                     ${
                       isSelected
                         ? `${info.borderColor} ${info.color} bg-opacity-20 shadow-md`
                         : "border-gray-200 hover:border-gray-400 hover:shadow-sm"
                     }`}
-                          >
-                            <Icon className="h-6 w-6 mx-auto mb-3" />
-                            <p className="font-semibold text-base">
-                              {info.name}
-                            </p>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
+                              >
+                                <Icon className="h-6 w-6 mx-auto mb-3" />
+                                <p className="font-semibold text-base">
+                                  {info.name}
+                                </p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
 
-                  <Button
-                    onClick={handleTierUpdate}
-                    className="w-full mt-6"
-                    disabled={
-                      isUpdatingTier ||
-                      newTier === (selectedUser.tier?.toString() as ITierString)
-                    }
-                  >
-                    {isUpdatingTier ? "Updating Tier..." : "Update Tier"}
-                  </Button>
-                </CardContent>
-              </Card>
+                      <Button
+                        onClick={handleTierUpdate}
+                        className="w-full mt-6"
+                        disabled={
+                          isUpdatingTier ||
+                          newTier ===
+                            (selectedUser.tier?.toString() as ITierString)
+                        }
+                      >
+                        {isUpdatingTier ? "Updating Tier..." : "Update Tier"}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
             </div>
           )}
         </DialogContent>

@@ -4,8 +4,8 @@ import { axiosError, baseAxios } from "@/network/axios";
 import { enqueueSnackbar } from "notistack";
 
 export interface IDeposit {
-    deposits:{
-  id: string;
+    // deposits:{
+  _id: string;
   user: {
     id:string;
     username:string;
@@ -17,8 +17,8 @@ export interface IDeposit {
   transactionHash?: string;
   createdAt: string;
   updatedAt: string;
-    },
-  pagination:[]
+    // },
+  // pagination:[]
 }
 
 interface IPagination {
@@ -142,7 +142,7 @@ export const useAdminDepositsStore = create<AdminDepositsStore>()(
           // Update local state
           set((state) => ({
             deposits: state.deposits.map((deposit) =>
-              deposit.deposits.id === depositId
+              deposit._id === depositId
                 ? { ...deposit, status: "confirmed" }
                 : deposit
             ),
@@ -153,7 +153,7 @@ export const useAdminDepositsStore = create<AdminDepositsStore>()(
         } catch (error) {
           set({ isConfirmingDeposit: false });
           console.log("Failed to confirm deposit:", error);
-          enqueueSnackbar("Failed to confirm deposit", { variant: "error" });
+          axiosError(error);
         }
       },
 
@@ -173,7 +173,7 @@ export const useAdminDepositsStore = create<AdminDepositsStore>()(
           // Update local state
           set((state) => ({
             deposits: state.deposits.map((deposit) =>
-              deposit.deposits.id === depositId
+              deposit._id === depositId
                 ? { ...deposit, status: "failed" }
                 : deposit
             ),

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { baseAxios } from "@/network/axios";
+import { axiosError, baseAxios } from "@/network/axios";
 import { enqueueSnackbar } from "notistack";
 
 interface IUserProfile {
@@ -147,6 +147,7 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
           });
 
           // Refresh user details
+          await useAdminUsersStore.getState().fetchUsers({});
           get().fetchUserDetails(userId);
           set({ isUpdatingBalance: false });
         } catch (error) {
@@ -167,7 +168,7 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
             { withCredentials: true }
           );
 
-          enqueueSnackbar("User status updated successfully", {
+          enqueueSnackbar(response.data.message, {
             variant: "success",
           });
 
@@ -179,11 +180,12 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
             isUpdatingStatus: false,
           }));
 
+          await useAdminUsersStore.getState().fetchUsers({});
           get().fetchUserDetails(userId);
         } catch (error) {
           set({ isUpdatingStatus: false });
           console.log("Failed to update user status:", error);
-          enqueueSnackbar("Failed to update user status", { variant: "error" });
+          axiosError(error);
         }
       },
 
@@ -195,8 +197,8 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
             { tier },
             { withCredentials: true }
           );
-
-          enqueueSnackbar("User tier updated successfully", {
+          
+          enqueueSnackbar(response.data.message, {
             variant: "success",
           });
 
@@ -206,15 +208,16 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
               user._id === userId
                 ? { ...user, profile: { ...user.profile, tier } }
                 : user
-            ),
-            isUpdatingTier: false,
-          }));
-
+              ),
+              isUpdatingTier: false,
+            }));
+            
+            await useAdminUsersStore.getState().fetchUsers({});
           get().fetchUserDetails(userId);
         } catch (error) {
           set({ isUpdatingTier: false });
           console.log("Failed to update user tier:", error);
-          enqueueSnackbar("Failed to update user tier", { variant: "error" });
+          axiosError(error);
         }
       },
 

@@ -27,7 +27,7 @@ interface UserStore {
   updateAdminEmail: (email: string) => void;
   toggleSideMenuOpen: () => void;
   closeSideMenu: () => void;
-  loadUser: () => Promise<void>;
+  loadAdmin: () => Promise<void>;
 
   
   login: ({ username, password }: ILogin) => Promise<string | undefined>;
@@ -70,7 +70,7 @@ const useAdminStore = create<UserStore>((set) => ({
         { username, password },
         { withCredentials: true }
       );
-      useAdminStore.getState().loadUser();
+      useAdminStore.getState().loadAdmin();
       set({
         authStatus: "authenticated",
       });
@@ -107,7 +107,7 @@ const useAdminStore = create<UserStore>((set) => ({
       console.log("Logout error:", error);
     }
   },
-  loadUser: async () => {
+  loadAdmin: async () => {
     const { authStatus } = useAdminStore.getState();
 
     // Prevent parallel fetching

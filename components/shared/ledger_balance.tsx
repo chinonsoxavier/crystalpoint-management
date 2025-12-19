@@ -1,6 +1,7 @@
 "use client";
 import useDashboardStore from "@/app/user/(user)/_dashboard_store";
 import useUserStore from "@/app/user/user_store";
+import { formatCurrency } from "@/utility/format_currency";
 import { WalletMinimal } from "lucide-react";
 
 const LedgerBalance = () => {
@@ -19,7 +20,6 @@ const {profile} = useDashboardStore();
                       border border-white/10 p-6 md:p-8 lg:p-10 
                       transition-all duration-500"
       >
-
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4.5 md:gap-8">
           {/* Left: Balance Section */}
           <div className="flex items-center gap-5">
@@ -27,7 +27,7 @@ const {profile} = useDashboardStore();
             <div className="icon-container relative">
               <div className="absolute inset-0 rounded-full scale-150 -z-10 animate-pulse" />
               <div className="bg-primary/20 backdrop-blur-sm p-4 rounded-2xl border border-primary/30">
-                <WalletMinimal className="w-8 h-8 md:w-10 md:h-10 text-primary" />
+                <WalletMinimal className="w-8 h-8 md:w-10 md:h-10 text-accent-text" />
               </div>
             </div>
 
@@ -40,7 +40,7 @@ const {profile} = useDashboardStore();
               <div className="flex items-center gap-3">
                 <p className="text-3xl md:text-4xl lg:text-5xl font-bold text-accent-text tabular-nums">
                   {showBalance ? (
-                    <span>${profile?.ledger_balance}</span>
+                    <span>{formatCurrency(profile?.ledger_balance ?? 0)}</span>
                   ) : (
                     <span className="tracking-widest">••••••</span>
                   )}
@@ -59,10 +59,7 @@ const {profile} = useDashboardStore();
             </p>
           </div>
         </div>
-
-    
       </div>
-      
     </div>
   );
 };

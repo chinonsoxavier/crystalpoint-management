@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useMembershipStore from "../_membership_store";
+import useMembershipStore from "../../_membership_store";
 const Page = () => {
   const [cryptocurrency, setCryptocurrency] = useState("");
   const { getMembershipCards, membershipCards } = useMembershipStore();

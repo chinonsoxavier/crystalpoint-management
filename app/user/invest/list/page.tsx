@@ -3,18 +3,16 @@
 import LedgerBalance from "@/components/shared/ledger_balance";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import useInvestStore from "./_invest_store";
+import useInvestStore from "../_invest_store";
 import Link from "next/link";
 
 const Page = () => {
-  
+  const { fetchInvestPlans, investPlans, isFetchingInvestPlans } =
+    useInvestStore();
 
-  const {fetchInvestPlans,investPlans,isFetchingInvestPlans} = useInvestStore();
-
-useEffect(() => {
-   fetchInvestPlans();
-}, [])
-
+  useEffect(() => {
+    fetchInvestPlans();
+  }, []);
 
   return (
     <div className="bg-accent p-4 md:p-6 text-white">
@@ -30,18 +28,17 @@ useEffect(() => {
         </div>
 
         {/* Investment Plans Grid */}
-        <div className="grid grid-cols-1 w-full md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 w-full sm:grid-cols-2 lg:grid-cols-3 md:gap-8 gap-5">
           {isFetchingInvestPlans ? (
             <div className="col-span-3 flex justify-center items-center">
               <p className="text-accent-text text-lg">Loading plans...</p>
             </div>
           ) : (
             <>
-              {" "}
               {investPlans.map((plan, index) => (
                 <div
                   key={index}
-                  className="group min p-4 min-h-[450px] md:p-6 relative overflow-hidden rounded-2xl 
+                  className="group p-4 min-h-[450px] md:p-6 relative overflow-hidden rounded-2xl 
                          transition-all duration-500 bg-accent-foreground hover:shadow-2xl border border-accent-border hover:border-primary"
                 >
                   <div className="relative z-10 flex flex-col justify-between h-full gap-6">
@@ -62,7 +59,7 @@ useEffect(() => {
                           Investment Range
                         </span>
                         <span className="text-xl font-bold text-white">
-                          ${plan.maxAmount}`
+                          ${plan.maxAmount}
                         </span>
                       </div>
                     </div>
@@ -89,34 +86,12 @@ useEffect(() => {
                       </div>
                     </div>
 
-                    {/* Duration & Referral */}
-                    {/* <div className="grid grid-cols-2 gap-4 py-2 md:py-4">
-                  <div className="bg-accent/50 rounded-xl p-2 md:p-4 text-center border border-gray-700/50">
-                    <p className="text-accent-text font-semibold text-sm">
-                      Duration
-                    </p>
-                    <p className="font-bold text-accent-text dark:text-white md:text-lg mt-1">
-                      {plan.durationDays}
-                    </p>
-                  </div>
-             
-                </div> */}
-                    {/* 
-                Risk Level
-                <div className="text-center">
-                  <span
-                    className={`inline-block px-4 py-2 rounded-full text-sm font-bold ${
-                      plan.risk === "Low"
-                        ? "bg-emerald-400/10 text-emerald-400 border border-emerald-500/40"
-                        : "bg-amber-400/10 text-amber-500 border border-amber-500/40"
-                    }`}
-                  >
-                    {plan.risk} Risk
-                  </span>
-                </div> */}
 
                     {/* Invest Button */}
-                    <Link href="/user/deposit" className="w-full" >
+                    <Link
+                      href={`/user/invest/select-plan/${plan.name.split(" ")[0].toLowerCase()}/${plan._id}`}
+                      className="w-full"
+                    >
                       <Button variant="outline" className="w-full">
                         Select {plan.name.split(" ")[1]} Package
                         <svg

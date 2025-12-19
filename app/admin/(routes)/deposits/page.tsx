@@ -19,7 +19,7 @@ import DepositsTable from "@/components/admin/deposits/deposits_table";
 type Period = "7d" | "30d" | "90d" | "1y";
 
 export default function DepositsPage() {
-  const { fetchDepositStats, depositStats } =
+  const { fetchDepositStats, depositStats,deposits } =
     useAdminDepositsStore();
   const [period, setPeriod] = useState<Period>("1y");
   useEffect(() => {

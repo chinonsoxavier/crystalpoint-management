@@ -19,6 +19,8 @@ interface IDepositMethods {
 }
 
 interface DepositStore {
+  depositRequestSuccessful: boolean;
+  isDepositLoading: boolean;
   selectedDepositMethod?: IDepositMethods;
   depositMethods: IDepositMethods[];
   depositMethod: IDepositMethod;
@@ -28,12 +30,18 @@ interface DepositStore {
   setSelectedDepositMethod: (method: IDepositMethods) => void;
   fetchDepositMethods: () => Promise<void>;
   fetchDepositHistory: (page: number) => Promise<void>;
-  createDepositMethods: () => Promise<void>;
+  createDepositRequest: (params: {
+    method?: string ;
+    amount?: number;
+    transactionHash?: string;
+  }) => Promise<void>;
 }
 
 
 
 const useDepositStore = create<DepositStore>((set) => ({
+  isDepositLoading:false,
+  depositRequestSuccessful:false,
   depositMethods: [] as IDepositMethods[],
   approvedDeposits:[],
   pendingDeposits:[],
@@ -126,18 +134,19 @@ const useDepositStore = create<DepositStore>((set) => ({
     }
   },
 
-  createDepositMethods: async () => {
+  createDepositRequest: async (params) => {
+      set({ isDepositLoading: false });
     try {
-      const res = await baseAxios.post("/deposit/create", {
+      const res = await baseAxios.post("/deposit/create",{params}, {
         withCredentials: true,
       });
-      set({ depositMethod: res.data?.data?.deposit || "" });
       console.log("Create Deposit Response:", res.data);
+      set({ depositRequestSuccessful :true});
     } catch (error) {
       console.log("Error creating deposit:", error);
-    }
-  },
-
+    }finally{
+      set({ isDepositLoading: false});
+  }},
   getDepositById: async (id: string) => {
     try {
       const res = await baseAxios.get(`/deposit/${id}`, {

@@ -16,7 +16,7 @@ import LedgerBalance from "@/components/shared/ledger_balance";
 import useDepositStore from "./_deposit_store";
 
 const Page = () => {
-  const { depositMethods, fetchDepositMethods,setSelectedDepositMethod,selectedDepositMethod } = useDepositStore();
+  const { depositMethods, fetchDepositMethods,setSelectedDepositMethod,selectedDepositMethod,createDepositRequest ,isDepositLoading,depositRequestSuccessful} = useDepositStore();
   const [copied, setCopied] = useState(false);
   const [depositAmount, setDepositAmount] = useState<number>(0);
   const walletAddress = selectedDepositMethod
@@ -32,7 +32,6 @@ const Page = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
     fetchDepositMethods();
@@ -40,7 +39,7 @@ const Page = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    setIsSubmitted(true);
+    createDepositRequest({method:selectedDepositMethod?.name ?? '',amount:depositAmount})
   };
   return (
     <div className="p-4 md:p-6 bg-accent h-full max-h-[calc(100dvh-128px)]">
@@ -51,7 +50,7 @@ const Page = () => {
           {/* Form Card */}
           <div className="bg-accent-foreground rounded-lg p-8">
             {/* Tabs */}
-            {!isSubmitted ? (
+            {!isDepositLoading ? (
               <form className="max-w-4xl" onSubmit={handleSubmit}>
                 <div className="flex gap-8 mb-6 border-b">
                   <button className="pb-3 font-semibold text-accent-text border-b-2">

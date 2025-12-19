@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import useUserStore from "@/app/user/user_store";
 import useAdminStore from "@/app/admin/_admin_store";
+import useDashboardStore from "@/app/user/(user)/_dashboard_store";
 
 interface AuthWrapperProps {
   children: React.ReactNode;
@@ -15,8 +16,9 @@ const AuthGuard = ({ children, requireAuth = true }: AuthWrapperProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const { authStatus, loadUser } = useUserStore();
+  const {loadProfile} = useDashboardStore();
   const adminAuthStatus = useAdminStore().authStatus;
-  const loadAdmin = useAdminStore().loadUser;
+  const loadAdmin = useAdminStore().loadAdmin;
   const [isInitialized, setIsInitialized] = useState(false);
 
   // List of public routes that don't require authentication
@@ -30,6 +32,7 @@ const AuthGuard = ({ children, requireAuth = true }: AuthWrapperProps) => {
       try {
         await loadAdmin();
         await loadUser();
+        await loadProfile();
       } finally {
         if (mounted) setIsInitialized(true);
       }

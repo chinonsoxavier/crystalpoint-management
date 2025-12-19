@@ -28,27 +28,21 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import DepositsTableModal from "./deposits_table_modal";
+import { formatDate } from "@/utility/format_date";
 type DepositStatus = "pending" | "confirmed" | "failed";
 
 const DepositsTable = () => {
   const { deposits, fetchDeposits } = useAdminDepositsStore();
   const [action, setAction] = useState<"confirm" | "reject" | null>(null);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<DepositStatus>("confirmed");
   const [selectedDeposit, setSelectedDeposit] = useState<
     (typeof deposits)[0] | null
   >(null);
   const [showActionModal, setShowActionModal] = useState(false);
 
-  const filteredDeposits = deposits.filter(
-    (deposit) =>
-      (deposit?.deposits?.user.username
-        .toLowerCase()
-        .includes(search.toLowerCase()) ||
-        deposit?.deposits?.id?.includes(search)) &&
-      (statusFilter === "confirmed" ||
-        deposit?.deposits.status === statusFilter)
-  );
+
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -64,7 +58,8 @@ const DepositsTable = () => {
   };
 
   useEffect(() => {
-    fetchDeposits({ page: 1, limit: 100, status: statusFilter });
+    fetchDeposits({ page:page, limit: 100, status: statusFilter });
+    console.log(deposits);
   }, [statusFilter]);
 
   const handleStatusFilterChange = (value: string) => {
@@ -124,29 +119,33 @@ const DepositsTable = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredDeposits.map((deposit) => (
-                  <TableRow key={deposit.deposits.id}>
+                {deposits.map((deposit) => (
+                  <TableRow key={deposit?._id}>
+                  
                     <TableCell className="font-mono text-sm">
-                      {deposit.deposits.id}
+                      {deposit?._id ?? ""}
                     </TableCell>
-                    <TableCell>{deposit.deposits.user.username}</TableCell>
+                    <TableCell>
+                      {deposit?.user?.username ?? ""}
+                    </TableCell>
                     <TableCell className="font-bold">
-                      ${deposit.deposits.amount.toLocaleString()}
+                      ${deposit?.amount.toLocaleString() ?? ""}
                     </TableCell>
                     <TableCell className="capitalize">
-                      {deposit.deposits.method.replace("_", " ")}
+                      {deposit?.method?.replace("_", " ") ?? ""}
                     </TableCell>
                     <TableCell>
                       <Badge
-                        className={getStatusColor(deposit.deposits.status)}
+                        className={getStatusColor(deposit?.status)}
                       >
-                        {deposit.deposits.status}
+                        {deposit?.status}
                       </Badge>
                     </TableCell>
-                    <TableCell>{deposit.deposits.createdAt}</TableCell>
+                    <TableCell>{formatDate(deposit?.createdAt)}</TableCell>
                     <TableCell>
+                    
                       <div className="flex gap-2">
-                        {deposit.deposits.status === "pending" && (
+                        {deposit?.status === "pending" && (
                           <>
                             <Button
                               size="sm"
@@ -185,13 +184,23 @@ const DepositsTable = () => {
           {/* Pagination */}
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              Showing {filteredDeposits.length} deposits
+              Showing {deposits.length} deposits
             </p>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" disabled>
+              <Button
+                onClick={() => setPage(page - 1)}
+                variant="outline"
+                size="sm"
+                disabled={page < 2}
+              >
                 <ChevronLeft size={16} />
               </Button>
-              <Button variant="outline" size="sm">
+              <Button
+                onClick={() => setPage(page + 1)}
+                variant="outline"
+                size="sm"
+                disabled={deposits.length < 1}
+              >
                 <ChevronRight size={16} />
               </Button>
             </div>

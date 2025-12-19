@@ -25,7 +25,7 @@ interface AdminAuthWrapperProps {
 const AdminAuthGuard = ({ children, requiredRole }: AdminAuthWrapperProps) => {
   const router = useRouter();
   const pathname = usePathname();
-  const { authStatus, loadUser, admin } = useAdminStore();
+  const { authStatus, loadAdmin, admin } = useAdminStore();
   const [isInitialized, setIsInitialized] = useState(false);
 
   const adminAuthRoute = "/admin/auth";
@@ -50,7 +50,8 @@ const AdminAuthGuard = ({ children, requiredRole }: AdminAuthWrapperProps) => {
     let mounted = true;
     const initializeAuth = async () => {
       try {
-        await loadUser();
+        await loadAdmin();
+        
       } catch (error) {
         console.error("Failed to load admin user:", error);
       } finally {
@@ -65,7 +66,7 @@ const AdminAuthGuard = ({ children, requiredRole }: AdminAuthWrapperProps) => {
     return () => {
       mounted = false;
     };
-  }, [loadUser]);
+  }, [loadAdmin]);
 
   useEffect(() => {
     if (!isInitialized) return;

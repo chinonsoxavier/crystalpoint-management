@@ -31,12 +31,12 @@ const DepositsTableModal = ({showActionModal,setShowActionModal,action,selectedD
               <div className="bg-secondary p-4 rounded">
                 <p className="text-sm text-muted-foreground">Deposit Amount</p>
                 <p className="text-2xl font-bold">
-                  ${selectedDeposit.deposits.amount.toLocaleString()}
+                  ${selectedDeposit.amount.toLocaleString()}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">User</p>
-                <p className="font-semibold">{selectedDeposit.deposits.user.username}</p>
+                <p className="font-semibold">{selectedDeposit.user.username}</p>
               </div>
               {action === "reject" && (
                 <Input placeholder="Reason for rejection" />
