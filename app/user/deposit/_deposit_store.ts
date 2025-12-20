@@ -1,21 +1,28 @@
 "use client";
 import { create } from "zustand";
 import { baseAxios } from "@/network/axios";
+import { enqueueSnackbar } from "notistack";
 
-interface IDepositMethod {
-  id: string;
+export interface IDepositMethod {
+  _id: string;
   method: string;
   amount: number;
   transactionHarsh: string;
-  status: "pending" | "processing" | "success" | "failed";
+  status: "awaiting_payment" | "pending" | "confirmed" | "failed" | "cancelled";
   walletAddress: string;
 }
 
 interface IDepositMethods {
-  id: string;
+  _id: string;
   name: string;
   network: string;
   walletAddress: string;
+}
+interface IDepositInstructions {
+  method: string;
+  walletAddress: string;
+  instructions: string;
+  qrCodeUrl: string;
 }
 
 interface DepositStore {
@@ -25,13 +32,13 @@ interface DepositStore {
   depositMethods: IDepositMethods[];
   depositMethod: IDepositMethod;
   depositHistory: IDepositMethod[];
-  pendingDeposits: [];
-  approvedDeposits: [];
+  depositInstructions: IDepositInstructions | null;
   setSelectedDepositMethod: (method: IDepositMethods) => void;
   fetchDepositMethods: () => Promise<void>;
   fetchDepositHistory: (page: number) => Promise<void>;
+  getDepositIntructions: (method: string) => Promise<void>;
   createDepositRequest: (params: {
-    method?: string ;
+    method?: string;
     amount?: number;
     transactionHash?: string;
   }) => Promise<void>;
@@ -40,69 +47,52 @@ interface DepositStore {
 
 
 const useDepositStore = create<DepositStore>((set) => ({
-  isDepositLoading:false,
-  depositRequestSuccessful:false,
-  depositMethods: [] as IDepositMethods[],
-  approvedDeposits:[],
-  pendingDeposits:[],
-  depositMethod: undefined as unknown as IDepositMethod,
-  depositHistory: [
-    {
-      id: "728ed52f",
-      method: "Btc",
-      amount: 100,
-      status: "pending",
-      transactionHarsh: "nc jhc",
-      walletAddress: "bbcuhc gh hckdgh",
-    },
-
-    {
-      id: "728ed52f",
-      method: "Btc",
-      amount: 100,
-      status: "pending",
-      transactionHarsh: "nc jhc",
-      walletAddress: "bbcuhc gh hckdgh",
-    },
-
-    {
-      id: "728ed52f",
-      method: "Btc",
-      amount: 100,
-      status: "pending",
-      transactionHarsh: "nc jhc",
-      walletAddress: "bbcuhc gh hckdgh",
-    },
-
-    {
-      id: "728ed52f",
-      method: "Btc",
-      amount: 100,
-      status: "pending",
-      transactionHarsh: "nc jhc",
-      walletAddress: "bbcuhc gh hckdgh",
-    },
-
-    {
-      id: "728ed52f",
-      method: "Btc",
-      amount: 100,
-      status: "pending",
-      transactionHarsh: "nc jhc",
-      walletAddress: "bbcuhc gh hckdgh",
-    },
-
-    {
-      id: "728ed52f",
-      method: "Btc",
-      amount: 100,
-      status: "pending",
-      transactionHarsh: "nc jhc",
-      walletAddress: "bbcuhc gh hckdgh",
-    },
-
-    // ...
+  isDepositLoading: false,
+  depositRequestSuccessful: false,
+  depositInstructions: null,
+  depositMethods: [
+      {
+        _id: "BTC",
+        name: "Bitcoin",
+        network: "BTC",
+        walletAddress: "bc1q00tpy9axmflknpxhuqafuf9dj62pdenc5h3pwr",
+      },
+      {
+        _id: "USDT-TRC20",
+        name: "USDT (TRC20)",
+        network: "TRON",
+        walletAddress: "TCi5CsQnzDCfZdRp9jYZoGpe1qD6Zpy6Je",
+      },
+      {
+        _id: "USDT-ERC20",
+        name: "USDT (ERC20)",
+        network: "USDT-ERC20",
+        walletAddress: "0x79fbF12Dc6BB71262Cb640c63641B4A6531E7138",
+      },
+      {
+        _id: "BNB",
+        name: "Binance Coin",
+        network: "BSC",
+        walletAddress: "0x79fbF12Dc6BB71262Cb640c63641B4A6531E7138",
+      },
+      {
+        _id: "ETH",
+        name: "Ethereum",
+        network: "Ethereum",
+        walletAddress: "0x79fbF12Dc6BB71262Cb640c63641B4A6531E7138",
+      },
   ],
+  depositMethod: undefined as unknown as IDepositMethod,
+  depositHistory:[],  
+
+  getDepositIntructions: async (method) => {
+    try {
+      const res = await baseAxios.get(`/deposit/instructions/${method}`);
+      set({ depositInstructions: res.data.data });
+    } catch (error) {
+      console.log("failed to fetch deposit intructions", error);
+    }
+  },
 
   setSelectedDepositMethod: (method: IDepositMethods) => {
     set({ selectedDepositMethod: method });
@@ -116,7 +106,7 @@ const useDepositStore = create<DepositStore>((set) => ({
           withCredentials: true,
         }
       );
-      set({ depositHistory: res.data?.data || [] });
+      set({ depositHistory: res.data?.data.deposits || [] });
       console.log("Deposit History:", res.data.data);
     } catch (error) {
       console.log("Error loading deposit history:", error);
@@ -127,7 +117,7 @@ const useDepositStore = create<DepositStore>((set) => ({
       const res = await baseAxios.get("/deposit/methods", {
         withCredentials: true,
       });
-      set({ depositMethods: res.data?.data || [] });
+      // set({ depositMethods: res.data?.data || [] });
       console.log("Deposit Methods:", res.data.data);
     } catch (error) {
       console.log("Error loading deposit depositMethods:", error);
@@ -135,49 +125,38 @@ const useDepositStore = create<DepositStore>((set) => ({
   },
 
   createDepositRequest: async (params) => {
-      set({ isDepositLoading: false });
+    set({ isDepositLoading: true });
+    console.log(params);
     try {
-      const res = await baseAxios.post("/deposit/create",{params}, {
-        withCredentials: true,
-      });
+      const res = await baseAxios.post(
+        "/deposit/create",
+        {
+          method: params.method,
+          amount: params.amount,
+          transactionHash: params.transactionHash,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      enqueueSnackbar(res.data.message,{variant:"success"})
       console.log("Create Deposit Response:", res.data);
-      set({ depositRequestSuccessful :true});
+      set({ depositRequestSuccessful: true });
     } catch (error) {
       console.log("Error creating deposit:", error);
-    }finally{
-      set({ isDepositLoading: false});
-  }},
-  getDepositById: async (id: string) => {
+    } finally {
+      set({ isDepositLoading: false });
+    }
+  },
+  getDepositById: async (_id: string) => {
     try {
-      const res = await baseAxios.get(`/deposit/${id}`, {
+      const res = await baseAxios.get(`/deposit/${_id}`, {
         withCredentials: true,
       });
       set({ depositMethod: res.data?.data || "" });
       console.log("Deposit Method by ID:", res.data.data);
     } catch (error) {
       console.log("Error loading deposit method by ID:", error);
-    }
-  },
-  fetchApprovedDeposits: async () => {
-    try {
-      const res = await baseAxios.get("/deposit/approved", {
-        withCredentials: true,
-      });
-      set({ approvedDeposits: res.data?.data || [] });
-      // console.log("Approved Withdrawals:", res.data.data);
-    } catch (error) {
-      console.log("Error loading approved deposits:", error);
-    }
-  },
-  fetchPendingWithdrawals: async () => {
-    try {
-      const res = await baseAxios.get("/deposit/pending", {
-        withCredentials: true,
-      });
-      set({ pendingDeposits: res.data?.data || [] });
-      // console.log("Pending Withdrawals:", res.data.data);
-    } catch (error) {
-      console.log("Error loading pending deposits:", error);
     }
   },
 }));

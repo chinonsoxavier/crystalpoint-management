@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { axiosError, baseAxios } from "@/network/axios";
 
 interface IMembershipCard {
-  id: string;
+  _id: string;
   name: string;
   tier: number;
   requiredDeposit: number;

@@ -24,7 +24,7 @@ export function CurrentMembership() {
   }, [currentMembership, getCurrentMembership]);
 
 
-  if (!currentMembership) {
+  if (!currentMembership?.membership) {
     return (
       <Card>
         <CardHeader>
@@ -45,7 +45,6 @@ export function CurrentMembership() {
   const activatedDate = new Date(currentMembership?.membership?.activatedAt ?? '');
   const nextTierDeposit = currentMembership?.membership?.card?.requiredDeposit * 5;
   const currentDeposit = currentMembership?.membership?.card?.requiredDeposit;
-  const progress = (currentDeposit / nextTierDeposit) * 100;
 
   return (
     <Card className="border bg-accent-foreground">

@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
+import React, { useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -43,6 +43,9 @@ export function TransactionTable<T extends object>({
     []
   );
 
+  // Add a state to track when data is loaded
+  const [isDataLoaded, setIsDataLoaded] = React.useState(false);
+
   const table = useReactTable({
     data,
     columns,
@@ -57,6 +60,25 @@ export function TransactionTable<T extends object>({
       columnFilters,
     },
   });
+
+  // Fix: Add data as a dependency to useEffect
+  useEffect(() => {
+    console.log("Data in TransactionTable:", data);
+    console.log("Data length:", data.length);
+    console.log("Table rows length:", table.getRowModel().rows.length);
+
+    // Mark data as loaded
+    if (data && data.length > 0) {
+      setIsDataLoaded(true);
+    }
+  }, [data, table]);
+
+  // Reset column filters when data changes
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setColumnFilters([]);
+    }
+  }, [data]);
 
   return (
     <div className="space-y-4">
@@ -83,7 +105,7 @@ export function TransactionTable<T extends object>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="md:text-lg" >
+                  <TableHead key={header.id} className="md:text-lg">
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -104,7 +126,7 @@ export function TransactionTable<T extends object>({
                   className="hover:bg-muted/50 transition-colors"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="md:text-base text-sm" >
+                    <TableCell key={cell.id} className="md:text-base text-sm">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -119,7 +141,7 @@ export function TransactionTable<T extends object>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {isDataLoaded ? "No results." : "Loading data..."}
                 </TableCell>
               </TableRow>
             )}

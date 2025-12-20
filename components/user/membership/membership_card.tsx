@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Lock, TrendingUp, Crown, Zap, Star } from "lucide-react";
 import useMembershipStore from "@/app/user/membership/_membership_store";
-
 const tierIcons = [Crown, Zap, Star];
 const tierColors = ["text-amber-500", "text-blue-500", "text-purple-500"];
 
@@ -20,7 +19,6 @@ export function MembershipCards() {
   const {
     membershipCards,
     loading,
-    error,
     getMembershipCards,
     activateMembership,
   } = useMembershipStore();
@@ -78,7 +76,7 @@ export function MembershipCards() {
 
           return (
             <Card
-              key={card.id}
+              key={card._id}
               className={`relative overflow-hidden ${
                 card.currentTier === card.tier
                   ? "border-primary ring-2 ring-primary/20"
@@ -158,7 +156,7 @@ export function MembershipCards() {
                 </div>
 
                 <Button
-                  onClick={() => handleActivate(card.id)}
+                  onClick={() => handleActivate(card._id)}
                   disabled={
                     !card.isEligible ||
                     card.currentTier === card.tier ||

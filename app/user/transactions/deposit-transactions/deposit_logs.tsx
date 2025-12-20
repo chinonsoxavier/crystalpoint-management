@@ -4,18 +4,23 @@ import { Badge } from "@/components/ui/badge";
 import { TransactionTable } from "@/components/layouts/transaction_table";
 import { Transactions } from "./page";
 import { useEffect } from "react";
-import useDepositStore from "../../deposit/_deposit_store";
+import useDepositStore, { IDepositMethod } from "../../deposit/_deposit_store";
 
 // Define the columns for this type
-const transactionColumns: ColumnDef<Transactions>[] = [
+const transactionColumns: ColumnDef<IDepositMethod>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "_id",
     header: "Transaction ID",
     cell: ({ row }) => (
       <div className="font-mono text-xs text-muted-foreground max-w-[100px] truncate">
-        {row.getValue("id")}
+        {row.getValue("_id")}
       </div>
     ),
+  },
+
+  {
+    accessorKey: "walletAddress",
+    header: "Wallet Address",
   },
   {
     accessorKey: "method",

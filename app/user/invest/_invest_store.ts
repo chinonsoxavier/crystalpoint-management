@@ -37,6 +37,7 @@ export interface IInvestLog {
   amount: number;
   expectedReturn: number;
   status: string;
+  startDate:string;
   endDate:string;
 }
 
@@ -114,7 +115,7 @@ const useInvestStore = create<IInvestStore>((set) => ({
     set({ isFetchingInvestHistory: true });
     try {
       const res = await baseAxios.get(
-        `/invest/history?page=${page}&limit=${20}`,
+        `/investment/logs?page=${page}&limit=${20}`,
         {
           withCredentials: true,
         }

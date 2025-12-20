@@ -17,6 +17,13 @@ import {
   faTrophy,
   faHistory,
   faEye,
+  faChartLine,
+  faListAlt,
+  faPlayCircle,
+  faClock,
+  faArrowUpRightDots,
+  faArrowDown,
+  faFileInvoiceDollar,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -72,9 +79,18 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
     {
       label: "Deposit Transactions",
       link: "/user/transactions/deposit-transactions",
+      icon: faArrowDown,
     },
-    { label: "Investment Logs", link: "/user/transactions/investment-logs" },
-    { label: "Withdrawal Logs", link: "/user/transactions/withdrawal-logs" },
+    {
+      label: "Investment Logs",
+      link: "/user/transactions/investment-logs",
+      icon: faFileInvoiceDollar,
+    },
+    {
+      label: "Withdrawal Logs",
+      link: "/user/transactions/withdrawal-logs",
+      icon: faArrowUpRightDots,
+    },
   ];
 
   const membershipCards = [
@@ -92,10 +108,14 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
   ];
 
   const investmentLinks = [
-    { name: "Stats", link: "/user/invest/stats" },
-    { name: "Investments", link: "/user/invest/list" },
-    { name: "Active Investments", link: "/user/invest/active" },
-    { name: "History", link: "/user/invest/history" },
+    { name: "Stats", link: "/user/invest/stats", icon: faChartLine },
+    { name: "Investments", link: "/user/invest/list", icon: faListAlt },
+    {
+      name: "Active Investments",
+      link: "/user/invest/active",
+      icon: faPlayCircle,
+    },
+    { name: "History", link: "/user/transactions/investment-logs", icon: faClock },
   ];
 
   const navItems = [
@@ -121,7 +141,7 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
                       : "text-accent-text hover:text-[#0A8A9F]"
                   }`}
                 >
-                  <div className="mt-1 rounded-full min-w-3.5 min-h-3.5 h-2.5 w-3.5 bg-transparent"></div>
+                  <FontAwesomeIcon icon={link.icon!} className="text-xs" />
                   {link.name}
                 </button>
               </Link>
@@ -138,7 +158,6 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
         setDropDownOpen(dropDownOpen === "Membership" ? "" : "Membership"),
       dropDown: isMembershipAvailable && (
         <div className="pl-8 space-y-2 py-2">
-          {/* Overview */}
           <Link href="/user/membership/overview">
             <button
               className={`w-full flex gap-2 items-center text-left text-sm px-4 py-2 rounded transition-colors ${
@@ -152,7 +171,6 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
             </button>
           </Link>
 
-          {/* Cards - Nested Dropdown */}
           <div>
             <button
               onClick={() => setCardsDropdownOpen(!cardsDropdownOpen)}
@@ -197,7 +215,6 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
             )}
           </div>
 
-          {/* Benefits */}
           <Link href="/user/membership/benefits">
             <button
               className={`w-full flex gap-2 items-center text-left text-sm px-4 py-2 rounded transition-colors ${
@@ -211,7 +228,6 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
             </button>
           </Link>
 
-          {/* History */}
           <Link href="/user/membership/history">
             <button
               className={`w-full flex gap-2 items-center text-left text-sm px-4 py-2 rounded transition-colors ${
@@ -246,7 +262,7 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
                       : "text-accent-text hover:text-[#0A8A9F]"
                   }`}
                 >
-                  <div className="mt-1 rounded-full min-w-3.5 min-h-3.5 h-2.5 w-3.5 bg-transparent"></div>
+                  <FontAwesomeIcon icon={link.icon!} className="text-xs" />
                   {link.label}
                 </button>
               </Link>
@@ -391,11 +407,11 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
       ),
     },
     { label: "Settings", icon: faGear, link: "/user/settings" },
-    {
-      label: "Promotional Bonus",
-      icon: faGift,
-      eventHandler: () => setPromoModalOpen(true),
-    },
+    // {
+    //   label: "Promotional Bonus",
+    //   icon: faGift,
+    //   eventHandler: () => setPromoModalOpen(true),
+    // },
     { label: "Help & Support", icon: faHeadphones, link: "/user/support" },
     { label: "Logout", icon: faDoorOpen, eventHandler: handleLogout },
   ];

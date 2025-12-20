@@ -2,51 +2,51 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { TransactionTable } from "@/components/layouts/transaction_table";
-import useInvestStore from "../../invest/_invest_store";
+import useInvestStore, { IInvestLog } from "../../invest/_invest_store";
 import { useEffect } from "react";
+import { formatDate } from "@/utility/format_date";
 
 // Define the specific type for this data
-export interface IInvestPlans {
-  id: string;
-  name: string;
-  description: string;
-  roiPercentage: number;
-  durationDays: number;
-  minAmount: number;
-  maxAmount: number;
-  isActive: boolean; // Changed from true to boolean
-  isFetchingMethods: boolean;
-}
+
 
 // Define the columns for this type
-const PlanColumns: ColumnDef<IInvestPlans>[] = [
+const PlanColumns: ColumnDef<IInvestLog>[] = [
   {
     accessorKey: "name",
     header: "Investment Name",
-    cell: ({ row }) => <div className="font-medium">{row.original.name}</div>,
+    cell: ({ row }) => (
+      <div className="font-medium">{row.original.plan.name}</div>
+    ),
   },
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: "startDate",
+    header: "Start Date",
     cell: ({ row }) => (
-      <div className="max-w-[200px] truncate">{row.original.description}</div>
+      <div className="max-w-[200px] truncate">{formatDate(row.original.startDate)}</div>
+    ),
+  },
+  {
+    accessorKey: "endDate",
+    header: "End Date",
+    cell: ({ row }) => (
+      <div className="max-w-[200px] truncate">{formatDate(row.original.endDate)}</div>
     ),
   },
   {
     accessorKey: "roiPercentage",
     header: "ROI",
-    cell: ({ row }) => <div>{row.original.roiPercentage}%</div>,
+    cell: ({ row }) => <div>{row.original.plan.roiPercentage}%</div>,
   },
   {
     accessorKey: "durationDays",
     header: "Duration",
-    cell: ({ row }) => <div>{row.original.durationDays} Days</div>,
+    cell: ({ row }) => <div>{row.original.plan.durationDays} Days</div>,
   },
   {
     accessorKey: "isActive",
     header: "Status",
     cell: ({ row }) => {
-      const isActive = row.original.isActive;
+      const isActive = row.original.plan.isActive;
       return (
         <Badge variant={isActive ? "default" : "secondary"}>
           {isActive ? "Active" : "Inactive"}

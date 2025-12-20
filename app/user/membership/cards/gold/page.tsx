@@ -1,26 +1,12 @@
 "use client";
 
 import type React from "react";
-
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import useMembershipStore from "../../_membership_store";
 const Page = () => {
-  const [cryptocurrency, setCryptocurrency] = useState("");
-  const { getMembershipCards, membershipCards } = useMembershipStore();
-  const [amount, setAmount] = useState("");
-  const [error, setError] = useState("");
+  const { getMembershipCards, membershipCards,activateMembership,loading } = useMembershipStore();
   useEffect(() => {
     getMembershipCards();
   }, []);
@@ -34,32 +20,9 @@ const Page = () => {
     );
   }, [membershipCards]);
 
-  // Debug (runs only after selectedCard updates)
-  useEffect(() => {
-    console.log("Selected:", selectedCard);
-  }, [selectedCard]);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-
-    if (!cryptocurrency) {
-      setError("Please select a cryptocurrency");
-      return;
-    }
-
-    if (!amount) {
-      setError("Please enter an amount");
-      return;
-    }
-
-    if (isNaN(Number(amount))) {
-      setError("Must be a number (E.g 100 not $100)");
-      return;
-    }
-
-    // Handle form submission
-    console.log("Form submitted:", { cryptocurrency, amount });
+     activateMembership(selectedCard?._id ?? '')
   };
 
   return (
@@ -72,10 +35,10 @@ const Page = () => {
         {/* Membership Card */}
         <div
           // key={card.id}
-          className="bg-[red] rounded-lg shadow-md overflow-hidden"
+          className="rounded-lg shadow-md overflow-hidden"
         >
           {/* Card Header */}
-          <div className="relative bg-gradient-to-r from-amber-500 via-amber-600 to-amber-800">
+          <div className="relative bg-liner-to-r from-amber-500 via-amber-600 to-amber-800">
             {/* Background pattern */}
             <div className="absolute inset-0 opacity-10">
               <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_25%,rgba(0,0,0,.1)_25%,rgba(0,0,0,.1)_50%,transparent_50%,rgba(0,0,0,.1)_75%,rgba(0,0,0,.1)_100%,transparent_75%,rgba(0,0,0,.1)_50%,transparent_25%,rgba(0,0,0,.1)_0%)] bg-size-[40px_40px]"></div>
@@ -108,9 +71,9 @@ const Page = () => {
                 </div>
 
                 <h2 className="md:text-3xl text-2xl font-bold text-white tracking-wide">
-                  CristalPoint
+                  CRISTALPOINT
                 </h2>
-                <h3 className="md:text-2xl text-xl font-bold text-white tracking-wide">
+                <h3 className="md:text-3xl text-2xl font-bold text-white tracking-wide">
                   MEMBERSHIP
                 </h3>
               </div>
@@ -161,25 +124,6 @@ const Page = () => {
                 ))}
               </ul>
             </div>
-
-            {/* <div className="flex justify-between items-center">
-              <div>
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    card.isActive
-                      ? "bg-green-100 text-green-800"
-                      : "bg-gray-100 text-gray-800"
-                  }`}
-                >
-                  {card.isActive ? "Active" : "Inactive"}
-                </span>
-              </div>
-              {card.canUpgrade && (
-                <Button className="text-blue-600 hover:text-blue-700">
-                  Upgrade
-                </Button>
-              )}
-            </div> */}
           </div>
         </div>
 
@@ -195,62 +139,13 @@ const Page = () => {
             onSubmit={handleSubmit}
             className="bg-accent-foregrond w-full rounded-lg"
           >
-            {/* Payment Section */}
-            <div className="space-y-3">
-              {/* Cryptocurrency Dropdown */}
-              <div className="max-w-4xl">
-                <Select required>
-                  <SelectTrigger className="w-full text-accent-text">
-                    <SelectValue placeholder="Select a wallet" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Crypto Deposit</SelectLabel>
-                      <SelectItem className="" value="Bitcoin">
-                        Bitcoin
-                      </SelectItem>
-                      <SelectItem className="" value="USDT (TRC20)">
-                        USDT (TRC20)
-                      </SelectItem>
-                      <SelectItem className="" value="USDT (ERC20)">
-                        USDT (ERC20)
-                      </SelectItem>
-                      <SelectItem className="" value="BNB">
-                        BNB
-                      </SelectItem>
-                      <SelectItem className="" value="Ethereum">
-                        Ethereum
-                      </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-              {/* Amount Input */}
-              <div className="max-w-4xl">
-                <Label className="block font-semibold text-accent-text mb-2">
-                  Amount
-                </Label>
-                <Input
-                  required
-                  type="text"
-                  placeholder=""
-                  className="w-full text-accent-text"
-                />
-                <p className="text-sm text-accent-text mt-2">
-                  Must be a number (E.g 100 not $100)
-                </p>
-              </div>
-            </div>
-
-            {/* Error Message */}
-            {error && <p className="text-red-400 text-sm mb-6">{error}</p>}
-
             {/* Submit Button */}
             <Button
               type="submit"
+              disabled={loading.activating}
               className="w-full mt-5 max-w-4xl text-slate-900 font-semibold py-3 rounded-lg text-lg transition-colors"
             >
-              Submit
+              {loading.activating ? "ACTIVATING" : "ACTIVATE"}
             </Button>
           </form>
         </div>
