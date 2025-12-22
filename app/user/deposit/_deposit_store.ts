@@ -1,6 +1,6 @@
 "use client";
 import { create } from "zustand";
-import { baseAxios } from "@/network/axios";
+import { baseAxios, baseAxiosPatch } from "@/network/axios";
 import { enqueueSnackbar } from "notistack";
 
 export interface IDepositMethod {
@@ -10,6 +10,7 @@ export interface IDepositMethod {
   transactionHarsh: string;
   status: "awaiting_payment" | "pending" | "confirmed" | "failed" | "cancelled";
   walletAddress: string;
+  createdAt:string
 }
 
 interface IDepositMethods {
@@ -28,6 +29,7 @@ interface IDepositInstructions {
 interface DepositStore {
   depositRequestSuccessful: boolean;
   isDepositLoading: boolean;
+  isDepositCancelLoading: boolean;
   selectedDepositMethod?: IDepositMethods;
   depositMethods: IDepositMethods[];
   depositMethod: IDepositMethod;
@@ -36,6 +38,7 @@ interface DepositStore {
   setSelectedDepositMethod: (method: IDepositMethods) => void;
   fetchDepositMethods: () => Promise<void>;
   fetchDepositHistory: (page: number) => Promise<void>;
+  cancelPendingDeposit: (id: string) => Promise<void>;
   getDepositIntructions: (method: string) => Promise<void>;
   createDepositRequest: (params: {
     method?: string;
@@ -49,6 +52,7 @@ interface DepositStore {
 const useDepositStore = create<DepositStore>((set) => ({
   isDepositLoading: false,
   depositRequestSuccessful: false,
+  isDepositCancelLoading:false,
   depositInstructions: null,
   depositMethods: [
       {
@@ -85,6 +89,20 @@ const useDepositStore = create<DepositStore>((set) => ({
   depositMethod: undefined as unknown as IDepositMethod,
   depositHistory:[],  
 
+
+  cancelPendingDeposit :async (id)=>{
+    set({isDepositCancelLoading:true});
+   try {
+      const res = await baseAxiosPatch.patch(`/deposit/${id}/cancel`,{withCredentials:true});
+      console.log(res.data);
+      enqueueSnackbar(res.data.message,{variant:'success'});
+   } catch (error) {
+      console.log("failed to cancel deposit", error);
+   }finally{  
+    set({ isDepositCancelLoading: false });
+
+   }
+  },
   getDepositIntructions: async (method) => {
     try {
       const res = await baseAxios.get(`/deposit/instructions/${method}`);

@@ -1,6 +1,7 @@
 "use client";
 
 import useDashboardStore from "@/app/user/(user)/_dashboard_store";
+import { formatCurrency } from "@/utility/format_currency";
 
 export interface BalanceCardsProps {
   showValues: boolean;
@@ -56,7 +57,7 @@ export function BalanceCards({ showValues }: BalanceCardsProps) {
             {card.label}
           </p>
           <p className="text-4xl font-bold relative z-10">
-            {showValues ? card.value : maskValue}
+           {showValues ?formatCurrency(card.value ?? 0) : maskValue}
           </p>
         </div>
       ))}

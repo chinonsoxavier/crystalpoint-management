@@ -4,13 +4,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SnackbarProvider } from "notistack";
 import { useEffect, useState } from "react";
-import userStore from "@/app/user/user_store"; // your function
 import { baseAxios } from "@/network/axios";
-import useSettingsStore from "@/app/user/settings/_settings_store";
-
+import { LanguageSelect } from "@/components/shared/language_select";
 
 export function Providers({ children }: { children: React.ReactNode }) {
-    // const {loadUser} = userStore();
+
   useEffect(() => {
     const checkServerHealth = async () => {
       try {
@@ -19,11 +17,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
       } catch (error) {
         console.error("Server health check failed:", error);
       }
-    }
+    };
     checkServerHealth();
-    // loadUser(); 
   }, []);
-  const [queryClient] = useState( 
+  const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
@@ -36,16 +33,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
       })
   );
 
-// if (authStatus === "loading") {
-//     return (
-//    <div className="flex items-center justify-center min-h-screen">
-//         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-//       </div>
-//     )}
   return (
     <QueryClientProvider client={queryClient}>
       <SnackbarProvider />
       {children}
+      <LanguageSelect/>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

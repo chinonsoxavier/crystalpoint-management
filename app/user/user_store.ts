@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { axiosError, baseAxios } from "@/network/axios";
+import { axiosError, baseAxios, baseAxiosDelete } from "@/network/axios";
 import { enqueueSnackbar } from "notistack";
 
 interface IUserProfile {
@@ -37,6 +37,7 @@ interface UserStore {
   errorMessage?: string;
   sideMenuOpen: boolean;
   showBalance: boolean;
+  isDeleteAccountLoading: boolean;
 
   // Actions
   loadUser: () => Promise<void>;
@@ -44,7 +45,7 @@ interface UserStore {
   closeSideMenu: () => void;
   toggleShowBalance: () => void;
   resetPassword: (email: string) => Promise<undefined | string>;
-
+  deleteAccount: (confirmation: string) => Promise<void>;
 
   register: (data: {
     firstName: string;
@@ -65,10 +66,11 @@ interface UserStore {
 // Create store
 const useUserStore = create<UserStore>((set) => ({
   user: null,
-  authStatus: 'idle',
+  authStatus: "idle",
   errorMessage: undefined,
   sideMenuOpen: true,
   showBalance: true,
+  isDeleteAccountLoading:false,
 
   toggleSideMenuOpen: () =>
     set((state) => ({ sideMenuOpen: !state.sideMenuOpen })),
@@ -78,19 +80,23 @@ const useUserStore = create<UserStore>((set) => ({
   toggleShowBalance: () =>
     set((state) => ({ showBalance: !state.showBalance })),
 
-   resetPassword: async (email: string) => {
+  resetPassword: async (email: string) => {
     try {
-      set({authStatus: "loading"});
+      set({ authStatus: "loading" });
       console.log(email);
-     const res = await baseAxios.post("/auth/forgot-password",{email});
-      enqueueSnackbar("Password reset link sent to your email.", { variant: "success" });
-      set({authStatus: "email-sent"});
-      return "success"
+      const res = await baseAxios.post("/auth/forgot-password", { email });
+      enqueueSnackbar("Password reset link sent to your email.", {
+        variant: "success",
+      });
+      set({ authStatus: "email-sent" });
+      return "success";
     } catch (error) {
-      enqueueSnackbar("Failed to send password reset link.", { variant: "error" });
+      enqueueSnackbar("Failed to send password reset link.", {
+        variant: "error",
+      });
       console.log("Reset password error:", error);
-      set({authStatus: "error"});
-    } 
+      set({ authStatus: "error" });
+    }
   },
 
   // REGISTER
@@ -124,7 +130,7 @@ const useUserStore = create<UserStore>((set) => ({
         phone,
         confirmPassword,
       });
-      console.log(res.data)
+      console.log(res.data);
       enqueueSnackbar(res.data.message, {
         variant: "success",
       });
@@ -165,7 +171,7 @@ const useUserStore = create<UserStore>((set) => ({
   },
 
   // LOGOUT
-  logout:async () => {
+  logout: async () => {
     try {
       const res = await baseAxios.post(
         "/auth/logout",
@@ -185,43 +191,54 @@ const useUserStore = create<UserStore>((set) => ({
       console.log("Logout error:", error);
     }
   },
-loadUser: async () => {
-  const { authStatus } = useUserStore.getState();
+  loadUser: async () => {
+    const { authStatus } = useUserStore.getState();
 
-  // Prevent parallel fetching
-  if (authStatus === "loading") return;
-  // set({ authStatus: "loading" });
+    // Prevent parallel fetching
+    if (authStatus === "loading") return;
+    // set({ authStatus: "loading" });
 
-  try {
-    const res = await baseAxios.get("/auth/me", { withCredentials: true });
+    try {
+      const res = await baseAxios.get("/auth/me", { withCredentials: true });
 
-    const user = res.data?.data?.user;
+      const user = res.data?.data?.user;
 
-    if (user) {
-      set({
-        user,
-        authStatus: "authenticated",
-      });
-    } else {
-      // Gracefully handle "user not found"
-      set({
-        user: null,
-        authStatus: "idle",
-      });
+      if (user) {
+        set({
+          user,
+          authStatus: "authenticated",
+        });
+      } else {
+        // Gracefully handle "user not found"
+        set({
+          user: null,
+          authStatus: "idle",
+        });
+      }
+    } catch (error: unknown) {
+      console.log(error);
     }
-  } catch (error: unknown) {
-    console.log(error)
-    // Expected UNAUTH states (e.g. 401, 404)
-  // axiosError(error)
-  //     set({
-  //       user: null,
-  //       authStatus: "idle",
-  //     });
-  }
-},
+  },
 
-
-
+  deleteAccount: async (confirmation: string) => {
+    try {
+      set({ isDeleteAccountLoading: true });
+      const res = await baseAxiosDelete.delete(
+        "/settings/account",
+        { data: { confirmation } }
+        // { withCredentials: true }
+      );
+      enqueueSnackbar(res.data.message, { variant: "success" });
+      useUserStore.getInitialState().logout();
+      // Redirect to login page or handle logout
+      // window.location.href = "/login";
+    } catch (error) {
+      axiosError(error);
+      console.log("Failed to delete account:", error);
+    } finally {
+      set({ isDeleteAccountLoading: false });
+    }
+  },
 }));
 
 export default useUserStore;

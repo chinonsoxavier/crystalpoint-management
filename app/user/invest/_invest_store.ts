@@ -25,7 +25,7 @@ interface IInvestmentStats {
 export interface IInvestLog {
   _id: string;
   plan: {
-    id: string;
+    _id: string;
     name: string;
     description: string;
     roiPercentage: number;

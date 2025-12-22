@@ -30,6 +30,7 @@ interface TransactionTableProps<T extends object> {
   columns: ColumnDef<T>[];
   searchColumn?: string; // Optional: which column to search in
   searchPlaceholder?: string; // Optional: placeholder for the search input
+  isDataLoading?: boolean;
 }
 
 export function TransactionTable<T extends object>({
@@ -37,6 +38,7 @@ export function TransactionTable<T extends object>({
   columns,
   searchColumn = "id", // Default to searching by 'id'
   searchPlaceholder = "Filter...",
+  isDataLoading,
 }: TransactionTableProps<T>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -141,7 +143,7 @@ export function TransactionTable<T extends object>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  {isDataLoaded ? "No results." : "Loading data..."}
+                  {isDataLoading ? "Loading data..." : "No results."}
                 </TableCell>
               </TableRow>
             )}

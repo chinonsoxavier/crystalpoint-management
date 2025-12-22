@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { FaWhatsapp } from "react-icons/fa";
 
 export default function WhatsAppFloat() {
-  const phoneNumber = "+1234567890";
+  const phoneNumber = "+2348161314443";
   const message = "Hello! I'm interested in your services.";
   
   // Format the WhatsApp URL

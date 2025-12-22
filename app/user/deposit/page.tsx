@@ -206,7 +206,7 @@ setStep(1);
                   <h2 className="text-xl font-bold">Complete Your Payment</h2>
                   <p className="text-slate-600">
                     Send exactly{" "}
-                    <span className="text-slate-900 font-bold text-lg">
+                    <span className="text-green-500 font-bold text-lg">
                       ${depositAmount}
                     </span>{" "}
                     worth of {selectedDepositMethod?.name}

@@ -6,7 +6,12 @@ import { useState } from "react";
 import landingStore from "@/app/(landing)/landing_store";
 import Animate from "../animation/animate";
 import { usePathname } from "next/navigation";
+import { useTranslateStore } from "@/lib/translations";
+import { translations } from "@/lib/i18n";
+
 const Header = () => {
+  const { language } = useTranslateStore();
+    const t = translations[language];
   const { toggleSideMenuOpen } = landingStore();
   const [hovered, setHovered] = useState(false);
   const pathname = usePathname();
@@ -74,7 +79,7 @@ const Header = () => {
                       : "text-white hover:text-[#1a365d]"
                   }`}
                 >
-                  Company <ChevronDown className="w-4 mt-px" />
+                  {t.header.company} <ChevronDown className="w-4 mt-px" />
                 </Link>
 
                 <div
@@ -90,7 +95,7 @@ const Header = () => {
                           isActiveLink("/about-us") ? "text-[#1a365d]" : ""
                         }
                       >
-                        About Us
+                       {t.header.aboutUs}
                       </Link>
                     </li>
                     <li className="text-primary-foreground duration-500 hover:text-[#1a365d]">
@@ -100,7 +105,7 @@ const Header = () => {
                           isActiveLink("/faqs") ? "text-[#1a365d]" : ""
                         }
                       >
-                        FAQ`s
+                       {t.header.faqs}
                       </Link>
                     </li>
                     <li className="text-primary-foreground duration-500 hover:text-[#1a365d]">
@@ -110,7 +115,7 @@ const Header = () => {
                           isActiveLink("/contact-us") ? "text-[#1a365d]" : ""
                         }
                       >
-                        Contact Us
+                      {t.header.contactUs}
                       </Link>
                     </li>
                   </ul>
@@ -125,7 +130,7 @@ const Header = () => {
                       : "text-white hover:text-[#1a365d]"
                   }`}
                 >
-                  Markets
+                  {t.header.markets}
                 </Link>
               </li>
               <li>
@@ -137,7 +142,7 @@ const Header = () => {
                       : "text-white hover:text-[#1a365d]"
                   }`}
                 >
-                  Plans
+                  {t.header.plans}
                 </Link>
               </li>
               <li>
@@ -149,7 +154,7 @@ const Header = () => {
                       : "text-white hover:text-[#1a365d]"
                   }`}
                 >
-                  Our Services
+                  {t.header.services}
                 </Link>
               </li>
             </ul>
@@ -165,7 +170,7 @@ const Header = () => {
                   : "hover:text-black text-white"
               }`}
             >
-              Log In
+            {t.header.login}
               <div
                 className={`center rounded-full transition-all duration-500 ${
                   isActiveLink("/sign-in")
@@ -191,7 +196,7 @@ const Header = () => {
                   : "hover:text-white text-[#2c2d32] bg-white hover:bg-[#1a365d]"
               }`}
             >
-              Sign Up
+              {t.header.signup}
               <div
                 className={`center delay-200 rounded-full w-4.5 h-4.5 transition-all duration-500 ${
                   isActiveLink("/sign-up")

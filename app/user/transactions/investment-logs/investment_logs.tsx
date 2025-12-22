@@ -15,38 +15,38 @@ const PlanColumns: ColumnDef<IInvestLog>[] = [
     accessorKey: "name",
     header: "Investment Name",
     cell: ({ row }) => (
-      <div className="font-medium">{row.original.plan.name}</div>
+      <div className="font-medium">{row.original.plan?.name ?? ''}</div>
     ),
   },
   {
     accessorKey: "startDate",
     header: "Start Date",
     cell: ({ row }) => (
-      <div className="max-w-[200px] truncate">{formatDate(row.original.startDate)}</div>
+      <div className="max-w-[200px] truncate">{formatDate(row.original?.startDate ?? '')}</div>
     ),
   },
   {
     accessorKey: "endDate",
     header: "End Date",
     cell: ({ row }) => (
-      <div className="max-w-[200px] truncate">{formatDate(row.original.endDate)}</div>
+      <div className="max-w-[200px] truncate">{formatDate(row.original?.endDate ?? '')}</div>
     ),
   },
   {
     accessorKey: "roiPercentage",
     header: "ROI",
-    cell: ({ row }) => <div>{row.original.plan.roiPercentage}%</div>,
+    cell: ({ row }) => <div>{row.original.plan?.roiPercentage ?? 0}%</div>,
   },
   {
     accessorKey: "durationDays",
     header: "Duration",
-    cell: ({ row }) => <div>{row.original.plan.durationDays} Days</div>,
+    cell: ({ row }) => <div>{row.original.plan?.durationDays ?? ''} Days</div>,
   },
   {
     accessorKey: "isActive",
     header: "Status",
     cell: ({ row }) => {
-      const isActive = row.original.plan.isActive;
+      const isActive = row.original.plan?.isActive ?? false;
       return (
         <Badge variant={isActive ? "default" : "secondary"}>
           {isActive ? "Active" : "Inactive"}
@@ -57,7 +57,7 @@ const PlanColumns: ColumnDef<IInvestLog>[] = [
 ];
 
 export default function InvestMentLogs() {
-  const { fetchInvestHistory, investHistory } = useInvestStore();
+  const { fetchInvestHistory, investHistory ,isFetchingInvestHistory} = useInvestStore();
 
   useEffect(() => {
     fetchInvestHistory(1);
@@ -67,6 +67,7 @@ export default function InvestMentLogs() {
     <TransactionTable
       columns={PlanColumns}
       data={investHistory}
+      isDataLoading= {isFetchingInvestHistory}
       searchColumn="name"
       searchPlaceholder="Filter by investment name..."
     />

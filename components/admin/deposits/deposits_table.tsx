@@ -16,7 +16,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Search, ChevronLeft, ChevronRight, Check, X } from "lucide-react";
+import {
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  Check,
+  X,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Loader2,
+} from "lucide-react";
 import { useAdminDepositsStore } from "@/app/admin/(routes)/deposits/admin_deposit_store";
 import {
   Table,
@@ -29,11 +39,28 @@ import {
 import { Button } from "@/components/ui/button";
 import DepositsTableModal from "./deposits_table_modal";
 import { formatDate } from "@/utility/format_date";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 type DepositStatus = "pending" | "confirmed" | "failed";
 
 const DepositsTable = () => {
-  const { deposits, fetchDeposits } = useAdminDepositsStore();
-  const [action, setAction] = useState<"confirm" | "reject" | null>(null);
+  const {
+    deposits,
+    fetchDeposits,
+    confirmDeposit,
+    rejectDeposit,
+    isRejectingDeposit,
+  } = useAdminDepositsStore();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<DepositStatus>("confirmed");
@@ -41,30 +68,63 @@ const DepositsTable = () => {
     (typeof deposits)[0] | null
   >(null);
   const [showActionModal, setShowActionModal] = useState(false);
+  const [action, setAction] = useState<"confirm" | "reject" | null>(null);
 
-
-
-  const getStatusColor = (status: string) => {
+  const getStatusProps = (status: string) => {
     switch (status) {
       case "pending":
-        return "bg-yellow-100 text-yellow-800";
+        return {
+          variant: "secondary" as const,
+          icon: <Clock className="h-3 w-3 mr-1" />,
+          text: "PENDING",
+        };
       case "confirmed":
-        return "bg-green-100 text-green-800";
+        return {
+          variant: "default" as const,
+          icon: <CheckCircle className="h-3 w-3 mr-1" />,
+          text: "CONFIRMED",
+        };
       case "failed":
-        return "bg-red-100 text-red-800";
+        return {
+          variant: "destructive" as const,
+          icon: <XCircle className="h-3 w-3 mr-1" />,
+          text: "FAILED",
+        };
       default:
-        return "bg-gray-100 text-gray-800";
+        return {
+          variant: "outline" as const,
+          icon: null,
+          text: status.toUpperCase(),
+        };
     }
   };
 
   useEffect(() => {
-    fetchDeposits({ page:page, limit: 100, status: statusFilter });
-    console.log(deposits);
-  }, [statusFilter]);
+    fetchDeposits({ page: page, limit: 100, status: statusFilter });
+  }, [statusFilter, page]);
 
   const handleStatusFilterChange = (value: string) => {
-    // Type assertion to ensure the value is of the correct type
     setStatusFilter(value as DepositStatus);
+  };
+
+  const handleConfirm = async (depositId: string) => {
+    try {
+      await confirmDeposit(depositId);
+      // Refresh the deposits list after successful action
+      fetchDeposits({ page, limit: 100, status: statusFilter });
+    } catch (error) {
+      console.error("Error confirming deposit:", error);
+    }
+  };
+
+  const handleReject = async (depositId: string) => {
+    try {
+      await rejectDeposit(depositId);
+      // Refresh the deposits list after successful action
+      fetchDeposits({ page, limit: 100, status: statusFilter });
+    } catch (error) {
+      console.error("Error rejecting deposit:", error);
+    }
   };
 
   return (
@@ -115,19 +175,15 @@ const DepositsTable = () => {
                   <TableHead>Method</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Date</TableHead>
-                  <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {deposits.map((deposit) => (
                   <TableRow key={deposit?._id}>
-                  
                     <TableCell className="font-mono text-sm">
                       {deposit?._id ?? ""}
                     </TableCell>
-                    <TableCell>
-                      {deposit?.user?.username ?? ""}
-                    </TableCell>
+                    <TableCell>{deposit?.user?.username ?? ""}</TableCell>
                     <TableCell className="font-bold">
                       ${deposit?.amount.toLocaleString() ?? ""}
                     </TableCell>
@@ -135,46 +191,108 @@ const DepositsTable = () => {
                       {deposit?.method?.replace("_", " ") ?? ""}
                     </TableCell>
                     <TableCell>
-                      <Badge
-                        className={getStatusColor(deposit?.status)}
-                      >
-                        {deposit?.status}
-                      </Badge>
+                      {deposit?.status === "pending" ? (
+                        <div className="flex items-center gap-2">
+                          <Badge variant="secondary" className="text-xs">
+                            <Clock className="h-3 w-3 mr-1" />
+                            PENDING
+                          </Badge>
+                          <div className="flex gap-1">
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-7 px-2 text-xs text-green-600 hover:bg-green-50 border-green-200"
+                                  disabled={isRejectingDeposit}
+                                >
+                                  {isRejectingDeposit ? (
+                                    <Loader2 className="h-3 w-3 animate-spin" />
+                                  ) : (
+                                    <Check className="h-3 w-3" />
+                                  )}
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>
+                                    Confirm Deposit
+                                  </AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Are you sure you want to confirm this
+                                    deposit of{" "}
+                                    <span className="font-semibold">
+                                      ${deposit?.amount.toLocaleString()}
+                                    </span>{" "}
+                                    from {deposit?.user?.username}? This action
+                                    cannot be undone.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() => handleConfirm(deposit._id)}
+                                    className="bg-green-600 text-white hover:bg-green-700"
+                                  >
+                                    Confirm Deposit
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-7 px-2 text-xs text-red-600 hover:bg-red-50 border-red-200"
+                                  disabled={isRejectingDeposit}
+                                >
+                                  {isRejectingDeposit ? (
+                                    <Loader2 className="h-3 w-3 animate-spin" />
+                                  ) : (
+                                    <X className="h-3 w-3" />
+                                  )}
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>
+                                    Reject Deposit
+                                  </AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Are you sure you want to reject this deposit
+                                    of{" "}
+                                    <span className="font-semibold">
+                                      ${deposit?.amount.toLocaleString()}
+                                    </span>{" "}
+                                    from {deposit?.user?.username}? This action
+                                    cannot be undone.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() => handleReject(deposit._id)}
+                                    className="bg-red-600 text-white hover:bg-red-700"
+                                  >
+                                    Reject Deposit
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
+                        </div>
+                      ) : (
+                        <Badge
+                          variant={getStatusProps(deposit?.status).variant}
+                          className="text-xs"
+                        >
+                          {getStatusProps(deposit?.status).icon}
+                          {getStatusProps(deposit?.status).text}
+                        </Badge>
+                      )}
                     </TableCell>
                     <TableCell>{formatDate(deposit?.createdAt)}</TableCell>
-                    <TableCell>
-                    
-                      <div className="flex gap-2">
-                        {deposit?.status === "pending" && (
-                          <>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="text-green-600 hover:text-green-700 bg-transparent"
-                              onClick={() => {
-                                setSelectedDeposit(deposit);
-                                setAction("confirm");
-                                setShowActionModal(true);
-                              }}
-                            >
-                              <Check size={16} />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="text-red-600 hover:text-red-700 bg-transparent"
-                              onClick={() => {
-                                setSelectedDeposit(deposit);
-                                setAction("reject");
-                                setShowActionModal(true);
-                              }}
-                            >
-                              <X size={16} />
-                            </Button>
-                          </>
-                        )}
-                      </div>
-                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

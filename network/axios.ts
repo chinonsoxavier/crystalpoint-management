@@ -15,6 +15,22 @@ export const baseAxios = axios.create({
   // withCredentials:true
 });
 
+export const baseAxiosPatch = axios.create({
+  baseURL: baseUrl,
+  withCredentials:true
+});
+
+
+
+export const baseAxiosDelete = axios.create({
+  baseURL: baseUrl,
+  withCredentials: true,
+});
+
+
+
+
+
 baseAxios.interceptors.request.use((config) => {
   return config;
 });
