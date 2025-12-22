@@ -90,14 +90,12 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
 
   return (
     <AuthGuard>
-      <div className="w-full wrapper min-h-screen md:px-6 px-4 flex items-center justify-center bg-linear-to-br from-slate-900 via-slate-800 to-slate-900">
+      <div className="w-full py-7 md:py-10 wrapper min-h-screen md:px-6 px-4 flex items-center justify-center bg-linear-to-br from-slate-900 via-slate-800 to-slate-900">
         <div className="w-full max-w-md">
           {/* Logo and Title Section */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-lg">
-              <span className="text-2xl font-bold text-white">
-                CP
-              </span>
+              <span className="text-2xl font-bold text-white">CP</span>
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">
               {step === "email" ? "Reset Password" : "Create New Password"}
@@ -147,7 +145,7 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
                         errors.email &&
                           "border-destructive focus:ring-destructive/20"
                       )}
-                      disabled={authStatus==='loading'}
+                      disabled={authStatus === "loading"}
                     />
                   </div>
                   {errors.email && (
@@ -158,10 +156,10 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  disabled={authStatus==='loading'}
+                  disabled={authStatus === "loading"}
                   className="w-full py-3 rounded-lg font-medium text-white"
                 >
-                  {authStatus==='loading' ? (
+                  {authStatus === "loading" ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
                       Sending Reset Link...
@@ -207,13 +205,13 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
                         errors.newPassword &&
                           "border-destructive focus:ring-destructive/20"
                       )}
-                      disabled={authStatus==='loading'}
+                      disabled={authStatus === "loading"}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground transition-colors"
-                      disabled={authStatus==='loading'}
+                      disabled={authStatus === "loading"}
                     >
                       {showPassword ? (
                         <EyeOff className="h-5 w-5" />
@@ -253,7 +251,7 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
                         errors.confirmPassword &&
                           "border-destructive focus:ring-destructive/20"
                       )}
-                      disabled={authStatus==='loading'}
+                      disabled={authStatus === "loading"}
                     />
                     <button
                       type="button"
@@ -261,7 +259,7 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
                         setShowConfirmPassword(!showConfirmPassword)
                       }
                       className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground transition-colors"
-                      disabled={authStatus==='loading'}
+                      disabled={authStatus === "loading"}
                     >
                       {showConfirmPassword ? (
                         <EyeOff className="h-5 w-5" />
@@ -280,10 +278,10 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  disabled={authStatus==='loading' || isSuccess}
+                  disabled={authStatus === "loading" || isSuccess}
                   className="w-full py-3 rounded-lg font-medium"
                 >
-                  {authStatus==='loading' ? (
+                  {authStatus === "loading" ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
                       Resetting Password...

@@ -63,7 +63,7 @@ const Page = () => {
 
   return (
     <AuthGuard>
-      <div className="w-full wrapper min-h-screen md:px-6 px-4 flex items-center justify-center bg-linear-to-br from-slate-900 via-slate-800 to-slate-900">
+      <div className="w-full wrapper py-7 md:py-10 min-h-screen md:px-6 px-4 flex items-center justify-center bg-linear-to-br from-slate-900 via-slate-800 to-slate-900">
         <div className="w-full max-w-lg">
           {/* Logo and Title Section */}
           <div className="text-center mb-8">

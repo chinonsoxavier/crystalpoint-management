@@ -11,6 +11,9 @@ import {
   Phone,
   Lock,
   Home,
+  Check,
+  ChevronsUpDown,
+  Search,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -18,6 +21,111 @@ import useUserStore from "@/app/user/user_store";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { AuthGuard } from "@/components/auth_guard";
+import { countries } from "@/components/shared/data/countrie"; // Ensure this path is correct
+
+// --- SHADCN IMPORTS FOR COMBOBOX ---
+// If you don't have these installed yet, run: npx shadcn@latest add popover command
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+
+// --- 1. COUNTRY COMBOBOX COMPONENT ---
+interface CountryComboboxProps {
+  value: string;
+  onChange: (value: string) => void;
+  error?: boolean;
+  disabled?: boolean;
+}
+
+const CountryCombobox = ({
+  value,
+  onChange,
+  error,
+  disabled,
+}: CountryComboboxProps) => {
+  const [open, setOpen] = useState(false);
+
+  const selectedCountry = countries.find((country) => country.code === value);
+
+  return (
+    <div className="relative w-full">
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            disabled={disabled}
+            className={cn(
+              "w-full justify-between pl-10 text-left font-normal h-12 bg-background/50",
+              !value && "text-muted-foreground",
+              error &&
+                "border-destructive text-destructive focus:ring-destructive/20"
+            )}
+          >
+            {selectedCountry ? selectedCountry.name : "Select a country"}
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          className="w-full p-0 border-border/50 bg-card shadow-xl"
+          align="start"
+        >
+          <Command className="bg-transparent">
+            <div className="flex items-center border-b px-3">
+              <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+              <CommandInput
+                placeholder="Search country..."
+                className="h-9 border-0 focus:ring-0 focus-visible:ring-0"
+              />
+            </div>
+            <CommandList>
+              <CommandEmpty>No country found.</CommandEmpty>
+              <CommandGroup>
+                {countries.map((country) => (
+                  <CommandItem
+                    key={country.code}
+                    value={country.name} // Search by name
+                    onSelect={() => {
+                      onChange(country.code); // Save by code
+                      setOpen(false);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        value === country.code ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {country.name}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+
+      {/* Icon positioned absolutely to match other inputs */}
+      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+        <Globe className="h-5 w-5 text-muted-foreground" />
+      </div>
+    </div>
+  );
+};
+
+// --- MAIN FORM COMPONENT ---
 
 interface FormData {
   firstName: string;
@@ -49,18 +157,6 @@ const Page = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const countries = [
-    "United States",
-    "United Kingdom",
-    "Canada",
-    "Australia",
-    "India",
-    "Germany",
-    "France",
-    "Japan",
-    "Other",
-  ];
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -147,14 +243,12 @@ const Page = () => {
 
   return (
     <AuthGuard>
-      <div className="w-full py-10 wrapper min-h-screen md:px-6 px-4 flex items-center justify-center bg-linear-to-br from-slate-900 via-slate-800 to-slate-900">
+      <div className="w-full py-7 md:py-10 wrapper min-h-screen md:px-6 px-4 flex items-center justify-center bg-linear-to-br from-slate-900 via-slate-800 to-slate-900">
         <div className="w-full max-w-lg">
           {/* Logo and Title Section */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-lg">
-              <span className="text-2xl font-bold text-white">
-                CP
-              </span>
+              <span className="text-2xl font-bold text-white">CP</span>
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">
               Create Account
@@ -312,30 +406,17 @@ const Page = () => {
                   >
                     Country
                   </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                      <Globe className="h-5 w-5 text-muted-foreground" />
-                    </div>
-                    <select
-                      id="country"
-                      name="country"
-                      value={formData.country}
-                      onChange={handleChange}
-                      className={cn(
-                        "w-full pl-10 pr-3 py-3 bg-background/50 border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all appearance-none",
-                        errors.country &&
-                          "border-destructive focus:ring-destructive/20"
-                      )}
-                      disabled={authStatus === "loading"}
-                    >
-                      <option value="">Select a country</option>
-                      {countries.map((c) => (
-                        <option key={c} value={c}>
-                          {c}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+
+                  {/* REPLACED SELECT WITH COMBOBOX */}
+                  <CountryCombobox
+                    value={formData.country}
+                    onChange={(val) =>
+                      setFormData((prev) => ({ ...prev, country: val }))
+                    }
+                    error={!!errors.country}
+                    disabled={authStatus === "loading"}
+                  />
+
                   {errors.country && (
                     <p className="text-sm text-destructive">{errors.country}</p>
                   )}
