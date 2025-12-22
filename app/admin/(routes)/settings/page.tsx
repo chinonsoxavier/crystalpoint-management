@@ -1,13 +1,5 @@
 "use client";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import type React from "react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -17,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { enqueueSnackbar } from "notistack";
 import useAdminStore from "../../_admin_store";
 import useAdminSettingsStore from "./admin_settings_store";
+import useUserStore from "@/app/user/user_store";
 
 export default function SettingsPage() {
   const {
@@ -27,7 +20,8 @@ export default function SettingsPage() {
     updateAdminDetail,
     isUpdateLoading,
   } = useAdminSettingsStore();
-  const { authStatus,admin,updateAdminEmail,updateAdminUsername ,loadUser} = useAdminStore();
+  const { loadUser } = useUserStore()
+  const { authStatus,admin,updateAdminEmail,updateAdminUsername} = useAdminStore();
 
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
