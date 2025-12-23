@@ -3,7 +3,7 @@
 import LedgerBalance from "@/components/shared/ledger_balance";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import useInvestStore from "../_invest_store";
+import useInvestStore from "./_invest_store";
 import Link from "next/link";
 
 const Page = () => {
@@ -86,10 +86,11 @@ const Page = () => {
                       </div>
                     </div>
 
-
                     {/* Invest Button */}
                     <Link
-                      href={`/user/invest/select-plan/${plan.name.split(" ")[0].toLowerCase()}/${plan._id}`}
+                      href={`/user/invest/select-plan/${plan.name
+                        .split(" ")[0]
+                        .toLowerCase()}/${plan._id}`}
                       className="w-full"
                     >
                       <Button variant="outline" className="w-full">

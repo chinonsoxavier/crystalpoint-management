@@ -76,7 +76,7 @@ const useDepositStore = create<DepositStore>((set) => ({
       {
         _id: "BNB",
         name: "Binance Coin",
-        network: "BSC",
+        network: "BNB",
         walletAddress: "0x79fbF12Dc6BB71262Cb640c63641B4A6531E7138",
       },
       {

@@ -44,18 +44,19 @@ export function BalanceCards({ showValues }: BalanceCardsProps) {
   const maskValue = "$" + "•".repeat(4);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {cardConfigs.map((card, idx) => (
         <div
           key={idx}
-          className={`bg-linear-to-br rounded-2xl p-8 text-white relative overflow-hidden hover:shadow-xl transition-shadow`}
+          className={`bg-accent-foreground border rounded-2xl p-5 text-white relative overflow-hidden hover:shadow-xl transition-shadow`}
         >
-          <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20"></div>
-          <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full -ml-16 -mb-16"></div>
-          <p className="text-sm font-semibold text-white/80 mb-3 relative z-10">
-            {card.label}
-          </p>
-          <p className="text-4xl font-bold relative z-10">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+            <p className="text-sm font-medium text-muted-foreground">
+              {card.label}
+            </p>
+          </div>
+          <p className="text-3xl font-bold relative z-10">
             {showValues ? formatCurrency(card.value ?? 0) : maskValue}
           </p>
         </div>

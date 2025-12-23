@@ -5,7 +5,7 @@ import type React from "react";
 import { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 
-import useMembershipStore from "../../_membership_store";
+import useMembershipStore from "../_membership_store";
 const Page = () => {
   const { getMembershipCards, membershipCards,activateMembership,loading } = useMembershipStore();
   useEffect(() => {

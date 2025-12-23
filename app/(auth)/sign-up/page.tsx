@@ -21,7 +21,7 @@ import useUserStore from "@/app/user/user_store";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { AuthGuard } from "@/components/auth_guard";
-import { countries } from "@/components/shared/data/countrie"; // Ensure this path is correct
+import { countries } from "@/components/shared/data/countrie"; 
 
 // --- SHADCN IMPORTS FOR COMBOBOX ---
 // If you don't have these installed yet, run: npx shadcn@latest add popover command
@@ -67,13 +67,15 @@ const CountryCombobox = ({
             aria-expanded={open}
             disabled={disabled}
             className={cn(
-              "w-full justify-between pl-10 text-left font-normal h-12 bg-background/50",
+              "w-full justify-between text-left font-normal h-12 bg-background/50",
               !value && "text-muted-foreground",
               error &&
                 "border-destructive text-destructive focus:ring-destructive/20"
             )}
           >
+            <div className="pl-7" >
             {selectedCountry ? selectedCountry.name : "Select a country"}
+            </div>
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -262,7 +264,7 @@ const Page = () => {
           <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-xl border border-border/50 overflow-hidden">
             <form onSubmit={handleSubmit} className="p-8 space-y-6">
               {/* First Name + Last Name */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label
                     htmlFor="firstName"
@@ -331,7 +333,7 @@ const Page = () => {
               </div>
 
               {/* Username + Email */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label
                     htmlFor="username"
@@ -398,7 +400,7 @@ const Page = () => {
               </div>
 
               {/* Country + Phone */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label
                     htmlFor="country"
@@ -455,7 +457,7 @@ const Page = () => {
               </div>
 
               {/* Passwords */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label
                     htmlFor="password"

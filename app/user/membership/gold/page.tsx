@@ -1,11 +1,10 @@
 "use client";
 
 import type React from "react";
-
 import { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 
-import useMembershipStore from "../../_membership_store";
+import useMembershipStore from "../_membership_store";
 const Page = () => {
   const { getMembershipCards, membershipCards,activateMembership,loading } = useMembershipStore();
   useEffect(() => {
@@ -16,37 +15,37 @@ const Page = () => {
   const selectedCard = useMemo(() => {
     return (
       membershipCards.find(
-        (m) => m.name.toLowerCase() === "silver member".toLowerCase()
+        (m) => m.name.toLowerCase() === "gold member".toLowerCase()
       ) || null
     );
   }, [membershipCards]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    activateMembership(selectedCard?._id ?? '')
+     activateMembership(selectedCard?._id ?? '')
   };
 
   return (
     <div className="bg-accent p-4 md:p-6 h-full overflow-y-auto">
       {/* Header */}
       <h1 className="md:text-4xl text-3xl py-3 font-bold mb-4 md:mb-6">
-        Investor`s Silver Card Request
+        Investor`s Gold Card Request
       </h1>
-      <main className="text-white rounded-lg bg-accent-foreground w-full p-4 md:p-6 space-y-10">
+      <main className="text-white rounded-lg bg-accent w-full p-4 md:p-6 space-y-10">
         {/* Membership Card */}
         <div
           // key={card.id}
           className="rounded-lg shadow-md overflow-hidden"
         >
           {/* Card Header */}
-          <div className="relative bg-linear-to-r from-zinc-500 via-zinc-600 to-zinc-800">
+          <div className="relative bg-liner-to-r from-amber-500 via-amber-600 to-amber-800">
             {/* Background pattern */}
             <div className="absolute inset-0 opacity-10">
               <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_25%,rgba(0,0,0,.1)_25%,rgba(0,0,0,.1)_50%,transparent_50%,rgba(0,0,0,.1)_75%,rgba(0,0,0,.1)_100%,transparent_75%,rgba(0,0,0,.1)_50%,transparent_25%,rgba(0,0,0,.1)_0%)] bg-size-[40px_40px]"></div>
             </div>
 
             {/* Card Content */}
-            <div className="relative z-10 h-full flex flex-col items-center justify-center p-4">
+            <div className="relative z-10 bg-accent-foreground h-full flex flex-col items-center justify-center p-4">
               {/* Medal Icon and Title */}
               <div className="flex items-center gap-4 mb-4">
                 {/* Medal Icon */}
@@ -90,47 +89,11 @@ const Page = () => {
               </div>
             </div>
           </div>
-
-          {/* Card Details */}
-          <div className="p-6 bg-white">
-            <h3 className="text-xl font-semibold mb-4 text-gray-800">
-              {/* {card.name} */}
-            </h3>
-
-            <div className="space-y-3 mb-6">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Tier:</span>
-                <span className="font-medium text-gray-800">
-                  Tier {selectedCard?.tier}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Required Deposit:</span>
-                <span className="font-medium text-gray-800">
-                  ${selectedCard?.requiredDeposit}
-                </span>
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <h4 className="text-lg font-medium mb-2 text-gray-800">
-                Benefits:
-              </h4>
-              <ul className="space-y-2">
-                {selectedCard?.benefits.map((benefit, index) => (
-                  <li key={index} className="flex items-start">
-                    <span className="text-green-500 mr-2">✓</span>
-                    <span className="text-gray-700">{benefit}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
         </div>
 
         {/* Description */}
         <p className="text-left md:text-lg text-gray-100 ">
-          You are in this page because you requested to make payment for the
+          You are in this page because you requested to make a deposit for the
           investor`s Gold memebereship Card.
         </p>
 

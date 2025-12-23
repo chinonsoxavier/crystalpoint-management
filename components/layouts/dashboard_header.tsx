@@ -90,26 +90,11 @@ const DashboardHeader = () => {
 
         <div className="flex smedium:gap-15 gap-5">
           <div className="flex items-center gap-3 smedium:gap-6 justify-evenly">
-            <div
-              onClick={toggleTheme}
-              className="rounded-full bg-accent cursor-pointer center h-11.5 w-11.5"
-            >
-              {theme === "light" ? (
-                <FontAwesomeIcon
-                  icon={faMoon}
-                  className="smedium:text-[22px] text-lg"
-                />
-              ) : (
-                <FontAwesomeIcon
-                  icon={faSun}
-                  className="smedium:text-[22px] text-lg"
-                />
-              )}
-            </div>
+          
 
             <div
               onClick={() => toggleShowBalance()}
-              className="rounded-full bg-accent hidden md:flex cursor-pointer items-center justify-center h-11.5 w-11.5"
+              className="rounded-full bg-accent flex cursor-pointer items-center justify-center h-11.5 w-11.5"
             >
               {showBalance ? (
                 <FontAwesomeIcon
