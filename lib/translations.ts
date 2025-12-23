@@ -3,7 +3,7 @@ import { Language } from "./i18n";
 
 interface TranslateStore {
   language: Language;
-  setLanguage: (lang: Language) => void;
+  setLanguage: (lang: "en" | "es" | "fr" | "de" | "zh") => void;
 }
 
 export const useTranslateStore = create<TranslateStore>((set) => ({

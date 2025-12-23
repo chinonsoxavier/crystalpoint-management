@@ -566,14 +566,14 @@ const Page = () => {
                   I agree to{" "}
                   <a
                     href="/terms-of-use"
-                    className="text-primary hover:text-primary/80 underline"
+                    className="text-primary hover:text-primary/80 "
                   >
                     Terms & Conditions
                   </a>{" "}
                   and{" "}
                   <a
                     href="/privacy-policy"
-                    className="text-primary hover:text-primary/80 underline"
+                    className="text-primary hover:text-primary/80 "
                   >
                     Privacy Policy
                   </a>

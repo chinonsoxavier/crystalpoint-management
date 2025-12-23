@@ -1,6 +1,6 @@
 "use client";
 
-import { Globe } from "lucide-react";
+import { ChevronDown, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,31 +10,63 @@ import {
   DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
 
-import { languages, type Language } from "@/lib/i18n";
+// Import your store
 import { useTranslateStore } from "@/lib/translations";
+
+// Define languages with flags here (moved from Footer)
+const languages = [
+  { code: "en", name: "English", flag: "🇺🇸" },
+  { code: "es", name: "Español", flag: "🇪🇸" },
+  { code: "fr", name: "Français", flag: "🇫🇷" },
+  { code: "de", name: "Deutsch", flag: "🇩🇪" },
+  { code: "ar", name: "العربية", flag: "🇸🇦" },
+];
 
 export function LanguageSelect() {
   const { language, setLanguage } = useTranslateStore();
 
+  // Find the full object for the current language to display flag/name correctly
+  const currentLangObj =
+    languages.find((l) => l.code === language) || languages[0];
+
   return (
-    <div className="fixed bottom-0 left-20 z-50">
+    <div className="w-full">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="gap-2 bg-white">
-            <Globe className="h-4 w-4" />
-            <span className="hidden sm:inline">{languages[language]}</span>
+          <Button
+            variant="ghost"
+            className="w-full justify-start gap-2 text-secondary-foreground hover:text-primary hover:bg-transparent p-0 h-auto text-[17px] md:text-[19px]"
+          >
+            <Globe className="w-4 h-4" />
+            <span className="flex items-center gap-2">
+              {currentLangObj.flag} {currentLangObj.name} hvgh
+            </span>
+            <ChevronDown className="w-4 h-4 opacity-50 ml-auto" />
           </Button>
         </DropdownMenuTrigger>
 
         <DropdownMenuPortal>
-          <DropdownMenuContent align="end" sideOffset={8} className="z-50">
-            {(Object.keys(languages) as Language[]).map((lang) => (
+          <DropdownMenuContent
+            align="start"
+            sideOffset={8}
+            className="min-w-[200px] p-1"
+          >
+            {languages.map((lang) => (
               <DropdownMenuItem
-                key={lang}
-                onClick={() => setLanguage(lang)}
-                className={language === lang ? "bg-accent" : ""}
+                key={lang.code}
+                onClick={() => setLanguage(lang.code)}
+                className={`flex items-center gap-3 cursor-pointer px-4 py-3 rounded-md ${
+                  language === lang.code
+                    ? "bg-blue-50 text-blue-600 font-medium"
+                    : "text-gray-700 hover:bg-gray-50"
+                }`}
               >
-                {languages[lang]}
+                <span className="text-lg">{lang.flag}</span>
+                <span className="flex-1 text-left">{lang.name}</span>
+                {/* Active indicator dot */}
+                {language === lang.code && (
+                  <div className="w-2 h-2 bg-blue-600 rounded-full" />
+                )}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>

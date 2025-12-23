@@ -70,6 +70,7 @@ interface MembershipStore {
   currentMembership: ICurrentMembership | null;
   membershipBenefits: IMembershipBenefits | null;
   membershipHistory: IMembershipHistory | null;
+  isActivated: boolean;
   loading: {
     cards: boolean;
     current: boolean;
@@ -81,6 +82,7 @@ interface MembershipStore {
   getMembershipCards: () => Promise<void>;
   getCurrentMembership: () => Promise<void>;
   getMembershipBenefits: () => Promise<void>;
+  setIsActivated: (activated:boolean) => Promise<void>;
   getMembershipHistory: (page?: number, limit?: number) => Promise<void>;
   activateMembership: (cardId: string) => Promise<boolean>;
   setError: (error: string | null) => void;
@@ -91,6 +93,7 @@ const useMembershipStore = create<MembershipStore>((set, get) => ({
   membershipCards: [],
   currentMembership: null,
   membershipBenefits: null,
+  isActivated:false,
   membershipHistory: null,
   loading: {
     cards: false,
@@ -100,7 +103,9 @@ const useMembershipStore = create<MembershipStore>((set, get) => ({
     activating: false,
   },
   error: null,
-
+  setIsActivated: async (activated) => {
+     set({isActivated:activated})
+   },
   getMembershipCards: async () => {
     set({ loading: { ...get().loading, cards: true }, error: null });
     try {
@@ -189,6 +194,7 @@ const useMembershipStore = create<MembershipStore>((set, get) => ({
           get().getMembershipCards(),
           get().getCurrentMembership(),
         ]);
+        set({isActivated:true})
         return true;
       }
       return false;
