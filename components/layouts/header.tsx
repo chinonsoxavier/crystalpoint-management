@@ -17,7 +17,7 @@ const Header = () => {
   const pathname = usePathname();
 
   // Check if link is active
-  const isActiveLink = (href: string) => {
+  const isActiveLink = (href: string) => { 
     if (href === "/") {
       return pathname === href;
     }
