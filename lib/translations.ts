@@ -1,12 +1,12 @@
 import { create } from "zustand";
-import { Language } from "./i18n";
+import type { LanguageCode } from "./types";
 
-interface TranslateStore {
-  language: Language;
-  setLanguage: (lang: "en" | "es" | "fr" | "de" | "zh") => void;
-}
+type TranslateState = {
+  language: LanguageCode;
+  setLanguage: (lang: LanguageCode) => void;
+};
 
-export const useTranslateStore = create<TranslateStore>((set) => ({
+export const useTranslateStore = create<TranslateState>((set) => ({
   language: "en",
   setLanguage: (lang) => set({ language: lang }),
 }));

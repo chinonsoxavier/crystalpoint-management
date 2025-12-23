@@ -12,9 +12,10 @@ import {
 
 // Import your store
 import { useTranslateStore } from "@/lib/translations";
+import { LanguageCode } from "@/lib/types";
 
 // Define languages with flags here (moved from Footer)
-const languages = [
+const languages: { code: LanguageCode; name: string, flag: string }[] = [
   { code: "en", name: "English", flag: "🇺🇸" },
   { code: "es", name: "Español", flag: "🇪🇸" },
   { code: "fr", name: "Français", flag: "🇫🇷" },
