@@ -37,17 +37,19 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="container mx-auto py-6 px-4 md:px-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Settings</h1>
-        <p className="text-muted-foreground">
-          Manage your account settings and preferences
-        </p>
+    <div className="overflow-hidden py-6 px-4 md:px-6">
+      <div className="mb-6">
+        <div className="md:mb-8 mb-5">
+          <h1 className="text-3xl font-bold">Settings</h1>
+          <p className="text-muted-foreground">
+            Manage your account settings and preferences
+          </p>
+        </div>
+
+        <SettingsTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
 
-      <SettingsTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-
-      <div className="mt-6">{renderTabContent()}</div>
+      <div className="overflow-y-scroll">{renderTabContent()}</div>
     </div>
   );
 }

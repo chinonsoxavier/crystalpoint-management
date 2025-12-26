@@ -18,12 +18,12 @@ export function BalanceCards({ showValues }: BalanceCardsProps) {
     {
       label: "PROFIT BALANCE",
       value: profile?.profit_balance,
-      colorClass: "from-purple-500 to-purple-600",
+      colorClass: "from-yellow-500 to-yellow-600",
     },
     {
       label: "TOTAL WITHDRAWALS",
       value: profile?.total_withdrawals,
-      colorClass: "from-yellow-500 to-yellow-600",
+      colorClass: "bg-white",
     },
     {
       label: "ACTIVE DEPOSIT",
@@ -36,22 +36,22 @@ export function BalanceCards({ showValues }: BalanceCardsProps) {
       colorClass: "from-red-500 to-red-600",
     },
     {
-      label: "PROMOTIONAL BALANCE",
+      label: "PROMOTION BALANCE",
       value: profile?.promotional_balance,
-      colorClass: "from-gray-400 to-gray-500",
+      colorClass: "from-orange-400 to-orange-500",
     },
   ];
   const maskValue = "$" + "•".repeat(4);
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
       {cardConfigs.map((card, idx) => (
         <div
           key={idx}
           className={`bg-accent-foreground border rounded-2xl p-5 text-white relative overflow-hidden hover:shadow-xl transition-shadow`}
         >
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+            <div className={`w-3 h-3 rounded-full ${card.colorClass} bg-linear-to-bl`}></div>
             <p className="text-sm font-medium text-muted-foreground">
               {card.label}
             </p>

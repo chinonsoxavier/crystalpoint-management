@@ -1,13 +1,13 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff,  Lock, Home, User, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import useUserStore from "@/app/user/user_store";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { AuthGuard } from "@/components/auth_guard";
 
 const Page = () => {
@@ -19,7 +19,12 @@ const Page = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { login, authStatus, errorMessage } = useUserStore();
+  const pathname = usePathname();
   const router = useRouter();
+
+  useEffect(() => {
+    setErrors({});
+  }, [pathname]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

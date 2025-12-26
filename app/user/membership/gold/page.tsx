@@ -1,42 +1,62 @@
+// app/user/membership/deposit/page.tsx
 "use client";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import LedgerBalance from "@/components/shared/ledger_balance";
-import useMembershipStore from "../_membership_store";
 import {
-  CheckCircle,
+  Check,
+  Copy,
+  AlertTriangle,
+  QrCode,
   Loader2,
+  Info,
   Wallet,
   DollarSign,
-  Shield,
-  Star,
-  Crown,
+  CheckCircle,
   ArrowRight,
   Clock,
-  AlertTriangle,
+  Crown,
+  Star,
+  Gem,
 } from "lucide-react";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
+import { usePathname, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import useDepositStore from "../../deposit/_deposit_store";
+import useMembershipStore from "../_membership_store";
 
 const Page = () => {
-  const { getMembershipCards, membershipCards, activateMembership, loading ,isActivated,setIsActivated} =
-    useMembershipStore();
+  const {
+    depositMethods,
+    fetchDepositMethods,
+    setSelectedDepositMethod,
+    selectedDepositMethod,
+    createDepositRequest,
+    isDepositLoading,
+    depositInstructions,
+    depositRequestSuccessful,
+  } = useDepositStore();
 
-  const [activationError, setActivationError] = useState<string | null>(null);
+    const {  membershipCards,getMembershipCards,loading } = useMembershipStore();
 
-  useEffect(() => {
-    getMembershipCards();
-  }, [getMembershipCards]);
 
+  const [step, setStep] = useState(1); // 1: Setup, 2: Instructions/Payment, 3: Success
+  const [copied, setCopied] = useState(false);
+  const [depositAmount, setDepositAmount] = useState<number>(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+
+  // Select Gold card once membershipCards is available
   const selectedCard = useMemo(() => {
     return (
       membershipCards.find(
@@ -45,215 +65,426 @@ const Page = () => {
     );
   }, [membershipCards]);
 
-  const membershipFee = selectedCard?.requiredDeposit || 500;
 
-  const handleActivateFromBalance = async (e: React.FormEvent) => {
-    e.preventDefault();
+  useEffect(() => {
+    // if(!membershipCards){
+    fetchDepositMethods();
+      getMembershipCards();
+    // };
+  }, []);
 
-    if (!selectedCard) {
-      setActivationError("Membership card not found.");
-      return;
+  useEffect(() => {
+    setStep(1);
+  }, []);
+
+  // Effect to transition to step 3 when deposit is successful
+  useEffect(() => {
+    if (depositRequestSuccessful) {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setStep(3);
+        setIsTransitioning(false);
+      }, 500);
     }
+  }, [depositRequestSuccessful]);
 
-    setActivationError(null);
-
-      await activateMembership(selectedCard._id);
+  // Helper to generate a unique random transaction hash
+  const generateRandomHash = () => {
+    const chars = "abcdef0123456789";
+    let result = "0x";
+    for (let i = 0; i < 40; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
   };
 
-  const handleReset = () => {
-    setIsActivated(false);
-    setActivationError(null);
+  const handleCopy = async (text: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleProceedToPayment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (selectedDepositMethod && depositAmount > 0) {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setStep(2);
+        setIsTransitioning(false);
+      }, 300);
+    }
+  };
+
+  const handleFinalSubmit = () => {
+    const randomHash = generateRandomHash();
+    createDepositRequest({
+      method: selectedDepositMethod?._id ?? "",
+      amount: depositAmount,
+      transactionHash: randomHash,
+      // selectedCard?.tier: selectedCard?.tier, // Add membership tier to the request
+    });
+  };
+
+  const handleNewDeposit = () => {
+    // Reset state for a new deposit
+    setStep(1);
+    // Don't reset deposit amount since it's fixed for membership
+  };
+
+  const getMembershipIcon = (tier: string) => {
+    switch (tier) {
+      case "silver":
+        return <Star className="w-5 h-5" />;
+      case "gold":
+        return <Crown className="w-5 h-5" />;
+      case "premium":
+        return <Gem className="w-5 h-5" />;
+      default:
+        return null;
+    }
+  };
+
+  const getMembershipColor = (tier: string) => {
+    switch (tier) {
+      case "silver":
+        return "text-slate-600 bg-slate-100";
+      case "gold":
+        return "text-amber-600 bg-amber-100";
+      case "premium":
+        return "text-purple-600 bg-purple-100";
+      default:
+        return "";
+    }
   };
 
   return (
-    <div className="bg-accent min-h-screen p-4 md:p-8">
-      <div className="max-w-5xl mx-auto space-y-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-center">
-          Investor’s Gold Membership Card Request
-        </h1>
+    <div className="p-4 md:p-8 bg-accent min-h-screen">
+      <div className="max-w-3xl mx-auto space-y-6">
+        <LedgerBalance />
 
-        <div className="grid lg:grid-cols-2 gap-8 items-start">
-          {/* Left: Gold Card Preview */}
-          <Card className="overflow-hidden shadow-2xl border-amber-600/20">
-            <div className="relative bg-gradient-to-r from-amber-500 via-amber-600 to-amber-800 p-8">
-              <div className="absolute inset-0 opacity-20 bg-[linear-gradient(135deg,transparent_25%,rgba(255,255,255,.2)_25%,rgba(255,255,255,.2)_50%,transparent_50%,rgba(255,255,255,.2)_75%,rgba(255,255,255,.2)_100%)] bg-[length:40px_40px]" />
-
-              <div className="relative z-10 text-white text-center space-y-6">
-                <div className="flex justify-center items-center gap-6">
-                  <div className="relative w-20 h-20">
-                    <div className="absolute inset-0 bg-white rounded-full shadow-2xl flex items-center justify-center">
-                      <svg
-                        className="w-12 h-12 text-amber-600"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L12 14z" />
-                      </svg>
-                    </div>
-                    <div className="absolute -left-3 top-6 w-8 h-10 bg-blue-600 rounded-l-lg" />
-                    <div className="absolute -right-3 top-6 w-8 h-10 bg-blue-700 rounded-r-lg" />
-                  </div>
-
-                  <div>
-                    <h2 className="text-4xl font-extrabold tracking-wider">
-                      CRISTALPOINT
-                    </h2>
-                    <h3 className="text-3xl font-bold tracking-wide">
-                      MEMBERSHIP
-                    </h3>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <p className="text-3xl font-bold tracking-widest">
-                    INVESTOR’S MEMBERSHIP
-                  </p>
-                  <p className="text-3xl font-bold tracking-widest">CARD</p>
-                  <Badge
-                    variant="secondary"
-                    className="mt-4 text-lg px-6 py-2 bg-white/20"
-                  >
-                    <Crown className="w-5 h-5 mr-2" />
-                    GOLD MEMBER
-                  </Badge>
-                </div>
+        <div className="bg-accent-foreground rounded-xl overflow-hidden shadow-lg border">
+          {/* Header with membership info */}
+          <div className="p-6 border-b bg-accent border">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="md:text-2xl text-xl font-bold flex items-center gap-2">
+                  Gold Membership Deposit
+                </h1>
+                <p className="text-accent-text md:text-base text-sm">
+                  Complete your payment to activate your membership
+                </p>
               </div>
             </div>
 
-            <CardContent className="space-y-6">
-           
-
-              <Separator />
-
-              <div className="text-center">
-                <p className="text-lg font-semibold">Activation Fee</p>
-                <p className="text-3xl font-bold text-amber-600">
-                  ${membershipFee}
-                </p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Deducted from your account balance
-                </p>
+            {selectedCard?.tier && (
+              <div
+                className={cn(
+                  "mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full",
+                  getMembershipColor(selectedCard?.tier.toString())
+                )}
+              >
+                {getMembershipIcon(selectedCard?.tier.toString())}
+                <span className="font-medium capitalize">
+                  Tier {selectedCard?.tier.toString()}
+                </span>
               </div>
-            </CardContent>
-          </Card>
+            )}
+          </div>
 
-          {/* Right: Activation Form */}
-          <Card className="shadow-xl">
-            <CardHeader>
-              <CardTitle className="text-2xl flex items-center gap-3">
-                <Crown className="w-8 h-8 text-amber-600" />
-                Activate Gold Membership
-              </CardTitle>
-              <CardDescription>
-                Instantly activate by deducting{" "}
-                <strong>${membershipFee}</strong> from your balance.
-              </CardDescription>
-            </CardHeader>
+          <div className="p-8">
+            {step === 1 ? (
+              /* --- STEP 1: CONFIGURATION --- */
+              <form onSubmit={handleProceedToPayment} className="space-y-6">
+                <div className="bg-accent p-4 rounded-lg border border-blue-100 flex gap-3">
+                  <Info className="w-5 h-5 text-accent-text shrink-0 mt-0.5" />
+                  <p className="text-sm text-accent-text">
+                    Select your preferred payment method to complete your{" "}
+                    {selectedCard?.tier} membership purchase.
+                  </p>
+                </div>
 
-            <CardContent className="space-y-6">
-              {!isActivated ? (
-                <>
-                  <div className="space-y-4">
-                    {/* Current Balance */}
-                    <div className="bg-muted/50 rounded-lg p-4 border">
-                      <p className="text-sm text-muted-foreground mb-2">
-                        Current Balance
-                      </p>
-                      <div className="text-2xl font-bold">
-                        <LedgerBalance />
-                      </div>
-                    </div>
-
-                    {/* Info Alert */}
-                    <Alert className="border-blue-200 bg-blue-50">
-                      <Wallet className="h-5 w-5 text-blue-700" />
-                      <AlertTitle>Internal Payment</AlertTitle>
-                      <AlertDescription>
-                        The fee will be automatically deducted from your account
-                        balance. No external deposit or wallet needed.
-                      </AlertDescription>
-                    </Alert>
-
-                    {/* Error Alert */}
-                    {activationError && (
-                      <Alert variant="destructive">
-                        <AlertTriangle className="h-5 w-5" />
-                        <AlertTitle>Activation Failed</AlertTitle>
-                        <AlertDescription>{activationError}</AlertDescription>
-                      </Alert>
-                    )}
-                  </div>
-
-                  <form onSubmit={handleActivateFromBalance}>
-                    <Button
-                      type="submit"
-                      size="lg"
-                      className="w-full h-14 text-lg font-semibold"
-                      disabled={
-                        loading.activating || !selectedCard
-                      }
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="deposit-method"
+                      className="text-base font-medium flex items-center gap-2"
                     >
-                      {loading.activating ? (
-                        <>
-                          <Loader2 className="mr-3 h-6 w-6 animate-spin" />
-                          Activating Membership...
-                        </>
-                      ) : (
-                        <>
-                          Activate Gold Membership
-                          <ArrowRight className="ml-3 h-5 w-5" />
-                        </>
-                      )}
-                    </Button>
-                  </form>
-                </>
-              ) : (
-                /* Success State */
-                <div className="text-center py-12 space-y-8">
-                  <div className="w-28 h-28 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <CheckCircle className="w-16 h-16 text-green-600" />
+                      <Wallet className="w-4 h-4" />
+                      Payment Method
+                    </Label>
+                    <Select
+                      required
+                      onValueChange={(value) => {
+                        const selected = depositMethods.find(
+                          (m) => m.network === value
+                        );
+                        setSelectedDepositMethod(selected!);
+                      }}
+                    >
+                      <SelectTrigger className="h-12 w-full text-base">
+                        <SelectValue placeholder="Choose a cryptocurrency" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {depositMethods.map((method, index) => (
+                          <SelectItem key={index} value={method.network}>
+                            <div className="flex items-center gap-2">
+                              <span>{method.name}</span>
+                              <span className="text-slate-500 text-sm">
+                                ({method.network})
+                              </span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
-                  <div className="space-y-4">
-                    <h2 className="text-3xl font-bold">
-                      Gold Membership Activated!
-                    </h2>
-                    <p className="text-lg text-muted-foreground max-w-md mx-auto">
-                      Congratulations! ${membershipFee} has been deducted from
-                      your balance. Your Investor’s Gold Card is now active.
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="amount"
+                      className="text-base font-medium flex items-center gap-2"
+                    >
+                      <DollarSign className="w-4 h-4" />
+                      Membership Fee
+                    </Label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-medium">
+                        ${" "}
+                      </span>
+                      <Input
+                        id="amount"
+                        className="pl-8 h-12 text-lg font-medium"
+                        type="number"
+                        defaultValue={selectedCard?.requiredDeposit}
+                        readOnly
+                        disabled
+                      />
+                    </div>
+                    <p className="text-xs text-slate-500">
+                      This is the fixed price for your {selectedCard?.tier}{" "}
+                      membership
                     </p>
                   </div>
+                </div>
 
-                  <div className="bg-muted/50 p-6 rounded-xl text-left max-w-md mx-auto">
-                    <div className="flex items-start gap-3">
-                      <Clock className="w-6 h-6 text-muted-foreground mt-0.5 shrink-0" />
-                      <div>
-                        <p className="font-semibold">Activation Complete</p>
-                        <p className="text-sm text-muted-foreground">
-                          Enjoy your exclusive Gold Member benefits and
-                          privileges.
-                        </p>
-                      </div>
+                <Button
+                  type="submit"
+                  className="w-full h-12 text-base font-semibold shadow-md"
+                  disabled={!selectedDepositMethod}
+                >
+                  Continue to Payment
+                </Button>
+              </form>
+            ) : step === 2 ? (
+              /* --- STEP 2: INSTRUCTIONS & QR CODE --- */
+              <div className={cn("space-y-6", isTransitioning && "opacity-0")}>
+                <div className="text-center space-y-2">
+                  <h2 className="text-xl font-bold">
+                    Complete Your Membership Payment
+                  </h2>
+                  <p className="text-slate-600">
+                    Send exactly{" "}
+                    <span className="text-green-500 font-bold text-lg">
+                      ${depositAmount}
+                    </span>{" "}
+                    worth of {selectedDepositMethod?.name} to activate your{" "}
+                    {selectedCard?.tier} membership
+                  </p>
+                </div>
+
+                {/* QR Code Section */}
+                {depositInstructions?.qrCodeUrl && (
+                  <div className="flex flex-col items-center space-y-3">
+                    <div className="p-6 bg-white rounded-xl border-2 border-slate-200 shadow-md">
+                      <Image
+                        src={depositInstructions.qrCodeUrl}
+                        alt="Payment QR Code"
+                        className="w-48 h-48"
+                      />
                     </div>
+                    <p className="text-sm text-slate-500">
+                      Scan this QR code with your wallet
+                    </p>
                   </div>
+                )}
 
-                  <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                {/* Wallet Address Box */}
+                <div className="space-y-2">
+                  <Label className="text-xs uppercase tracking-wider text-muted-foreground">
+                    Your Personal Deposit Address
+                  </Label>
+                  <div className="flex gap-2">
+                    <div className="flex-1 bg-muted p-3 rounded-lg font-mono text-sm break-all border">
+                      {depositInstructions?.walletAddress ||
+                        selectedDepositMethod?.walletAddress}
+                    </div>
                     <Button
                       variant="outline"
-                      size="lg"
-                      onClick={() => (window.location.href = "/user/dashboard")}
-                      className="flex-1"
+                      size="icon"
+                      className="shrink-0 h-12 w-12"
+                      onClick={() =>
+                        handleCopy(
+                          depositInstructions?.walletAddress ||
+                            selectedDepositMethod?.walletAddress ||
+                            ""
+                        )
+                      }
                     >
-                      Go to Dashboard
-                    </Button>
-                    <Button size="lg" onClick={handleReset} className="flex-1">
-                      Done
+                      {copied ? (
+                        <Check className="text-green-500 w-5 h-5" />
+                      ) : (
+                        <Copy className="w-5 h-5" />
+                      )}
                     </Button>
                   </div>
                 </div>
-              )}
-            </CardContent>
-          </Card>
+
+                {/* Instructions Text */}
+                {depositInstructions?.instructions && (
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                    <h4 className="text-sm font-bold mb-2 flex items-center gap-2 text-blue-800">
+                      <QrCode className="w-4 h-4" /> Instructions
+                    </h4>
+                    <p className="text-sm leading-relaxed text-blue-700">
+                      {depositInstructions.instructions}
+                    </p>
+                  </div>
+                )}
+
+                {/* Warning */}
+                <div className="bg-amber-50 p-4 rounded-lg border border-amber-200 flex gap-3">
+                  <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
+                  <p className="text-sm text-amber-800 leading-tight">
+                    Only send <strong>{selectedDepositMethod?.name}</strong> via
+                    the <strong>{selectedDepositMethod?.network}</strong>{" "}
+                    network. Sending any other coin or using a different network
+                    will result in permanent loss.
+                  </p>
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setStep(1)}
+                    className="flex-1 h-12 border-slate-200"
+                  >
+                    Go Back
+                  </Button>
+                  <Button
+                    onClick={handleFinalSubmit}
+                    disabled={isDepositLoading}
+                    className="flex-1 h-12 shadow-md"
+                  >
+                    {isDepositLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      "I have made the payment"
+                    )}
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              /* --- STEP 3: SUCCESS --- */
+              <div className={cn("space-y-6", isTransitioning && "opacity-0")}>
+                <div className="text-center space-y-4">
+                  <div className="flex justify-center">
+                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+                      <CheckCircle className="w-10 h-10 text-green-600" />
+                    </div>
+                  </div>
+                  <h2 className="text-2xl font-bold">
+                    Membership Activated Successfully!
+                  </h2>
+                  <p className="text-accent-text max-w-md mx-auto">
+                    Your{" "}
+                    <span className="font-bold capitalize">
+                      {selectedCard?.tier}
+                    </span>{" "}
+                    membership has been activated. You now have access to all
+                    the exclusive benefits and features.
+                  </p>
+                </div>
+
+                <div className="bg-accent p-6 rounded-lg border">
+                  <div className="flex items-start gap-3">
+                    <Clock className="w-5 h-5 text-accent-text shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="font-semibold text-accent-text mb-1">
+                        Membership Status
+                      </h3>
+                      <p className="text-sm text-accent-text">
+                        Your membership is now active. You can manage your
+                        membership settings and view your benefits in your
+                        account dashboard.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-accent p-6 rounded-lg border">
+                  <h3 className="font-semibold text-black dark:text-white mb-3">
+                    Transaction Details
+                  </h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-slate-600">Membership</span>
+                      <span className="text-sm font-medium capitalize">
+                        {selectedCard?.tier}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-slate-600">Amount</span>
+                      <span className="text-sm font-medium">
+                        ${depositAmount}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-slate-600">
+                        Payment Method
+                      </span>
+                      <span className="text-sm font-medium">
+                        {selectedDepositMethod?.name}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-slate-600">Network</span>
+                      <span className="text-sm font-medium">
+                        {selectedDepositMethod?.network}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-slate-600">Status</span>
+                      <span className="text-sm font-medium text-green-600">
+                        Active
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() =>
+                      (window.location.href =
+                        "/user/transactions/deposit-transactions")
+                    }
+                    className="flex-1 h-12 border-slate-200"
+                  >
+                    View Transaction History
+                  </Button>
+                  <Button
+                    onClick={() => (window.location.href = "/user/dashboard")}
+                    className="flex-1 h-12 shadow-md"
+                  >
+                    Go to Dashboard
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

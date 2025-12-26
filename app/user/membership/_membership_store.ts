@@ -116,7 +116,7 @@ const useMembershipStore = create<MembershipStore>((set, get) => ({
         set({ membershipCards: res.data.data });
       }
     } catch (error) {
-      console.error("[v0] Failed to get membership cards:", error);
+      console.error("Failed to get membership cards:", error);
       const errorMessage = axiosError(error);
       set({ error: errorMessage });
     } finally {
@@ -153,7 +153,7 @@ const useMembershipStore = create<MembershipStore>((set, get) => ({
         set({ membershipBenefits: res.data.data });
       }
     } catch (error) {
-      console.error("[v0] Failed to get membership benefits:", error);
+      console.error("Failed to get membership benefits:", error);
       const errorMessage = axiosError(error);
       set({ error: errorMessage });
     } finally {
@@ -172,7 +172,7 @@ const useMembershipStore = create<MembershipStore>((set, get) => ({
         set({ membershipHistory: res.data.data });
       }
     } catch (error) {
-      console.error("[v0] Failed to get membership history:", error);
+      console.error("Failed to get membership history:", error);
       const errorMessage = axiosError(error);
       set({ error: errorMessage });
     } finally {
@@ -199,7 +199,7 @@ const useMembershipStore = create<MembershipStore>((set, get) => ({
       }
       return false;
     } catch (error) {
-      console.error("[v0] Failed to activate membership:", error);
+      console.error("Failed to activate membership:", error);
       const errorMessage = axiosError(error);
       set({ error: errorMessage });
       return false;

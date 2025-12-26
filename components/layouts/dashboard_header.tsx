@@ -78,20 +78,14 @@ const DashboardHeader = () => {
             />
           )}
 
-          <div className="flex-1 bg-accent hidden smedium:flex max-w-md items-center gap-2 rounded-lg px-4 py-2">
-            <Search size={18} className="text-accent-text" />
-            <input
-              type="text"
-              placeholder="Search here..."
-              className="bg-accent outline-none text-accent-text placeholder:text-accent-text w-full"
-            />
-          </div>
+       
         </div>
 
         <div className="flex smedium:gap-15 gap-5">
-          <div className="flex items-center gap-3 smedium:gap-6 justify-evenly">
           
 
+
+          <div className="flex items-center gap-4">
             <div
               onClick={() => toggleShowBalance()}
               className="rounded-full bg-accent flex cursor-pointer items-center justify-center h-11.5 w-11.5"
@@ -108,9 +102,6 @@ const DashboardHeader = () => {
                 />
               )}
             </div>
-          </div>
-
-          <div className="flex items-center gap-4">
             <p className="font-medium text-lg hidden md:block">
               Hello,
               <span>

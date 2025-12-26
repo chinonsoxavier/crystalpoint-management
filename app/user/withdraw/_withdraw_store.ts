@@ -1,6 +1,7 @@
 "use client";
 import { create } from "zustand";
 import { axiosError, baseAxios } from "@/network/axios";
+import { enqueueSnackbar } from "notistack";
 
 interface IWithdrawals {
   id: string;
@@ -44,8 +45,10 @@ try {
   },
 {
   withCredentials:true
-})
+});
+enqueueSnackbar(res.data.message,{variant:"success"});
 } catch (error) {
+  console.log("failed to request withdrawal",error);
   axiosError(error);
 }finally{
   set({ loadingWithdrawal :false});

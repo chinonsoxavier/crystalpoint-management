@@ -112,6 +112,17 @@ export default function UsersPage() {
     });
   }, [page, tierFilter,selectedUser]);
 
+  useEffect(() => {
+  if(depositType==='bonus'){
+    setBalanceAmount(selectedUser?.balance?.bonus ?? 0);
+    return;
+  };
+    setBalanceAmount(selectedUser?.balance?.deposit ?? 0);
+
+
+  }, [depositType])
+  
+
   // Reset form when a new user is selected
   useEffect(() => {
     if (selectedUser) {
@@ -373,7 +384,7 @@ export default function UsersPage() {
                   <TabsTrigger value="tier">Tier Management</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="balance?">
+                <TabsContent value="balance?" className="w-full bg-[red]" >
                   {/* Balance Management Section */}
                   <Card>
                     <CardHeader>

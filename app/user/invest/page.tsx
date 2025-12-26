@@ -28,7 +28,7 @@ const Page = () => {
         </div>
 
         {/* Investment Plans Grid */}
-        <div className="grid grid-cols-1 w-full sm:grid-cols-2 lg:grid-cols-3 md:gap-8 gap-5">
+        <div className="grid grid-cols-1 w-full sm:grid-cols-2 lg:grid-cols-3 md:gap-8 sm:gap-5 gap-3">
           {isFetchingInvestPlans ? (
             <div className="col-span-3 flex justify-center items-center">
               <p className="text-accent-text text-lg">Loading plans...</p>
@@ -38,96 +38,64 @@ const Page = () => {
               {investPlans.map((plan, index) => (
                 <div
                   key={index}
-                  className="group p-4 min-h-[450px] md:p-6 relative overflow-hidden rounded-2xl 
+                  className="group p-4 smedium:p-6 relative overflow-hidden rounded-2xl 
                          transition-all duration-500 bg-accent-foreground hover:shadow-2xl border border-accent-border hover:border-primary"
                 >
-                  <div className="relative z-10 flex flex-col justify-between h-full gap-6">
+                  <div className="relative space-y-5 md:space-y-8 z-10 flex flex-col justify-between h-full">
                     {/* Plan Name */}
-                    <div className="text-center md:space-y-4 space-y-2">
-                      <h3 className="text-2xl md:text-3xl font-extrabold text-accent-text">
+                    <div className="text-center">
+                      <h3 className="text-2xl smedium:text-3xl font-extrabold text-accent-text">
                         {plan.name}
                       </h3>
-                      <p className="text-sm md:text-base text-accent-text leading-relaxed">
+                      <p className="text-sm smedium:text-base text-accent-text leading-relaxed">
                         {plan.description}
                       </p>
                     </div>
 
-                    {/* Investment Range */}
-                    <div className=" border-b border-gray-800/50">
-                      <div className="flex justify-between items-center">
-                        <span className="text-accent-text text-sm font-medium">
-                          Investment Range
-                        </span>
-                        <span className="text-xl font-bold text-white">
-                          ${plan.maxAmount}
-                        </span>
-                      </div>
-                    </div>
+                    <div className="">
+                      {/* Invest Button */}
+                      <Link
+                        href={`/user/invest/select-plan/${plan.name
+                          .split(" ")[0]
+                          .toLowerCase()}/${plan._id}`}
+                        className="w-full"
+                      >
+                        <Button variant="outline" className="w-full">
+                          Select {plan.name.split(" ")[1]} Package
+                          <svg
+                            className="w-6 h-6 ml-2"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M13 7l5 5m0 0l-5 5m5-5H6"
+                            />
+                          </svg>
+                        </Button>
+                      </Link>
 
-                    {/* Daily Profit + Total ROI */}
-                    <div className="bg-linear-to-r from-emerald-600/10 to-blue-600/10 rounded-2xl p-4 md:p-6 text-center border border-emerald-500/20">
-                      <div className="grid grid-cols-2 gap-6">
-                        <div>
-                          <p className="text-accent-text text-xs uppercase tracking-wider">
-                            Duration
-                          </p>
-                          <p className="md:text-3xl text-2xl font-extrabold text-emerald-400 mt-2">
-                            {plan.durationDays}%
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-accent-text text-xs uppercase tracking-wider">
-                            Total ROI
-                          </p>
-                          <p className="md:text-3xl text-2xl font-extrabold bg-linear-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                            {plan.roiPercentage}%
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Invest Button */}
-                    <Link
-                      href={`/user/invest/select-plan/${plan.name
-                        .split(" ")[0]
-                        .toLowerCase()}/${plan._id}`}
-                      className="w-full"
-                    >
-                      <Button variant="outline" className="w-full">
-                        Select {plan.name.split(" ")[1]} Package
+                      {/* Trust Badge */}
+                      <div className="flex items-center justify-center gap-2 text-xs text-accent-text pt-4 border-t border-gray-800/50">
                         <svg
-                          className="w-6 h-6 ml-2"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                          className="w-5 h-5 text-green-500"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
                         >
                           <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 7l5 5m0 0l-5 5m5-5H6"
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clipRule="evenodd"
                           />
                         </svg>
-                      </Button>
-                    </Link>
-
-                    {/* Trust Badge */}
-                    <div className="flex items-center justify-center gap-2 text-xs text-accent-text pt-4 border-t border-gray-800/50">
-                      <svg
-                        className="w-5 h-5 text-green-500"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span>
-                        100% Capital Protection • Daily Profit • Instant
-                        Withdrawals
-                      </span>
+                        <span>
+                          100% Capital Protection • Daily Profit • Instant
+                          Withdrawals
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -76,7 +76,7 @@ const useUserStore = create<UserStore>((set) => ({
     set((state) => ({ sideMenuOpen: !state.sideMenuOpen })),
 
   closeSideMenu: () => set({ sideMenuOpen: false }),
-
+  
   toggleShowBalance: () =>
     set((state) => ({ showBalance: !state.showBalance })),
 

@@ -5,7 +5,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SnackbarProvider } from "notistack";
 import { useEffect, useState } from "react";
 import { baseAxios } from "@/network/axios";
-import { LanguageSelect } from "@/components/shared/language_select";
 
 export function Providers({ children }: { children: React.ReactNode }) {
 
@@ -37,7 +36,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <SnackbarProvider />
       {children}
-      <LanguageSelect/>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

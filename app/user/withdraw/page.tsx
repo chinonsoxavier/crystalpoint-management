@@ -86,14 +86,17 @@ const Page = () => {
         </div>
       </div>
 
-      <form onSubmit={handleWithdrawal} className=" my-4 bg-accent-foreground p-4 md:p-6 rounded-lg">
+      <form
+        onSubmit={handleWithdrawal}
+        className=" my-4 bg-accent-foreground p-4 md:p-6 rounded-lg"
+      >
         <div className="flex gap-2 flex-col mb-6">
           <button className="pb-1 font-semibold text-black dark:text-white text-left text-lg md:text-xl">
             Withdraw
           </button>
 
           <p className="text-[#8b98d] dark:text-[#666e70]  md:text-lg">
-            Ledger Balance: 0$
+            Ledger Balance: {profile?.ledger_balance}
           </p>
           <p className="text-[#8b98d] dark:text-[#666e70]  md:text-lg">
             Profit Balance: ${profile?.profit_balance || 0}
@@ -136,11 +139,11 @@ const Page = () => {
                         className=""
                         value={method.network}
                       >
-                        {method.name}
+                        {method.name} ({method.network})
                       </SelectItem>
                     ))}
                   </SelectGroup>
-                 </SelectContent>
+                </SelectContent>
               </Select>
             </div>
 
@@ -158,11 +161,11 @@ const Page = () => {
                     <SelectItem className="" value="ledger balance">
                       Ledger Balance
                     </SelectItem>
-                    <SelectItem className="" value="Profit Account">
-                      Profit Account
+                    <SelectItem className="" value="Profit balance">
+                      Profit Balance
                     </SelectItem>
-                    <SelectItem className="" value="Promo Account">
-                      Promo Account
+                    <SelectItem className="" value="Promo balance">
+                      Promo Balance
                     </SelectItem>
                   </SelectGroup>
                 </SelectContent>
@@ -175,8 +178,10 @@ const Page = () => {
                 Wallet Address
               </Label>
               <Input
-              value={walletAddress}
-              onChange={(e)=>{setWalletAddres(e.target.value)}}
+                value={walletAddress}
+                onChange={(e) => {
+                  setWalletAddres(e.target.value);
+                }}
                 required
                 type="text"
                 placeholder=""
@@ -190,13 +195,13 @@ const Page = () => {
                 Amount
               </Label>
               <Input
-              value={amount}
-              onChange={(e)=>{
-                const val = parseInt(e.target.value);
-                        setAmount(val);
-              }}
+                value={amount}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value);
+                  setAmount(val);
+                }}
                 required
-                type="text"
+                type="number"
                 placeholder=""
                 className="w-full text-accent-text"
               />
@@ -212,9 +217,10 @@ const Page = () => {
           {/* Submit Button */}
           <Button
             type="submit"
+            disabled={loadingWithdrawal}
             className="w-full font-semibold py-3 rounded-lg transition-colors"
           >
-            Submit
+            {loadingWithdrawal ? 'SUBMITING':'SUBMIT'}
           </Button>
         </div>
       </form>
