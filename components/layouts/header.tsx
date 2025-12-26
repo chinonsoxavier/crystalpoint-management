@@ -7,7 +7,7 @@ import landingStore from "@/app/(landing)/landing_store";
 import Animate from "../animation/animate";
 import { usePathname } from "next/navigation";
 import { useTranslateStore } from "@/lib/translations";
-import { translations } from "@/lib/i18n";
+import { translations  } from "@/lib/i18n";
 
 const Header = () => {
   const { language } = useTranslateStore();

@@ -30,13 +30,13 @@ export interface LandingTranslation {
   // Add other page sections here
 }
 
-// export const translations: Record<Language, LandingTranslation> = {
-//   en: { header: enLanding },
-//   es: { header: esLanding },
-//   fr: { header: frLanding },
-//   pt: { header: ptLanding }, // Fixed: now correctly maps to Portuguese
-//   zh: { header: zhLanding },
-// };
+export const translations: Record<Language, LandingTranslation> = {
+  en: enLanding ,
+  es: esLanding,
+  fr: frLanding,
+  pt: ptLanding,
+  zh: zhLanding,
+};
 
 export const languages: Record<Language, string> = {
   en: "English",
