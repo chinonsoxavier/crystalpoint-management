@@ -201,7 +201,7 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
         } catch (error) {
           set({ isUpdatingBalance: false });
           console.log("Failed to update user balance:", error);
-          axiosError(error)
+         axiosError(error)
         }
       },
 

@@ -44,11 +44,13 @@ import {
   Crown,
   Star,
   Shield,
+  MessageSquare,
 } from "lucide-react";
 import { useAdminUsersStore } from "./admin_users_store";
 import { formatDate } from "@/utility/format_date";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useWithdrawStore from "@/app/user/withdraw/_withdraw_store";
+import { Switch } from "@/components/ui/switch";
 
 type IDepositType =
   | "deposit"
@@ -60,6 +62,26 @@ type IDepositType =
   | "activeDeposit";
 type ITierFilter = "all" | "1" | "2" | "3";
 type ITierString = "1" | "2" | "3" | undefined;
+
+// Define promotional messages
+const promotionalMessages = [
+  {
+    id: "membershipCard",
+    text: "Membership Card ID number required.",
+    enabled: false,
+  },
+  {
+    id: "activateMembership",
+    text: "Activate membership card.",
+    enabled: false,
+  },
+  { id: "tier2Upgrade", text: "Tier2 Upgrade required.", enabled: false },
+  { id: "tier3Upgrade", text: "Tier3 Upgrade required.", enabled: false },
+  { id: "securityLevy", text: "Security levy.", enabled: false },
+  { id: "promotionalBonus", text: "Promotional bonus!!!.", enabled: false },
+  { id: "vipUpgrade", text: "Vip Upgrade required.", enabled: false },
+  { id: "premiumUpgrade", text: "Premium Upgrade required.", enabled: false },
+];
 
 // Tier information for display
 const tierInfo = {
@@ -97,7 +119,7 @@ export default function UsersPage() {
     fetchUsers,
   } = useAdminUsersStore();
 
-  const {fetchWithdrawalBalance,withdrawalBalance} = useWithdrawStore();
+  const { fetchWithdrawalBalance, withdrawalBalance } = useWithdrawStore();
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState<(typeof users)[0] | null>(
     null
@@ -105,6 +127,7 @@ export default function UsersPage() {
   const [tierFilter, setTierFilter] = useState<ITierFilter>("all");
   const [showUserModal, setShowUserModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showPromotionalModal, setShowPromotionalModal] = useState(false);
   const [page, setPage] = useState(1);
 
   // State for balance update
@@ -114,6 +137,11 @@ export default function UsersPage() {
 
   // State for tier update
   const [newTier, setNewTier] = useState<ITierString>("1");
+
+  // State for promotional messages
+  const [userPromotionalMessages, setUserPromotionalMessages] = useState(
+    promotionalMessages.map((msg) => ({ ...msg }))
+  );
 
   useEffect(() => {
     fetchUsers({
@@ -125,15 +153,13 @@ export default function UsersPage() {
 
   useEffect(() => {
     fetchWithdrawalBalance();
-  }, [selectedUser,]);
-  
-useEffect(() => {
-  if(showEditModal && selectedUser){
-    fetchFinancialSummary(selectedUser?._id || "");
-  }
- 
-}, [showEditModal,selectedUser])
+  }, [selectedUser]);
 
+  useEffect(() => {
+    if (showEditModal && selectedUser) {
+      fetchFinancialSummary(selectedUser?._id || "");
+    }
+  }, [showEditModal, selectedUser]);
 
   useEffect(() => {
     switch (depositType) {
@@ -144,7 +170,9 @@ useEffect(() => {
         setBalanceAmount(userFinancialSumary?.balances?.totalWithdrawn ?? 0);
         return;
       case "pendingWithdrawals":
-        setBalanceAmount(userFinancialSumary?.balances?.pendingWithdrawals ?? 0);
+        setBalanceAmount(
+          userFinancialSumary?.balances?.pendingWithdrawals ?? 0
+        );
         return;
       case "activeDeposit":
         setBalanceAmount(userFinancialSumary?.balances?.activeDeposit ?? 0);
@@ -160,16 +188,6 @@ useEffect(() => {
         return;
       default:
     }
-
-    // if (depositType === "bonus") {
-    //   setBalanceAmount(selectedUser?.balance?.bonus ?? 0);
-    //   return;
-    // } else if (depositType === "profit") {
-    //   setBalanceAmount(selectedUser?.balance?.profile ?? 0);
-    //   return;
-    // }
-
-    // setBalanceAmount(selectedUser?.balance?.deposit ?? 0);
   }, [depositType]);
 
   // Reset form when a new user is selected
@@ -179,6 +197,14 @@ useEffect(() => {
       setBalanceReason("");
       setDepositType("deposit");
       setNewTier(selectedUser.tier?.toString() as ITierString);
+
+      // Reset promotional messages to default
+      setUserPromotionalMessages(
+        promotionalMessages.map((msg) => ({
+          ...msg,
+          enabled: false, // Reset to false when selecting a new user
+        }))
+      );
     }
   }, [selectedUser]);
 
@@ -222,6 +248,38 @@ useEffect(() => {
     if (!selectedUser || !newTier) return;
 
     await updateUserTier(selectedUser._id, parseInt(newTier));
+  };
+
+  // Toggle promotional message
+  const togglePromotionalMessage = (id: string) => {
+    setUserPromotionalMessages((prev) =>
+      prev.map((msg) =>
+        msg.id === id ? { ...msg, enabled: !msg.enabled } : msg
+      )
+    );
+  };
+
+  // Handler for updating promotional messages (UI only for now)
+  const handlePromotionalMessagesUpdate = () => {
+    // This would typically call an API to update the user's promotional messages
+    console.log("Updating promotional messages:", userPromotionalMessages);
+    console.log("For user:", selectedUser?._id);
+    // You can add a toast notification here to show success
+    alert("Promotional messages updated successfully!");
+    setShowPromotionalModal(false);
+  };
+
+  // Open promotional messages modal for a specific user
+  const openPromotionalMessagesModal = (user: (typeof users)[0]) => {
+    setSelectedUser(user);
+    // Reset promotional messages to default
+    setUserPromotionalMessages(
+      promotionalMessages.map((msg) => ({
+        ...msg,
+        enabled: false, // Reset to false when selecting a new user
+      }))
+    );
+    setShowPromotionalModal(true);
   };
 
   const handlePreviousPage = () => {
@@ -334,6 +392,14 @@ useEffect(() => {
                           }}
                         >
                           <Edit size={16} />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => openPromotionalMessagesModal(user)}
+                          title="Manage Promotional Messages"
+                        >
+                          <MessageSquare size={16} />
                         </Button>
                       </div>
                     </TableCell>
@@ -606,6 +672,55 @@ useEffect(() => {
               </Tabs>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Promotional Messages Modal */}
+      <Dialog
+        open={showPromotionalModal}
+        onOpenChange={setShowPromotionalModal}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <MessageSquare className="h-5 w-5" />
+              Promotional Messages
+            </DialogTitle>
+            <DialogDescription>
+              Select messages to display on {selectedUser?.username}`s dashboard
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-3">
+              {userPromotionalMessages.map((message) => (
+                <div
+                  key={message.id}
+                  className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors"
+                >
+                  <p className="text-sm font-medium">{message.text}</p>
+                  <Switch
+                    checked={message.enabled}
+                    onCheckedChange={() => togglePromotionalMessage(message.id)}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <Button
+                onClick={handlePromotionalMessagesUpdate}
+                className="flex-1"
+              >
+                Update Messages
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setShowPromotionalModal(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

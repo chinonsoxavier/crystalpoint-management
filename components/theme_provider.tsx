@@ -5,55 +5,32 @@ import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface ThemeContextType {
-  theme: "light" | "dark";
-  toggleTheme: () => void;
+  theme: "dark"; // Always dark mode
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-  const applyTheme = (newTheme: "light" | "dark") => {
-    const html = document.documentElement;
-    if (newTheme === "dark") {
-      html.classList.add("dark");
-    } else {
-      html.classList.remove("dark");
-    }
-  };
+const applyTheme = () => {
+  const html = document.documentElement;
+  html.classList.add("dark");
+};
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
-    if (typeof window === "undefined") return "light";
-    const storedTheme = localStorage.getItem("theme") as
-      | "light"
-      | "dark"
-      | null;
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    return storedTheme || (prefersDark ? "dark" : "light");
-  });
   const [mounted, setMounted] = useState(false);
 
-  // Apply theme to DOM when theme changes
+  // Apply dark theme to DOM on mount
   useEffect(() => {
-    applyTheme(theme);
-  }, [theme]);
+    applyTheme();
+  }, []);
 
-  // Mark as mounted once on initial mount (defer to next paint to avoid synchronous state updates)
+  // Mark as mounted once on initial mount
   useEffect(() => {
     const raf = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    applyTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-  };
-
-
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme: "dark" }}>
       {mounted ? children : null}
     </ThemeContext.Provider>
   );
