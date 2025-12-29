@@ -126,7 +126,7 @@ export function PromoModal({ isOpen, onClose }: PromoModalProps) {
                       </div>
 
                       <Button asChild>
-                        <div
+                        <Link href='/user/deposit'
                           className={`w-full h-10 md:h-14 text-lg font-bold rounded-xl bg-linear-to-r ${plan.color}`}
                         >
                           Select {plan.name === "VIP" ? "VIP" : plan.name} Plan
@@ -143,7 +143,7 @@ export function PromoModal({ isOpen, onClose }: PromoModalProps) {
                               d="M13 7l5 5m0 0l-5 5m5-5H6"
                             />
                           </svg>
-                        </div>
+                        </Link>
                       </Button>
 
                       {/* Trust Badge */}

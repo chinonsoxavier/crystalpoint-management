@@ -16,7 +16,7 @@ const Gold = () => {
           </Animate>
 
           <div className=" flex justify-start max-w-4xl mx-auto">
-            <Animate className="justify-start my-6 overflow-hidden rounded-xl bg-[red]">
+            <Animate className="justify-start my-6 overflow-hidden rounded-xl">
               <Image
                 src={goldImage}
                 className=" duration-500 hover:scale-105 h-full rounded-xl"

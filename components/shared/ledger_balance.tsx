@@ -39,7 +39,7 @@ const {profile} = useDashboardStore();
               {/* Balance with toggle */}
               <div className="flex items-center gap-3">
                 <p className="text-3xl md:text-4xl lg:text-5xl font-bold text-accent-text tabular-nums">
-                  {showBalance ? (
+                 $ {showBalance ? (
                     <span>{formatCurrency(profile?.ledger_balance ?? 0)}</span>
                   ) : (
                     <span className="tracking-widest">••••••</span>

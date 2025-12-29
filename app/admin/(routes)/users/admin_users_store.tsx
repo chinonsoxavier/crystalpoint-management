@@ -36,6 +36,24 @@ interface IPagination {
   pages: number;
 }
 
+interface IFinancialSummary {
+  balances: {
+    activeDeposit: number;
+    profit: number;
+    bonus: number;
+    promotionalBonus: number;
+    totalWithdrawn: number;
+    pendingWithdrawals: number;
+  };
+  totals: {
+    totalDeposit?: number;
+    totalWithdrawals?: number;
+    totalProfit?: number;
+    totalBonus?: number;
+    totalPromotionalBonus?: number;
+  };
+}
+
 interface AdminUsersStore {
   // State
   users: IAdminUser[];
@@ -46,10 +64,13 @@ interface AdminUsersStore {
   isUpdatingBalance: boolean;
   isUpdatingStatus: boolean;
   isUpdatingTier: boolean;
+  userFinancialSumary: IFinancialSummary;
   isLoadingReferrals: boolean;
   referrals: [];
 
   // Actions
+
+  fetchFinancialSummary: (userId: string) => Promise<void>;
   fetchUsers: (params: {
     page?: number;
     limit?: number;
@@ -59,7 +80,14 @@ interface AdminUsersStore {
   fetchUserDetails: (userId: string) => Promise<void>;
   updateUserBalance: (
     userId: string,
-    type: "deposit" | "bonus",
+    type:
+      | "deposit"
+      | "profit"
+      | "bonus"
+      | "promotionalBonus"
+      | "totalWithdrawn"
+      | "pendingWithdrawals"
+      | "activeDeposit",
     amount: number,
     reason: string
   ) => Promise<void>;
@@ -79,6 +107,7 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
       // Initial State
       users: [],
       selectedUser: null,
+      userFinancialSumary: {},
       pagination: null,
       isLoadingUsers: false,
       isLoadingUserDetails: false,
@@ -102,6 +131,7 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
           const response = await baseAxios.get(`/admin/users?${queryString}`, {
             withCredentials: true,
           });
+          console.log("Fetched Users:", response.data?.data);
 
           set({
             users: response.data?.data?.users || [],
@@ -112,6 +142,23 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
           set({ isLoadingUsers: false });
           console.log("Failed to fetch users:", error);
           enqueueSnackbar("Failed to fetch users", { variant: "error" });
+        }
+      },
+      fetchFinancialSummary: async (userId) => {
+        try {
+          const response = await baseAxios.get(
+            "/admin/users/" + userId + "/financial-summary",
+            {
+              withCredentials: true,
+            }
+          );
+          console.log("User Financial Summary:", response.data?.data);
+          set({
+            userFinancialSumary: response.data?.data || {},
+          });
+        } catch (error) {
+          console.log("Failed to fetch user financial summary:", error);
+          axiosError(error);
         }
       },
 
@@ -135,14 +182,15 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
 
       updateUserBalance: async (userId, type, amount, reason) => {
         set({ isUpdatingBalance: true });
+        console.log("Update User Balance Response:", amount, type);
         try {
           const response = await baseAxios.patch(
             `/admin/users/${userId}/balance`,
-            { type, amount, reason },
+            { type, amount, reason, },
             { withCredentials: true }
           );
 
-          enqueueSnackbar("User balance updated successfully", {
+          enqueueSnackbar(response.data.message, {
             variant: "success",
           });
 
@@ -153,9 +201,7 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
         } catch (error) {
           set({ isUpdatingBalance: false });
           console.log("Failed to update user balance:", error);
-          enqueueSnackbar("Failed to update user balance", {
-            variant: "error",
-          });
+          axiosError(error)
         }
       },
 
@@ -197,7 +243,7 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
             { tier },
             { withCredentials: true }
           );
-          
+
           enqueueSnackbar(response.data.message, {
             variant: "success",
           });
@@ -208,11 +254,11 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
               user._id === userId
                 ? { ...user, profile: { ...user.profile, tier } }
                 : user
-              ),
-              isUpdatingTier: false,
-            }));
-            
-            await useAdminUsersStore.getState().fetchUsers({});
+            ),
+            isUpdatingTier: false,
+          }));
+
+          await useAdminUsersStore.getState().fetchUsers({});
           get().fetchUserDetails(userId);
         } catch (error) {
           set({ isUpdatingTier: false });

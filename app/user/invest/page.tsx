@@ -55,9 +55,7 @@ const Page = () => {
                     <div className="">
                       {/* Invest Button */}
                       <Link
-                        href={`/user/invest/select-plan/${plan.name
-                          .split(" ")[0]
-                          .toLowerCase()}/${plan._id}`}
+                        href={`/user/deposit`}
                         className="w-full"
                       >
                         <Button variant="outline" className="w-full">

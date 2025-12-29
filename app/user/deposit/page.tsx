@@ -38,6 +38,7 @@ const Page = () => {
     createDepositRequest,
     isDepositLoading,
     depositInstructions,
+    getDepositIntructions,
     depositRequestSuccessful,
   } = useDepositStore();
 
@@ -48,7 +49,8 @@ const Page = () => {
    const pathname = usePathname();
   useEffect(() => {
     fetchDepositMethods();
-  }, []);
+    getDepositIntructions(selectedDepositMethod?._id || "" );
+  }, [depositAmount,selectedDepositMethod]);
 
 useEffect(() => {
 setStep(1);
@@ -111,13 +113,13 @@ setStep(1);
 
   return (
     <div className="p-4 md:p-8 bg-accent min-h-screen">
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="space-y-6">
         <LedgerBalance />
 
-        <div className="bg-accent-foreground rounded-xl overflow-hidden shadow-lg border">
+        <div className="bg-accent-foreground max-w-3xl rounded-xl overflow-hidden shadow-lg border w-full">
         
 
-          <div className="p-8">
+          <div className="p-8 w-full">
             {step === 1 ? (
               /* --- STEP 1: CONFIGURATION --- */
               <form onSubmit={handleProceedToPayment} className="space-y-6">
@@ -188,13 +190,21 @@ setStep(1);
                         required
                       />
                     </div>
+                    {
+                      selectedDepositMethod && depositInstructions?.minimumAmount && depositAmount < depositInstructions.minimumAmount  && (
+                      <p className="text-[red] text-sm" >
+                        Minimum deposit amount for {selectedDepositMethod?.name} is ${depositInstructions?.minimumAmount ?? 0}
+                      </p>
+                      )
+                    }
+                
                   </div>
                 </div>
 
                 <Button
                   type="submit"
                   className="w-full h-12 text-base font-semibold shadow-md"
-                  disabled={!selectedDepositMethod || depositAmount <= 0}
+                  disabled={!selectedDepositMethod || depositAmount <= (depositInstructions?.minimumAmount ?? 0)}
                 >
                   Continue to Payment
                 </Button>
@@ -317,10 +327,10 @@ setStep(1);
                     </div>
                   </div>
                   <h2 className="text-2xl font-bold">
-                    Deposit Activated Successfully!
+                    Deposit Alert Successfully!
                   </h2>
                   <p className="text-accent-text max-w-md mx-auto">
-                    Your deposit of{" "}
+                    Your deposit of alert{" "}
                     <span className="font-bold text-green-600">
                       ${depositAmount}{" "}
                     </span>

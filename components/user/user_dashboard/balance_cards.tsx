@@ -57,7 +57,7 @@ export function BalanceCards({ showValues }: BalanceCardsProps) {
             </p>
           </div>
           <p className="text-3xl font-bold relative z-10">
-            {showValues ? formatCurrency(card.value ?? 0) : maskValue}
+           $ {showValues ? formatCurrency(card.value ?? 0) : maskValue}
           </p>
         </div>
       ))}

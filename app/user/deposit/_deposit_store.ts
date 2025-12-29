@@ -1,6 +1,6 @@
 "use client";
 import { create } from "zustand";
-import { baseAxios, baseAxiosPatch } from "@/network/axios";
+import { axiosError, baseAxios, baseAxiosPatch } from "@/network/axios";
 import { enqueueSnackbar } from "notistack";
 
 export interface IDepositMethod {
@@ -24,6 +24,10 @@ interface IDepositInstructions {
   walletAddress: string;
   instructions: string;
   qrCodeUrl: string;
+  network: string;
+  minimumAmount: number;
+  estimatedConfirmationTime: string;
+  importantNotes: string[];
 }
 
 interface DepositStore {
@@ -104,8 +108,9 @@ const useDepositStore = create<DepositStore>((set) => ({
    }
   },
   getDepositIntructions: async (method) => {
+    console.log("deposit instructions", method);
     try {
-      const res = await baseAxios.get(`/deposit/instructions/${method}`);
+      const res = await baseAxios.get(`/deposit/instructions/${method}`,{withCredentials:true});
       set({ depositInstructions: res.data.data });
     } catch (error) {
       console.log("failed to fetch deposit intructions", error);
@@ -161,6 +166,7 @@ const useDepositStore = create<DepositStore>((set) => ({
       console.log("Create Deposit Response:", res.data);
       set({ depositRequestSuccessful: true });
     } catch (error) {
+      axiosError(error)
       console.log("Error creating deposit:", error);
     } finally {
       set({ isDepositLoading: false });

@@ -48,8 +48,16 @@ import {
 import { useAdminUsersStore } from "./admin_users_store";
 import { formatDate } from "@/utility/format_date";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import useWithdrawStore from "@/app/user/withdraw/_withdraw_store";
 
-type IDepositType = "deposit" | "bonus";
+type IDepositType =
+  | "deposit"
+  | "profit"
+  | "bonus"
+  | "promotionalBonus"
+  | "totalWithdrawn"
+  | "pendingWithdrawals"
+  | "activeDeposit";
 type ITierFilter = "all" | "1" | "2" | "3";
 type ITierString = "1" | "2" | "3" | undefined;
 
@@ -84,9 +92,12 @@ export default function UsersPage() {
     isUpdatingTier,
     isUpdatingStatus,
     users,
+    userFinancialSumary,
+    fetchFinancialSummary,
     fetchUsers,
   } = useAdminUsersStore();
 
+  const {fetchWithdrawalBalance,withdrawalBalance} = useWithdrawStore();
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState<(typeof users)[0] | null>(
     null
@@ -110,18 +121,56 @@ export default function UsersPage() {
       limit: 100,
       tier: tierFilter === "all" ? undefined : tierFilter,
     });
-  }, [page, tierFilter,selectedUser]);
+  }, [page, tierFilter, selectedUser]);
 
   useEffect(() => {
-  if(depositType==='bonus'){
-    setBalanceAmount(selectedUser?.balance?.bonus ?? 0);
-    return;
-  };
-    setBalanceAmount(selectedUser?.balance?.deposit ?? 0);
-
-
-  }, [depositType])
+    fetchWithdrawalBalance();
+  }, [selectedUser,]);
   
+useEffect(() => {
+  if(showEditModal && selectedUser){
+    fetchFinancialSummary(selectedUser?._id || "");
+  }
+ 
+}, [showEditModal,selectedUser])
+
+
+  useEffect(() => {
+    switch (depositType) {
+      case "promotionalBonus":
+        setBalanceAmount(userFinancialSumary?.balances?.promotionalBonus ?? 0);
+        return;
+      case "totalWithdrawn":
+        setBalanceAmount(userFinancialSumary?.balances?.totalWithdrawn ?? 0);
+        return;
+      case "pendingWithdrawals":
+        setBalanceAmount(userFinancialSumary?.balances?.pendingWithdrawals ?? 0);
+        return;
+      case "activeDeposit":
+        setBalanceAmount(userFinancialSumary?.balances?.activeDeposit ?? 0);
+        return;
+      case "deposit":
+        setBalanceAmount(selectedUser?.balance?.deposit ?? 0);
+        return;
+      case "profit":
+        setBalanceAmount(userFinancialSumary?.balances?.profit ?? 0);
+        return;
+      case "bonus":
+        setBalanceAmount(userFinancialSumary?.balances?.bonus ?? 0);
+        return;
+      default:
+    }
+
+    // if (depositType === "bonus") {
+    //   setBalanceAmount(selectedUser?.balance?.bonus ?? 0);
+    //   return;
+    // } else if (depositType === "profit") {
+    //   setBalanceAmount(selectedUser?.balance?.profile ?? 0);
+    //   return;
+    // }
+
+    // setBalanceAmount(selectedUser?.balance?.deposit ?? 0);
+  }, [depositType]);
 
   // Reset form when a new user is selected
   useEffect(() => {
@@ -369,7 +418,7 @@ export default function UsersPage() {
 
       {/* Edit User Modal with Separated Sections */}
       <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Edit User</DialogTitle>
             <DialogDescription>
@@ -377,14 +426,14 @@ export default function UsersPage() {
             </DialogDescription>
           </DialogHeader>
           {selectedUser && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Tabs defaultValue="balance?">
+            <div className="grid grid-cols-1 w-full gap-6">
+              <Tabs defaultValue="balance?" className="w-full">
                 <TabsList>
                   <TabsTrigger value="balance?">Balance Management</TabsTrigger>
                   <TabsTrigger value="tier">Tier Management</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="balance?" className="w-full bg-[red]" >
+                <TabsContent value="balance?" className="w-full">
                   {/* Balance Management Section */}
                   <Card>
                     <CardHeader>
@@ -411,12 +460,28 @@ export default function UsersPage() {
                                 setDepositType(value)
                               }
                             >
-                              <SelectTrigger className="w-full" id="deposit-type">
+                              <SelectTrigger
+                                className="w-full"
+                                id="deposit-type"
+                              >
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="deposit">Deposit</SelectItem>
                                 <SelectItem value="bonus">Bonus</SelectItem>
+                                <SelectItem value="profit">Profit</SelectItem>
+                                <SelectItem value="promotionalBonus">
+                                  Promotional Bonus
+                                </SelectItem>
+                                <SelectItem value="totalWithdrawn">
+                                  Total Withdrawn
+                                </SelectItem>
+                                <SelectItem value="pendingWithdrawals">
+                                  Pending Withdrawals
+                                </SelectItem>
+                                <SelectItem value="activeDeposit">
+                                  Active Deposit
+                                </SelectItem>
                               </SelectContent>
                             </Select>
                           </div>

@@ -20,8 +20,6 @@ export const baseAxiosPatch = axios.create({
   withCredentials:true
 });
 
-
-
 export const baseAxiosDelete = axios.create({
   baseURL: baseUrl,
   withCredentials: true,

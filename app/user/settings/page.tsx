@@ -37,8 +37,8 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="overflow-hidden py-6 px-4 md:px-6">
-      <div className="mb-6">
+    <div className="py-6 px-4 md:px-6">
+      <div className="pt-6 bg-accent sticky top-0">
         <div className="md:mb-8 mb-5">
           <h1 className="text-3xl font-bold">Settings</h1>
           <p className="text-muted-foreground">
@@ -48,8 +48,9 @@ export default function SettingsPage() {
 
         <SettingsTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
-
-      <div className="overflow-y-scroll">{renderTabContent()}</div>
+      <div className="py-6">
+        <div className="">{renderTabContent()}</div>
+      </div>
     </div>
   );
 }

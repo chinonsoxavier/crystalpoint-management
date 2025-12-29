@@ -15,18 +15,20 @@ interface IMembershipCard {
 
 }
 
-interface ICurrentMembership {
-  membership: {
-    id: string;
-    user: string;
-    card: {
+interface ICurrentMembershipCard {
       id: string;
       name: string;
       tier: number;
       requiredDeposit: number;
       benefits: string[];
       isActive: boolean;
-    };
+}
+
+interface ICurrentMembership {
+  membership: {
+    id: string;
+    user: string;
+    card:ICurrentMembershipCard;
     status: string;
     activatedAt: string;
   };
@@ -63,6 +65,11 @@ interface IMembershipHistory {
     total: number;
     pages: number;
   };
+};
+
+interface MembershipEligibility { 
+  totalDeposit: number,
+    upgradeEligibility:null
 }
 
 interface MembershipStore {
@@ -70,6 +77,7 @@ interface MembershipStore {
   currentMembership: ICurrentMembership | null;
   membershipBenefits: IMembershipBenefits | null;
   membershipHistory: IMembershipHistory | null;
+  membershipEligibility:MembershipEligibility | null;
   isActivated: boolean;
   loading: {
     cards: boolean;
@@ -79,6 +87,7 @@ interface MembershipStore {
     activating: boolean;
   };
   error: string | null;
+  getMembershipEligibility: () => Promise<void>;
   getMembershipCards: () => Promise<void>;
   getCurrentMembership: () => Promise<void>;
   getMembershipBenefits: () => Promise<void>;
@@ -92,6 +101,7 @@ interface MembershipStore {
 const useMembershipStore = create<MembershipStore>((set, get) => ({
   membershipCards: [],
   currentMembership: null,
+  membershipEligibility:null,
   membershipBenefits: null,
   isActivated:false,
   membershipHistory: null,
@@ -106,12 +116,28 @@ const useMembershipStore = create<MembershipStore>((set, get) => ({
   setIsActivated: async (activated) => {
      set({isActivated:activated})
    },
+  getMembershipEligibility: async () => {
+    set({ loading: { ...get().loading, cards: true }, error: null });
+    try {
+      const res = await baseAxios.get("/membership/eligibility", {
+        withCredentials: true,    
+      });
+      set({ membershipEligibility: res.data.data });
+      console.log(res.data.data);
+    } catch (error) {
+      console.error("Failed to get membership eligibility:", error);
+      const errorMessage = axiosError(error);
+      set({ error: errorMessage });
+    } finally {
+      set({ loading: { ...get().loading, cards: false } });
+    }},
   getMembershipCards: async () => {
     set({ loading: { ...get().loading, cards: true }, error: null });
     try {
       const res = await baseAxios.get("/membership/cards", {
         withCredentials: true,
       });
+      console.log(res.data.data);
       if (res.data.success) {
         set({ membershipCards: res.data.data });
       }

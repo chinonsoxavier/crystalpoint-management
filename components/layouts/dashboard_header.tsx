@@ -65,7 +65,7 @@ const DashboardHeader = () => {
           onClick={() => toggleSideMenuOpen()}
           className="flex z-0 relative items-center justify-start gap-7"
         >
-          {sideMenuOpen ? (
+          {!sideMenuOpen ? (
             <div className="space-y-1.5 group cursor-pointer">
               <div className="bg-[#b3b3b3] w-6.5 h-[3px] rounded-[0.1875rem]"></div>
               <div className="bg-[#b3b3b3] w-6.5 h-[3px] rounded-[0.1875rem]"></div>

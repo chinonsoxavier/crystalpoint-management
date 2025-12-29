@@ -4,6 +4,7 @@ import DashboardHeader from "./dashboard_header";
 import DashboardSidemenu from "./dashboard_sidemenu";
 import useUserStore from "@/app/user/user_store";
 import { AuthGuard } from "../auth_guard";
+import DashboardAdPrompt from "../shared/ad_prompt";
 // import { AuthGuard } from "../auth_guard";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
@@ -19,7 +20,15 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           <aside className="">
             <DashboardSidemenu totalDeposit={user?.balance?.deposit ?? 0} />
           </aside>
-          <section className="w-full mb-5 overflow-y-auto">{children}</section>
+
+          <section className="w-full mb- overflow-y-auto">
+            <div className="pt-4 h-[20%] px-4 md:pt-6 md:px-6">
+            <DashboardAdPrompt />
+            </div>
+            <div className="h-[80%]" >
+             {children}
+            </div>
+          </section>
         </section>
 
         {/* footer */}

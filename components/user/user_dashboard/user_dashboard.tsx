@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, Copy } from "lucide-react";
 import useDashboardStore from "@/app/user/(user)/_dashboard_store";
+import AdPrompt from "@/components/shared/ad_prompt";
 const UserDashboard = () => {
   const {referralLink,loadProfile} = useDashboardStore();
   const [copied, setCopied] = useState(false);

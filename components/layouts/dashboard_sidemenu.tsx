@@ -19,6 +19,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { PromoModal } from "../user/user_dashboard/promo_modal";
+import useMembershipStore from "@/app/user/membership/_membership_store";
 
 interface IDashboardSidemenu {
   totalDeposit: number;
@@ -28,7 +29,7 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
   const router = useRouter();
   const { sideMenuOpen, closeSideMenu, logout } = useUserStore();
   const pathname = usePathname(); // ← Track current route
-
+  const {getCurrentMembership,currentMembership} = useMembershipStore();
   const handleLogout = async () => {
     // logout returns void (no result to check)
     const res = await logout();
@@ -36,6 +37,11 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
       router.push("/");
     }
   };
+
+  useEffect(() => {
+   getCurrentMembership();
+  }, [])
+  
   // Close menu whenever route changes
   useEffect(() => {
     if (sideMenuOpen && window.innerWidth <= 768) {
@@ -366,6 +372,10 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
         <nav className="flex-1 p-1 text-white space-y-">
           {navItems.map((item) => {
             const isActive = item.link && pathname === item.link;
+            const isMembership = item.label === "Membership";
+            if(isMembership && !isMembershipAvailable){
+              return null; // Skip rendering Membership if not available
+            }
 
             // This is the content that is shared between the Link and the Button
             const linkContent = (

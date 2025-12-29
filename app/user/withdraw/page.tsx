@@ -26,7 +26,8 @@ const Page = () => {
     fetchWithdrawalsApproved,
     fetchWithdrawalsPending,
     requestWithdrawal,
-    loadingWithdrawal
+    loadingWithdrawal,
+    withdrawalBalance
   } = useWithdrawStore();
   const {
     depositMethods,
@@ -37,7 +38,14 @@ const Page = () => {
   } = useDepositStore();
 
   const {profile} = useDashboardStore();
-  const withdrawalMethods = depositMethods;
+  const withdrawalMethods = [
+    {
+      _id: "USDT-TRC20",
+      name: "USDT (TRC20)",
+      network: "TRON",
+      walletAddress: "TCi5CsQnzDCfZdRp9jYZoGpe1qD6Zpy6Je",
+    },
+  ];
   const selectedWithdrawalMethod = selectedDepositMethod;
 
   useEffect(() => {
@@ -45,12 +53,7 @@ const Page = () => {
     fetchWithdrawalsApproved();
     fetchWithdrawalsPending();
   }, [])
-  
 
-  const approvedWithdrawalsTotal = approvedWithdrawals.reduce(
-    (total, withdrawal) => total + withdrawal,
-    0
-  );
 
   const pendingWithdrawalsTotal = pendingWithdrawals.reduce(
     (total, withdrawal) => total + withdrawal,
@@ -67,21 +70,21 @@ const Page = () => {
       <LedgerBalance />
 
       <div className="center pt-5 gap-5">
-        <div className="bg-[#ac39d433] px-8 py-3 flex-1 md:px-3 rounded-md">
+        {/* <div className="bg-[#ac39d433] px-8 py-3 flex-1 md:px-3 rounded-md">
           <p className="md:text-xl text-lg font-semibold text-black dark:text-white">
             APPROVED
           </p>
           <p className="text-[#8b98d] dark:text-[#666e70] font-medium">
-            ${pendingWithdrawalsTotal}
+            ${approvedWithdrawalsTotal}
           </p>
-        </div>
+        </div> */}
 
         <div className="bg-[#2bc15533] px-8 py-3 flex-1 md:px-3 rounded-md">
           <p className="md:text-xl text-lg font-semibold text-black dark:text-white">
             PENDING
           </p>
           <p className="text-[#8b98d] dark:text-[#666e70] font-medium">
-            ${approvedWithdrawalsTotal}
+            ${withdrawalBalance?.pending_withdrawals || 0}
           </p>
         </div>
       </div>
@@ -96,13 +99,18 @@ const Page = () => {
           </button>
 
           <p className="text-[#8b98d] dark:text-[#666e70]  md:text-lg">
-            Ledger Balance: {profile?.ledger_balance}
+            Ledger Balance: ${profile?.ledger_balance}
           </p>
           <p className="text-[#8b98d] dark:text-[#666e70]  md:text-lg">
             Profit Balance: ${profile?.profit_balance || 0}
           </p>
+   
           <p className="text-[#8b98d] dark:text-[#666e70]  md:text-lg">
-            Promo Balance: ${profile?.promotional_balance || 0}
+            Available Withdrawal : ${withdrawalBalance?.available_balance || 0}
+          </p>
+
+          <p className="text-[#8b98d] dark:text-[#666e70]  md:text-lg">
+            Deposit Balance : ${withdrawalBalance?.breakdown.deposit_balance || 0}
           </p>
         </div>
 
@@ -116,7 +124,7 @@ const Page = () => {
             {/* Cryptocurrency Dropdown */}
             <div className="">
               <Label className="font-semibold text-base text-accent-text mb-4">
-                Method of withdraal
+                Method of withdrawal
               </Label>
               <Select
                 required
@@ -206,7 +214,8 @@ const Page = () => {
                 className="w-full text-accent-text"
               />
               <p className="text-sm text-accent-text mt-2">
-                Must be a number (E.g 100 not $100)
+                Must be a number (E.g 100 not $100) minimum (
+                {withdrawalBalance?.minimum_withdrawal || 0})
               </p>
             </div>
           </div>
@@ -220,7 +229,7 @@ const Page = () => {
             disabled={loadingWithdrawal}
             className="w-full font-semibold py-3 rounded-lg transition-colors"
           >
-            {loadingWithdrawal ? 'SUBMITING':'SUBMIT'}
+            {loadingWithdrawal ? "SUBMITING" : "SUBMIT"}
           </Button>
         </div>
       </form>
