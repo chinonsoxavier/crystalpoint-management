@@ -1,3 +1,4 @@
+// components/landing/plans/investment_card.tsx
 "use client";
 
 import { faServer } from "@fortawesome/free-solid-svg-icons";
@@ -5,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Animate from "../../animation/animate";
 import HoverArrow from "../../ui/hover_arrow";
 import { useRouter } from "next/navigation";
+import { useTranslate } from "@/hooks/use_translate";
 
 interface InvestmentPlan {
   id: string;
@@ -13,7 +15,7 @@ interface InvestmentPlan {
   min: number | null;
   max: number | null;
   return: string;
-frequency: string;
+  frequency: string;
   duration: string;
   referralBonus: string;
   welcomeBonus: string;
@@ -25,6 +27,8 @@ interface InvestmentCardProps {
 
 export default function InvestmentCard({ plan }: InvestmentCardProps) {
   const router = useRouter();
+  const { t } = useTranslate();
+
   const handleGetStarted = () => {
     router.push("/sign-up");
   };
@@ -44,9 +48,13 @@ export default function InvestmentCard({ plan }: InvestmentCardProps) {
         <Animate type="fadeInLeft" className="flex items-start gap-2">
           <span className="text-gray-400 mt-0.5">•</span>
           <div>
-            <span className="text-gray-300">Minimum:</span>
+            <span className="text-gray-300">
+              {t.landing.investmentCard.minimum}:
+            </span>
             <span className="ml-2 font-semibold">
-              {plan.min ? `$${plan.min.toLocaleString()}` : "Unlimited"}
+              {plan.min
+                ? `$${plan.min.toLocaleString()}`
+                : t.landing.investmentCard.unlimited}
             </span>
           </div>
         </Animate>
@@ -54,9 +62,13 @@ export default function InvestmentCard({ plan }: InvestmentCardProps) {
         <Animate type="fadeInLeft" className="flex items-start gap-2">
           <span className="text-gray-400 mt-0.5">•</span>
           <div>
-            <span className="text-gray-300">Maximum:</span>
+            <span className="text-gray-300">
+              {t.landing.investmentCard.maximum}:
+            </span>
             <span className="ml-2 font-semibold">
-             {plan.max ? `$${plan.max.toLocaleString()}` : "Unlimited"}
+              {plan.max
+                ? `$${plan.max.toLocaleString()}`
+                : t.landing.investmentCard.unlimited}
             </span>
           </div>
         </Animate>
@@ -64,14 +76,18 @@ export default function InvestmentCard({ plan }: InvestmentCardProps) {
         <Animate type="fadeInLeft" className="flex items-start gap-2">
           <span className="text-gray-400 mt-0.5">•</span>
           <div>
-            <span className="text-gray-300">Return:</span>
+            <span className="text-gray-300">
+              {t.landing.investmentCard.return}:
+            </span>
             <span className="ml-2 font-semibold">{plan.return}</span>
           </div>
         </Animate>
         <Animate type="fadeInLeft" className="flex items-start gap-2">
           <span className="text-gray-400 mt-0.5">•</span>
           <div>
-            <span className="text-gray-300">Frequency:</span>
+            <span className="text-gray-300">
+              {t.landing.investmentCard.frequency}:
+            </span>
             <span className="ml-2 font-semibold">{plan.frequency}</span>
           </div>
         </Animate>
@@ -82,18 +98,22 @@ export default function InvestmentCard({ plan }: InvestmentCardProps) {
         >
           <span className="text-gray-400 mt-0.5">•</span>
           <div>
-            <span className="text-gray-300">Duration:</span>
+            <span className="text-gray-300">
+              {t.landing.investmentCard.duration}:
+            </span>
             <span className="ml-2 font-semibold">{plan.duration}</span>
           </div>
         </Animate>
 
-         <Animate
+        <Animate
           type="fadeInLeft"
           className="flex items-start delay-[150] gap-2"
         >
           <span className="text-gray-400 mt-0.5">•</span>
           <div>
-            <span className="text-gray-300">Welcome Bonus:</span>
+            <span className="text-gray-300">
+              {t.landing.investmentCard.welcomeBonus}:
+            </span>
             <span className="ml-2 font-semibold">{plan.welcomeBonus}</span>
           </div>
         </Animate>
@@ -104,16 +124,20 @@ export default function InvestmentCard({ plan }: InvestmentCardProps) {
         >
           <span className="text-gray-400 mt-0.5">•</span>
           <div>
-            <span className="text-gray-300">Referral Bonus:</span>
+            <span className="text-gray-300">
+              {t.landing.investmentCard.referralBonus}:
+            </span>
             <span className="ml-2 font-semibold">{plan.referralBonus}</span>
           </div>
         </Animate>
 
         <Animate
           type="fadeInLeft"
-          className="flex items-center delay-[175] gap-3 pt-2"
+          className="flex items-start delay-[175] gap-3 pt-2"
         >
-          <span className="text-gray-300">Support:</span>
+          <span className="text-gray-300">
+            {t.landing.investmentCard.support}:
+          </span>
           <span className="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
             24/7 Live Support
           </span>
@@ -126,7 +150,7 @@ export default function InvestmentCard({ plan }: InvestmentCardProps) {
           onClick={handleGetStarted}
           className="mt-8 flex items-center group justify-center gap-2 text-white cursor-pointer font-semibold text-lg transition-colors"
         >
-          Get Started
+          {t.landing.investmentCard.getStarted}
           <HoverArrow
             variant="custom"
             className="group-hover:rotate-0 duration-500 bg-white text-primary-foreground"

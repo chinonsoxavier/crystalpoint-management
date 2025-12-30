@@ -1,16 +1,22 @@
+// components/landing/about/investors_choice.tsx
+"use client";
+
 import Link from "next/link";
 import Animate from "../animation/animate";
+import { useTranslate } from "@/hooks/use_translate";
 
 const InvestorsChoice = () => {
+  const { t } = useTranslate();
+
   return (
-    <div className="w-full md:py-16 py-10 flex items-cener bg-primary/50">
+    <div className="w-full md:py-16 py-10 flex items-center bg-primary/50">
       <div className="max_width_sm flex-wrap gap-12 flex items-center justify-between">
         <Animate
           type="fadeInLeft"
           className="bg-[rgba(255,255,255,0.3)] border border-[#eee] ml-10 md:ml-0 md:pt-3 pt-3 pr-6 md:pr-8 pb-3 md:pb-9 pl-16 md:pl-24 rounded-r-xl md:rounded-xl w-fit"
         >
           <h2 className="md:text-4xl text-xl font-semibold text-primary-foreground">
-            Investors #1 Chice
+            {t.landing.investorsChoice.title}
           </h2>
 
           <p className="text-primary-foreground text-lg md:text-[24px] tracking-wider">
@@ -21,7 +27,7 @@ const InvestorsChoice = () => {
         <Animate type="fadeInRight">
           <Link href="/sign-up">
             <button className="bg-primary text-white md:py-4 py-2.5 px-5 md:px-8 text-base md:text-lg rounded-md cursor-pointer">
-              Open your account
+              {t.landing.investorsChoice.button}
             </button>
           </Link>
         </Animate>

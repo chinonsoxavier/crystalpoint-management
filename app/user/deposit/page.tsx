@@ -46,16 +46,15 @@ const Page = () => {
   const [copied, setCopied] = useState(false);
   const [depositAmount, setDepositAmount] = useState<number>(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-   const pathname = usePathname();
+  const pathname = usePathname();
   useEffect(() => {
     fetchDepositMethods();
-    getDepositIntructions(selectedDepositMethod?._id || "" );
-  }, [depositAmount,selectedDepositMethod]);
+    getDepositIntructions(selectedDepositMethod?._id || "");
+  }, [depositAmount, selectedDepositMethod]);
 
-useEffect(() => {
-setStep(1);
-}, [pathname])
-
+  useEffect(() => {
+    setStep(1);
+  }, [pathname]);
 
   // Effect to transition to step 3 when deposit is successful
   useEffect(() => {
@@ -117,8 +116,6 @@ setStep(1);
         <LedgerBalance />
 
         <div className="bg-accent-foreground max-w-3xl rounded-xl overflow-hidden shadow-lg border w-full">
-        
-
           <div className="p-8 w-full">
             {step === 1 ? (
               /* --- STEP 1: CONFIGURATION --- */
@@ -181,7 +178,7 @@ setStep(1);
                       </span>
                       <Input
                         id="amount"
-                        className="pl-8 h-12 text-lg font-medium"
+                        className="pl-8 h-9 text-lg font-medium"
                         type="number"
                         placeholder="0.00"
                         onChange={(e) =>
@@ -190,21 +187,25 @@ setStep(1);
                         required
                       />
                     </div>
-                    {
-                      selectedDepositMethod && depositInstructions?.minimumAmount && depositAmount < depositInstructions.minimumAmount  && (
-                      <p className="text-[red] text-sm" >
-                        Minimum deposit amount for {selectedDepositMethod?.name} is ${depositInstructions?.minimumAmount ?? 0}
-                      </p>
-                      )
-                    }
-                
+                    {selectedDepositMethod &&
+                      depositInstructions?.minimumAmount &&
+                      depositAmount < depositInstructions.minimumAmount && (
+                        <p className="text-[red] text-sm">
+                          Minimum deposit amount for{" "}
+                          {selectedDepositMethod?.name} is $
+                          {depositInstructions?.minimumAmount ?? 0}
+                        </p>
+                      )}
                   </div>
                 </div>
 
                 <Button
                   type="submit"
                   className="w-full h-12 text-base font-semibold shadow-md"
-                  disabled={!selectedDepositMethod || depositAmount <= (depositInstructions?.minimumAmount ?? 0)}
+                  disabled={
+                    !selectedDepositMethod ||
+                    depositAmount <= (depositInstructions?.minimumAmount ?? 0)
+                  }
                 >
                   Continue to Payment
                 </Button>
@@ -393,7 +394,10 @@ setStep(1);
                 <div className="flex gap-3 pt-4">
                   <Button
                     variant="outline"
-                    onClick={() => (window.location.href = "/user/transactions/deposit-transactions")}
+                    onClick={() =>
+                      (window.location.href =
+                        "/user/transactions/deposit-transactions")
+                    }
                     className="flex-1 h-12 border-slate-200"
                   >
                     View Transaction History

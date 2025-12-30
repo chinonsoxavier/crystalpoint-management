@@ -563,13 +563,13 @@ const Page = () => {
                   disabled={authStatus === "loading"}
                 />
                 <label htmlFor="agreeTerms" className="text-sm text-foreground">
-                  I agree to{" "}
+                  I agree to
                   <a
-                    href="/terms-of-use"
+                    href="/terms-of-service"
                     className="text-primary hover:text-primary/80 "
                   >
                     Terms & Conditions
-                  </a>{" "}
+                  </a>
                   and{" "}
                   <a
                     href="/privacy-policy"

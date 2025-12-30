@@ -1,3 +1,4 @@
+// lib/translations.ts
 import { create } from "zustand";
 import { Language } from "@/lib/i18n";
 

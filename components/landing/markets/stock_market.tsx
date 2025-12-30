@@ -1,5 +1,5 @@
+// components/landing/markets/stock_market.tsx
 "use client";
-
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -11,20 +11,15 @@ import {
   YAxis,
 } from "recharts";
 import { TrendingDown, TrendingUp } from "lucide-react";
-import Image from "next/image"; // Keep this import
+import Image from "next/image";
 import Animate from "@/components/animation/animate";
-
-// REMOVE these imports as they are no longer needed
-// import apple from "@/assets/svg/apple--big.svg";
-// import google from "@/assets/svg/alphabet--big.svg";
-// import microsoft from "@/assets/svg/microsoft--big.svg";
+import { useTranslate } from "@/hooks/use_translate";
 
 const STOCKS = [
   {
     id: "GOOGL",
     name: "Alphabet Inc (Google) Class A",
     ticker: "GOOGL",
-    // Use the path from the public directory
     logo: "/logos/alphabet--big.svg",
   },
   {
@@ -50,7 +45,6 @@ const TIME_PERIODS = [
   { key: "ALL", label: "All" },
 ];
 
-// Custom hook to handle client-side rendering
 function useIsClient() {
   const [isClient, setIsClient] = useState(false);
 
@@ -63,6 +57,7 @@ function useIsClient() {
 }
 
 export default function StockMarketPage() {
+  const { t } = useTranslate();
   const [selectedStock, setSelectedStock] = useState(STOCKS[0]);
   const [selectedPeriod, setSelectedPeriod] = useState(TIME_PERIODS[1]);
   const isClient = useIsClient();
@@ -95,12 +90,13 @@ export default function StockMarketPage() {
       <div className="max_width">
         <Animate className="text-center mb-12 space-y-6">
           <h1 className="text-4xl md:text-5xl font-semibold">
-            Invest on <span className="underline">Stock</span> Market
+            {t.landing.stockMarket.title.before}{" "}
+            <span className="underline">
+              {t.landing.stockMarket.title.highlight}
+            </span>
           </h1>
           <p className="text-xl max-w-4xl mx-auto">
-            Invest on our extensive range of CFDs on FX, Commodities,
-            Cryptocurrencies, Shares, ETFs and more. Low costs, fast execution
-            and 24/7 support.
+            {t.landing.stockMarket.subtitle}
           </p>
         </Animate>
 
@@ -130,13 +126,12 @@ export default function StockMarketPage() {
           {/* Price Display */}
           <div className="p-6 space-y-2">
             <Animate className="flex items-start gap-2 justify-start">
-              {/* Use the logo directly from the selectedStock object */}
               <Image
                 src={selectedStock.logo}
                 alt={selectedStock.ticker}
-                width={32} // Add width and height for next/image
+                width={32}
                 height={32}
-                className="rounded-full  sm:flex"
+                className="rounded-full sm:flex"
               />
               <p className="text-2xl font-bold md:text-3xl">
                 {selectedStock.name}
@@ -144,7 +139,7 @@ export default function StockMarketPage() {
             </Animate>
             <Animate className="flex items-baseline flex-wrap space-y-2 space-x-4 mb-6">
               <span className="md:text-3xl text-2xl font-semibold">
-                ${" "}{currentPrice.toFixed(2)} USD
+                $ {currentPrice.toFixed(2)} USD
               </span>
               <div
                 className={`flex items-center space-x-2 px-3 py-1.5 rounded-full ${
@@ -169,18 +164,18 @@ export default function StockMarketPage() {
             {/* Time Period Buttons */}
             <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
               {TIME_PERIODS.map((period) => (
-                <Animate key={period.key} >
-                <button
-                  onClick={() => setSelectedPeriod(period)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    selectedPeriod.key === period.key
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                  }`}
+                <Animate key={period.key}>
+                  <button
+                    onClick={() => setSelectedPeriod(period)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      selectedPeriod.key === period.key
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                    }`}
                   >
-                  {period.label}
-                </button>
-             </Animate>
+                    {period.label}
+                  </button>
+                </Animate>
               ))}
             </div>
 
@@ -196,10 +191,7 @@ export default function StockMarketPage() {
                     Error loading chart data.
                   </div>
                 ) : (
-                  <ResponsiveContainer
-                    width="100%"
-                    height="100%"
-                  >
+                  <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                       data={chartData}
                       margin={{ top: 10, right: 30, left: -20 }}
@@ -269,16 +261,28 @@ export default function StockMarketPage() {
         {/* Statistics */}
         <div className="flex flex-wrap justify-center grid-cols-3 gap-6 pt-20">
           <Animate className="text-center">
-            <div className="text-2xl font-bold mb-1">102+ Billion</div>
-            <div className="text-gray-400 text-sm">transactions</div>
+            <div className="text-2xl font-bold mb-1">
+              {t.landing.stockMarket.statistics.transactions.value}
+            </div>
+            <div className="text-gray-400 text-sm">
+              {t.landing.stockMarket.statistics.transactions.label}
+            </div>
           </Animate>
           <Animate className="text-center">
-            <div className="text-2xl font-bold mb-1">211+ Thousand</div>
-            <div className="text-gray-400 text-sm">active accounts</div>
+            <div className="text-2xl font-bold mb-1">
+              {t.landing.stockMarket.statistics.activeAccounts.value}
+            </div>
+            <div className="text-gray-400 text-sm">
+              {t.landing.stockMarket.statistics.activeAccounts.label}
+            </div>
           </Animate>
           <Animate className="text-center">
-            <div className="text-2xl font-bold mb-1">112+ Thousand</div>
-            <div className="text-gray-400 text-sm">running days</div>
+            <div className="text-2xl font-bold mb-1">
+              {t.landing.stockMarket.statistics.runningDays.value}
+            </div>
+            <div className="text-gray-400 text-sm">
+              {t.landing.stockMarket.statistics.runningDays.label}
+            </div>
           </Animate>
         </div>
       </div>

@@ -1,22 +1,17 @@
 "use client";
 import useUserStore from "@/app/user/user_store";
 import {
-  faArrowRight,
+  faArrowLeft,
   faEye,
   faEyeSlash,
-  faMoon,
-  faSun,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Gem, Search } from "lucide-react";
-// import { useTheme } from "next-themes";
-import { useTheme } from "../theme_provider";
+import { Gem } from "lucide-react";
 import Link from "next/link";
 
 const DashboardHeader = () => {
   const { user } = useUserStore();
-  const { theme, toggleTheme } = useTheme();
 
   const { showBalance, toggleShowBalance, toggleSideMenuOpen, sideMenuOpen } =
     useUserStore();
@@ -30,10 +25,7 @@ const DashboardHeader = () => {
           sideMenuOpen ? "w-70 justify-start" : "w-20 justify-center"
         } transition-opacity duration-300`}
       >
-        {/* <div className="roboto">   <Gem
-                      className={`w-7 h-7 transition-colors duration-300 text-[#0A8A9F]"
-                      }`}
-                    /></div> */}
+     
         <div className="flex relative z-10 bg-accent-foreground items-center gap-3">
           <div className="relative">
             <Gem
@@ -73,7 +65,7 @@ const DashboardHeader = () => {
             </div>
           ) : (
             <FontAwesomeIcon
-              icon={faArrowRight}
+              icon={faArrowLeft}
               className="text-[rgba(30,170,231)] text-xl cursor-pointer"
             />
           )}

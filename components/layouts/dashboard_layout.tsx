@@ -5,12 +5,9 @@ import DashboardSidemenu from "./dashboard_sidemenu";
 import useUserStore from "@/app/user/user_store";
 import { AuthGuard } from "../auth_guard";
 import DashboardAdPrompt from "../shared/ad_prompt";
-// import { AuthGuard } from "../auth_guard";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const { user } = useUserStore();
-  //   const menuOpen = useStore((state: any) => state.menuOpen);
-
   return (
     <AuthGuard>
       <main className={`relative bg-accent overflow-hidden`}>

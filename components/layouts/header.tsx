@@ -7,17 +7,17 @@ import landingStore from "@/app/(landing)/landing_store";
 import Animate from "../animation/animate";
 import { usePathname } from "next/navigation";
 import { useTranslateStore } from "@/lib/translations";
-import { translations  } from "@/lib/i18n";
+import { translations } from "@/lib/i18n";
 
 const Header = () => {
   const { language } = useTranslateStore();
-    const t = translations[language];
+  const t = translations[language];
   const { toggleSideMenuOpen } = landingStore();
   const [hovered, setHovered] = useState(false);
   const pathname = usePathname();
 
   // Check if link is active
-  const isActiveLink = (href: string) => { 
+  const isActiveLink = (href: string) => {
     if (href === "/") {
       return pathname === href;
     }
@@ -79,7 +79,8 @@ const Header = () => {
                       : "text-white hover:text-[#1a365d]"
                   }`}
                 >
-                  {t.header.company} <ChevronDown className="w-4 mt-px" />
+                  {t.landing.header.company}{" "}
+                  <ChevronDown className="w-4 mt-px" />
                 </Link>
 
                 <div
@@ -95,7 +96,7 @@ const Header = () => {
                           isActiveLink("/about-us") ? "text-[#1a365d]" : ""
                         }
                       >
-                       {t.header.aboutUs}
+                        {t.landing.header.aboutUs}
                       </Link>
                     </li>
                     <li className="text-primary-foreground duration-500 hover:text-[#1a365d]">
@@ -105,7 +106,7 @@ const Header = () => {
                           isActiveLink("/faqs") ? "text-[#1a365d]" : ""
                         }
                       >
-                       {t.header.faqs}
+                        {t.landing.header.faqs}
                       </Link>
                     </li>
                     <li className="text-primary-foreground duration-500 hover:text-[#1a365d]">
@@ -115,7 +116,7 @@ const Header = () => {
                           isActiveLink("/contact-us") ? "text-[#1a365d]" : ""
                         }
                       >
-                      {t.header.contactUs}
+                        {t.landing.header.contactUs}
                       </Link>
                     </li>
                   </ul>
@@ -130,7 +131,7 @@ const Header = () => {
                       : "text-white hover:text-[#1a365d]"
                   }`}
                 >
-                  {t.header.markets}
+                  {t.landing.header.markets}
                 </Link>
               </li>
               <li>
@@ -142,7 +143,7 @@ const Header = () => {
                       : "text-white hover:text-[#1a365d]"
                   }`}
                 >
-                  {t.header.plans}
+                  {t.landing.header.plans}
                 </Link>
               </li>
               <li>
@@ -154,7 +155,7 @@ const Header = () => {
                       : "text-white hover:text-[#1a365d]"
                   }`}
                 >
-                  {t.header.services}
+                  {t.landing.header.services}
                 </Link>
               </li>
             </ul>
@@ -170,7 +171,7 @@ const Header = () => {
                   : "hover:text-black text-white"
               }`}
             >
-            {t.header.login}
+              {t.landing.header.login}
               <div
                 className={`center rounded-full transition-all duration-500 ${
                   isActiveLink("/sign-in")
@@ -196,7 +197,7 @@ const Header = () => {
                   : "hover:text-white text-[#2c2d32] bg-white hover:bg-[#1a365d]"
               }`}
             >
-              {t.header.signup}
+              {t.landing.header.signup}
               <div
                 className={`center delay-200 rounded-full w-4.5 h-4.5 transition-all duration-500 ${
                   isActiveLink("/sign-up")

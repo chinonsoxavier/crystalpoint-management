@@ -216,7 +216,7 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
         try {
           const response = await baseAxios.patch(
             `/admin/users/${userId}/status`,
-            { isActive },
+            { isActive },{withCredentials: true}
           );
 
           enqueueSnackbar(response.data.message, {

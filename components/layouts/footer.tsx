@@ -1,80 +1,19 @@
+// footer.tsx
 "use client";
 
 import { ChevronDown, Gem, Globe } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { LanguageSelect } from "../shared/language_select";
-
-// Language options with flags and codes
-const languages = [
-  { code: "en", name: "English", flag: "🇺🇸" },
-  { code: "es", name: "Español", flag: "🇪🇸" },
-  { code: "fr", name: "Français", flag: "🇫🇷" },
-  { code: "de", name: "Deutsch", flag: "🇩🇪" },
-  { code: "ar", name: "العربية", flag: "🇸🇦" },
-];
+import { useTranslate } from "@/hooks/use_translate";
 
 const Footer = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedLang, setSelectedLang] = useState(languages[0]);
+  const { t } = useTranslate();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
-
-  useEffect(() => {
-    if (!isClient) return;
-
-    let mounted = true;
-
-    const initializeLanguage = () => {
-      try {
-        const savedLang = localStorage.getItem("preferred-language");
-        if (savedLang && mounted) {
-          const lang = languages.find((l) => l.code === savedLang);
-          if (lang) setSelectedLang(lang);
-        } else if (mounted) {
-          // Detect browser language
-          const browserLang = navigator.language.split("-")[0];
-          const detectedLang = languages.find((l) => l.code === browserLang);
-          if (detectedLang) {
-            setSelectedLang(detectedLang);
-          }
-        }
-      } catch (error) {
-        console.log("Error accessing localStorage:", error);
-      }
-    };
-    // Add a small delay to avoid cascading renders
-    const timer = setTimeout(initializeLanguage, 100);
-
-    return () => {
-      mounted = false;
-      clearTimeout(timer);
-    };
-  }, [isClient]);
-
-  // Handle language change
-  const handleLanguageChange = (lang: (typeof languages)[0]) => {
-    setSelectedLang(lang);
-    try {
-      localStorage.setItem("preferred-language", lang.code);
-    } catch (error) {
-      console.log("Error saving to localStorage:", error);
-    }
-    setIsOpen(false);
-
-    // Show success message
-    console.log(`Language changed to ${lang.name}`);
-
-    // Dispatch event for other components to update
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(
-        new CustomEvent("languageChanged", { detail: lang.code })
-      );
-    }
-  };
 
   return (
     <div className="wrapper">
@@ -111,7 +50,7 @@ const Footer = () => {
               {/* Our Company */}
               <div>
                 <h3 className="font-bold text-primary-foreground text-[17px] md:text-[19px] mb-4">
-                  Our Company
+                  {t.landing.footer.company.title}
                 </h3>
                 <ul className="space-y-2">
                   <li>
@@ -119,7 +58,7 @@ const Footer = () => {
                       href="/about-us"
                       className="text-secondary-foreground hover:text-primary duration-300 text-[17px] md:text-[19px]"
                     >
-                      About Us
+                      {t.landing.footer.company.aboutUs}
                     </a>
                   </li>
                   <li>
@@ -127,7 +66,7 @@ const Footer = () => {
                       href="/services"
                       className="text-secondary-foreground hover:text-primary duration-300 text-[17px] md:text-[19px]"
                     >
-                      What We Offer
+                      {t.landing.footer.company.whatWeOffer}
                     </a>
                   </li>
                   <li>
@@ -135,7 +74,7 @@ const Footer = () => {
                       href="/faqs"
                       className="text-secondary-foreground hover:text-primary duration-300 text-[17px] md:text-[19px]"
                     >
-                      FAQ`s
+                      {t.landing.footer.company.faqs}
                     </a>
                   </li>
                   <li>
@@ -143,7 +82,7 @@ const Footer = () => {
                       href="/contact-us"
                       className="text-secondary-foreground hover:text-primary duration-300 text-[17px] md:text-[19px]"
                     >
-                      Contact Us
+                      {t.landing.footer.company.contactUs}
                     </a>
                   </li>
                 </ul>
@@ -152,7 +91,7 @@ const Footer = () => {
               {/* Our Services */}
               <div>
                 <h3 className="font-bold text-primary-foreground text-[17px] md:text-[19px] mb-4">
-                  Our Services
+                  {t.landing.footer.services.title}
                 </h3>
                 <ul className="space-y-2">
                   <li>
@@ -160,7 +99,7 @@ const Footer = () => {
                       href="/services/real-estate"
                       className="text-secondary-foreground hover:text-primary duration-300 text-[17px] md:text-[19px]"
                     >
-                      Real Estate
+                      {t.landing.footer.services.realEstate}
                     </a>
                   </li>
 
@@ -169,7 +108,7 @@ const Footer = () => {
                       href="/services/gold-investments"
                       className="text-secondary-foreground hover:text-primary duration-300 text-[17px] md:text-[19px]"
                     >
-                      Gold Investments
+                      {t.landing.footer.services.goldInvestments}
                     </a>
                   </li>
                   <li>
@@ -177,7 +116,7 @@ const Footer = () => {
                       href="/services/financial-planning"
                       className="text-secondary-foreground hover:text-primary duration-300 text-[17px] md:text-[19px]"
                     >
-                      Retirement Planning
+                      {t.landing.footer.services.retirementPlanning}
                     </a>
                   </li>
                 </ul>
@@ -186,7 +125,7 @@ const Footer = () => {
               {/* More */}
               <div>
                 <h3 className="font-bold text-primary-foreground text-[17px] md:text-[19px] mb-4">
-                  More
+                  {t.landing.footer.more.title}
                 </h3>
                 <ul className="space-y-2">
                   <li>
@@ -194,7 +133,7 @@ const Footer = () => {
                       href="/services/oil-and-gas"
                       className="text-secondary-foreground hover:text-primary duration-300 text-[17px] md:text-[19px]"
                     >
-                      Oil and Gas
+                      {t.landing.footer.more.oilAndGas}
                     </a>
                   </li>
                   <li>
@@ -202,7 +141,7 @@ const Footer = () => {
                       href="/services/financial-planning"
                       className="text-secondary-foreground hover:text-primary duration-300 text-[17px] md:text-[19px]"
                     >
-                      Financial Planning
+                      {t.landing.footer.more.financialPlanning}
                     </a>
                   </li>
                   <li>
@@ -210,7 +149,7 @@ const Footer = () => {
                       href="/services/loans-and-grants"
                       className="text-secondary-foreground hover:text-primary duration-300 text-[17px] md:text-[19px]"
                     >
-                      Loans and Grants
+                      {t.landing.footer.more.loansAndGrants}
                     </a>
                   </li>
                   <li>
@@ -218,7 +157,7 @@ const Footer = () => {
                       href="/services/stock-investment"
                       className="text-secondary-foreground hover:text-primary duration-300 text-[17px] md:text-[19px]"
                     >
-                      Stock Investment
+                      {t.landing.footer.more.stockInvestment}
                     </a>
                   </li>
                 </ul>
@@ -227,7 +166,7 @@ const Footer = () => {
               {/* Account */}
               <div>
                 <h3 className="font-bold text-primary-foreground text-[17px] md:text-[19px] mb-4">
-                  Account
+                  {t.landing.footer.account.title}
                 </h3>
                 <ul className="space-y-2">
                   <li>
@@ -235,7 +174,7 @@ const Footer = () => {
                       href="/sign-up"
                       className="text-secondary-foreground hover:text-primary duration-300 text-[17px] md:text-[19px]"
                     >
-                      Create Account
+                      {t.landing.footer.account.createAccount}
                     </a>
                   </li>
                   <li>
@@ -243,7 +182,7 @@ const Footer = () => {
                       href="/sign-in"
                       className="text-secondary-foreground hover:text-primary duration-300 text-[17px] md:text-[19px]"
                     >
-                      Login
+                      {t.landing.footer.account.login}
                     </a>
                   </li>
                   <li>
@@ -251,11 +190,11 @@ const Footer = () => {
                       href="/forgot-password"
                       className="text-secondary-foreground hover:text-primary duration-300 text-[17px] md:text-[19px]"
                     >
-                      Forgot Password?
+                      {t.landing.footer.account.forgotPassword}
                     </a>
                   </li>
                   {/* Language Selector */}
-                 <LanguageSelect/>
+                  <LanguageSelect />
                 </ul>
               </div>
             </div>
@@ -270,7 +209,7 @@ const Footer = () => {
                       href="/terms-of-use"
                       className="hover:text-primary-foreground"
                     >
-                      Terms of Use
+                      {t.landing.footer.legal.termsOfUse}
                     </a>
                     {/*divider  */}
                     <div className="border-r border-secondary-foreground  mx-2 h-4 w-1"></div>
@@ -278,13 +217,13 @@ const Footer = () => {
                       href="/privacy-policy"
                       className="hover:text-primary-foreground"
                     >
-                      Privacy policy
+                      {t.landing.footer.legal.privacyPolicy}
                     </a>
                   </div>
                   <span className="text-base">
                     ©2019 - 2025
                     <span className="border-r border-secondary-foreground  mx-2 h-3 w-1"></span>
-                    CristalPoint Management. All Rights Reserved.
+                    {t.landing.footer.copyright}
                   </span>
                 </div>
               </div>

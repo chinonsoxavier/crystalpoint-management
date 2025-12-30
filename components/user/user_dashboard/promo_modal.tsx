@@ -99,9 +99,7 @@ export function PromoModal({ isOpen, onClose }: PromoModalProps) {
         <div className="md:p-8 p-4.5">
           <div className="grid grid-cols-1 w-full md:grid-cols-2 lg:grid-cols-3 gap-8">
             {promoPlans.map((plan) => (
-              <DialogClose key={plan.name}>
-                <Link href="/user/deposit">
-                  <div
+                  <div  key={plan.name}
                     className={`group relative overflow-hidden rounded-2xl 
                                transition-all duration-500 bg-accent-foreground hover:shadow-2xl border border-accent-border hover:border-primary`}
                   >
@@ -126,6 +124,7 @@ export function PromoModal({ isOpen, onClose }: PromoModalProps) {
                       </div>
 
                       <Button asChild>
+              <DialogClose key={plan.name}>
                         <Link href='/user/deposit'
                           className={`w-full h-10 md:h-14 text-lg font-bold rounded-xl bg-linear-to-r ${plan.color}`}
                         >
@@ -141,9 +140,10 @@ export function PromoModal({ isOpen, onClose }: PromoModalProps) {
                               strokeLinejoin="round"
                               strokeWidth={2}
                               d="M13 7l5 5m0 0l-5 5m5-5H6"
-                            />
+                              />
                           </svg>
                         </Link>
+                              </DialogClose>
                       </Button>
 
                       {/* Trust Badge */}
@@ -166,8 +166,6 @@ export function PromoModal({ isOpen, onClose }: PromoModalProps) {
                       </div>
                     </div>
                   </div>
-                </Link>
-              </DialogClose>
             ))}
           </div>
 

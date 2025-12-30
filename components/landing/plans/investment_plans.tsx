@@ -1,99 +1,111 @@
+"use client";
+// components/landing/plans/investment_plans.tsx
 import Animate from "../../animation/animate";
 import InvestmentCard from "./investment_card";
-
-interface InvestmentPlan {
-  id: string;
-  name: string;
-  icon: string;
-  min: number;
-  max: number;
-  return: string;
-  frequency: string;
-  duration: string;
-  referralBonus: string;
-  welcomeBonus: string;
-}
-
-const investmentPlans: InvestmentPlan[] = [
-  {
-    id: "beginners",
-    name: "Beginners Plan",
-    icon: "🛍",
-    min: 50,
-    max: 499,
-    return: "3%",
-    frequency: "Daily",
-    duration: "5 days",
-    welcomeBonus: "6%",
-    referralBonus: "10%",
-  },
-  {
-    id: "accessories",
-    name: "Accessories Plan",
-    icon: "⚙",
-    min: 500,
-    max: 999,
-    return: "4%",
-    frequency: "Daily",
-    duration: "7 days",
-    welcomeBonus: "6%",
-    referralBonus: "10%",
-  },
-  {
-    id: "oil-gas",
-    name: "Oil & Gas Plan",
-    icon: "🛢",
-    min: 1000,
-    max: 1999,
-    return: "5%",
-    frequency: "Every 3 days",
-    duration: "12 days",
-    welcomeBonus: "6%",
-    referralBonus: "10%",
-  },
-  {
-    id: "agriculture",
-    name: "Agriculture Plan",
-    icon: "🌾",
-    min: 2000,
-    max: 4999,
-    return: "8%",
-    frequency: "Every 4 days",
-    duration: "20 days",
-    welcomeBonus: "6%",
-    referralBonus: "10%",
-  },
-  {
-    id: "real-estate",
-    name: "Real Estate Plan",
-    icon: "🏢",
-    min: 5000,
-    max: 1000000,
-    return: "10%",
-    frequency: "Every 7 days",
-    duration: "28 days",
-    welcomeBonus: "6%",
-    referralBonus: "10%",
-  },
-];
+import { useTranslate } from "@/hooks/use_translate";
 
 export default function InvestmentPlans() {
+  const { t } = useTranslate();
+
   return (
     <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <Animate className="text-center mb-12">
           <h1 className="text-4xl sm:text-5xl font-bold text-primary-foreground mb-2">
-            Invest on
-            <span className="underline pl-2">cristalpoint</span>
+            {t.landing.investmentPlans.title.before}
+            <span className="underline pl-2">
+              {t.landing.investmentPlans.title.highlight}
+            </span>
           </h1>
         </Animate>
 
         {/* Investment Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {investmentPlans.map((plan) => (
-            <InvestmentCard key={plan.id} plan={plan} />
-          ))}
+          <InvestmentCard
+            key="beginners"
+            plan={{
+              id: "beginners",
+              name: t.landing.investmentPlans.plans.beginners.name,
+              icon: "🛍",
+              min: 50,
+              max: 499,
+              return: t.landing.investmentPlans.plans.beginners.return,
+              frequency: t.landing.investmentPlans.plans.beginners.frequency,
+              duration: t.landing.investmentPlans.plans.beginners.duration,
+              referralBonus:
+                t.landing.investmentPlans.plans.beginners.referralBonus,
+              welcomeBonus:
+                t.landing.investmentPlans.plans.beginners.welcomeBonus,
+            }}
+          />
+          <InvestmentCard
+            key="accessories"
+            plan={{
+              id: "accessories",
+              name: t.landing.investmentPlans.plans.accessories.name,
+              icon: "⚙",
+              min: 500,
+              max: 999,
+              return: t.landing.investmentPlans.plans.accessories.return,
+              frequency: t.landing.investmentPlans.plans.accessories.frequency,
+              duration: t.landing.investmentPlans.plans.accessories.duration,
+              referralBonus:
+                t.landing.investmentPlans.plans.accessories.referralBonus,
+              welcomeBonus:
+                t.landing.investmentPlans.plans.accessories.welcomeBonus,
+            }}
+          />
+          <InvestmentCard
+            key="oil-gas"
+            plan={{
+              id: "oil-gas",
+              name: t.landing.investmentPlans.plans.oilGas.name,
+              icon: "🛢",
+              min: 1000,
+              max: 1999,
+              return: t.landing.investmentPlans.plans.oilGas.return,
+              frequency: t.landing.investmentPlans.plans.oilGas.frequency,
+              duration: t.landing.investmentPlans.plans.oilGas.duration,
+              referralBonus:
+                t.landing.investmentPlans.plans.oilGas.referralBonus,
+              welcomeBonus: t.landing.investmentPlans.plans.oilGas.welcomeBonus,
+            }}
+          />
+          <InvestmentCard
+            key="agriculture"
+            plan={{
+              id: "agriculture",
+              name: t.landing.investmentPlans.plans.agriculture.name,
+              icon: "🌾",
+              min: 2000,
+              max: 4999,
+              return: t.landing.investmentPlans.plans.agriculture.return,
+              frequency: t.landing.investmentPlans.plans.agriculture.frequency,
+              duration: t.landing.investmentPlans.plans.agriculture.duration,
+              referralBonus:
+                t.landing.investmentPlans.plans.agriculture.referralBonus,
+              welcomeBonus:
+                t.landing.investmentPlans.plans.agriculture.welcomeBonus,
+            }}
+          />
+          <InvestmentCard
+            key="real-estate"
+            plan={{
+              id: "real-estate",
+              name: t.landing.investmentPlans.plans.realEstate.name,
+              icon: "🏢",
+              min: 5000,
+              max: 1000000,
+              return: t.landing.investmentPlans.plans.realEstate.return,
+              frequency: t.landing.investmentPlans.plans.realEstate.frequency,
+              duration: t.landing.investmentPlans.plans.realEstate.duration,
+              referralBonus:
+                t.landing.investmentPlans.plans.realEstate.referralBonus,
+              welcomeBonus:
+                t.landing.investmentPlans.plans.realEstate.welcomeBonus,
+            }}
+          />
         </div>
       </div>
     </div>

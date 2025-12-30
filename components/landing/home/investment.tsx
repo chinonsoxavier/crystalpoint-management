@@ -1,3 +1,5 @@
+"use client";
+// components/landing/home/investment.tsx
 import { Check } from "lucide-react";
 import Image from "next/image";
 import aboutUImage from "@/assets/images/in-equity-16-image.jpg";
@@ -6,7 +8,11 @@ import { Button } from "@/components/ui/button";
 import HoverArrow from "@/components/ui/hover_arrow";
 import Animate from "@/components/animation/animate";
 import Link from "next/link";
+import { useTranslate } from "@/hooks/use_translate";
+
 const Investment = () => {
+  const { t } = useTranslate();
+
   return (
     <div className="wrapper flex-col flex-wrap flex items-stretch justify-center overflow-clip bg-[#f5f7f9] md:pb-20 pb-10">
       <div className="flex py-10 md:py-20 medium:flex-row flex-col items-stretch justify-between w-full max_width gap-12 medium:gap-20">
@@ -14,17 +20,17 @@ const Investment = () => {
           type="fadeInLeft"
           className="flex flex-col xlarge:shrink-0 items-start justify-between md:max-w-[430px]"
         >
-          <div
-            className="space-y-4
-            "
-          >
+          <div className="space-y-4">
             <h2 className="md:text-5xl text-4xl font-semibold text-primary-foreground">
-              Investment that`s <span className="underline"> suitable </span>
-              for you
+              {t.landing.investment.title.before}
+              <span className="underline">
+                {" "}
+                {t.landing.investment.title.highlight}{" "}
+              </span>
             </h2>
 
             <p className="text-primary text-2xl md:text-3xl font-semibold">
-              Your financial freedom is our success
+              {t.landing.investment.subtitle}
             </p>
           </div>
 
@@ -35,7 +41,7 @@ const Investment = () => {
               </div>
 
               <p className="text-secondary-foreground text-base md:text-lg font-semibold">
-                We are Innovative
+                {t.landing.investment.features.innovative}
               </p>
             </div>
             <div className="flex items-center justify-start gap-3">
@@ -44,7 +50,7 @@ const Investment = () => {
               </div>
 
               <p className="text-secondary-foreground md:text-lg font-semibold">
-                We are Innovative
+                {t.landing.investment.features.innovative}
               </p>
             </div>
             <div className="flex items-center justify-start gap-3">
@@ -53,7 +59,7 @@ const Investment = () => {
               </div>
 
               <p className="text-secondary-foreground md:text-lg font-semibold">
-                We are Innovative
+                {t.landing.investment.features.innovative}
               </p>
             </div>
           </div>
@@ -79,26 +85,17 @@ const Investment = () => {
           className="flex space-y-4 items-start flex-col flex-1 justify-between"
         >
           <h2 className="md:text-3xl text-2xl font-semibold text-primary-foreground">
-            Cristalpoint investment management offer Card to investors on
-            Cristalpoint Super plan
+            {t.landing.investment.cardSection.title}
           </h2>
 
           <p className="text-secondary-foreground md:text-lg">
-            The partnership aims to fill a gap in the traditional financial
-            system that has left many without access to essential banking
-            products. According to a 2024 survey by the FDIC, 25 percent of U.S.
-            households are unbanked or underbanked, while global numbers have
-            reached a staggering 1.7 billion, according to data released by the
-            World Bank. Through BlockCard, Cristalpoint investors can have a
-            virtual card issued to them while a physical card is mailed to them.
-            The card has a minimum of $1000 balance needed. It can be used at
-            over 45 million merchants and ATMs – anywhere in the world where
-            major credit cards are accepted.
+            {t.landing.investment.cardSection.description}
           </p>
 
           <Link href="/plans">
             <Button variant="dark" className="bg-primary text-white">
-              Learn More <HoverArrow variant="dark" />
+              {t.landing.investment.cardSection.button}{" "}
+              <HoverArrow variant="dark" />
             </Button>
           </Link>
         </Animate>

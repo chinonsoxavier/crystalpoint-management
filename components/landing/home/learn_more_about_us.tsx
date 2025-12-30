@@ -1,3 +1,5 @@
+// components/landing/learn_more_about_us.tsx
+"use client";
 import {
   faAddressCard,
   faComment,
@@ -11,63 +13,85 @@ import { Button } from "@/components/ui/button";
 import HoverArrow from "@/components/ui/hover_arrow";
 import Animate from "@/components/animation/animate";
 import Link from "next/link";
+import { useTranslate } from "@/hooks/use_translate";
+
 const LearnMoreAboutUs = () => {
-  const data = [
-    {
-      icon: faAddressCard,
-      label: "About Us",
-      desc: "Experts in financial services",
-    },
-    {
-      icon: faWrench,
-      label: "Our Services",
-      desc: "Our awesome services",
-    },
-    {
-      icon: faComment,
-      label: "Contact Us",
-      desc: "Any questions?Write us",
-    },
-  ];
+  const { t } = useTranslate();
 
   return (
     <div className="wrapper py-20 bg-white">
       <div className="max_width">
         <Animate>
           <h2 className="text-[#333] text-center text-[1.8rem] Archivo font-semibold md:text-[2.625rem]">
-            Learn more about
-            <span className="underline"> CristalPoint Management </span>
+            {t.landing.learnMoreAboutUs.title.before}
+            <span className="underline">
+              {" "}
+              {t.landing.learnMoreAboutUs.title.highlight}{" "}
+            </span>
           </h2>
         </Animate>
 
         <Animate>
           <p className="text-[#999] text-center mt-3 md:text-[1.25rem]">
-            Your Number One Provider of Profitable Investment
+            {t.landing.learnMoreAboutUs.subtitle}
           </p>
         </Animate>
       </div>
 
       <div className="flex items-center flex-wrap justify-center gap-10 mt-15 w-full max_width">
-        {data.map((aboutUs, index) => (
-          <Animate
-            key={index}
-            className="border center min-w-[270px] flex-col md:pb-10 pb-6 flex-1 hover:border-primary border-secondary-foreground rounded-lg hover:shadow duration-500"
-          >
-            <div className="center bg-white w-20 h-20 -mt-10">
-              <FontAwesomeIcon
-                size="3x"
-                className="txt-[40px] text-primary size-16"
-                icon={aboutUs.icon}
-              />
-            </div>
+        <Animate className="border center min-w-[270px] flex-col md:pb-10 pb-6 flex-1 hover:border-primary border-secondary-foreground rounded-lg hover:shadow duration-500">
+          <div className="center bg-white w-20 h-20 -mt-10">
+            <FontAwesomeIcon
+              size="3x"
+              className="txt-[40px] text-primary size-16"
+              icon={faAddressCard}
+            />
+          </div>
 
-            <h3 className="text-primary-foreground font-bold text-lg">
-              {aboutUs.label}
-            </h3>
+          <h3 className="text-primary-foreground font-bold text-lg">
+            {t.landing.learnMoreAboutUs.cards.aboutUs.label}
+          </h3>
 
-            <p className="text-secondary-foreground">{aboutUs.desc}</p>
-          </Animate>
-        ))}
+          <p className="text-secondary-foreground">
+            {t.landing.learnMoreAboutUs.cards.aboutUs.desc}
+          </p>
+        </Animate>
+
+        <Animate className="border center min-w-[270px] flex-col md:pb-10 pb-6 flex-1 hover:border-primary border-secondary-foreground rounded-lg hover:shadow duration-500">
+          <div className="center bg-white w-20 h-20 -mt-10">
+            <FontAwesomeIcon
+              size="3x"
+              className="txt-[40px] text-primary size-16"
+              icon={faWrench}
+            />
+          </div>
+
+          <h3 className="text-primary-foreground font-bold text-lg">
+            {t.landing.learnMoreAboutUs.cards.ourServices.label}
+          </h3>
+
+          <p className="text-secondary-foreground">
+            {t.landing.learnMoreAboutUs.cards.ourServices.desc}
+          </p>
+        </Animate>
+
+        <Animate className="border center min-w-[270px] flex-col md:pb-10 pb-6 flex-1 hover:border-primary border-secondary-foreground rounded-lg hover:shadow duration-500">
+          <div className="center bg-white w-20 h-20 -mt-10">
+            <FontAwesomeIcon
+              size="3x"
+              className="txt-[40px] text-primary size-16"
+              icon={faComment}
+            />
+          </div>
+
+          <h3 className="text-primary-foreground font-bold text-lg">
+            {t.landing.learnMoreAboutUs.cards.contactUs.label}
+          </h3>
+
+          <p className="text-secondary-foreground">
+            {t.landing.learnMoreAboutUs.cards.contactUs.desc}
+          </p>
+        </Animate>
       </div>
 
       <div className="wrapper max_width pt-30">
@@ -91,19 +115,17 @@ const LearnMoreAboutUs = () => {
             className="flex-1 w-full medium:max-w-[480px] space-y-8"
           >
             <h2 className="text-primary-foreground font-semibold text-2xl md:text-3xl">
-              TRUST, EXPERIENCE, EXPERTISE AND KNOWLEDGE
+              {t.landing.learnMoreAboutUs.aboutSection.title}
             </h2>
 
             <p className="text-secondary-foreground text-lg md:text-2xl tracking-wide">
-              We are an international financial company engaged in investment
-              activities, which are related to trading on financial markets and
-              cryptocurrency exchanges performed by qualified professional
-              traders.
+              {t.landing.learnMoreAboutUs.aboutSection.description}
             </p>
 
             <Link href="/about-us">
               <Button variant="dark" className="text-white bg-primary">
-                Learn More <HoverArrow className="" variant="dark" />
+                {t.landing.learnMoreAboutUs.aboutSection.button}{" "}
+                <HoverArrow className="" variant="dark" />
               </Button>
             </Link>
           </Animate>

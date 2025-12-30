@@ -1,3 +1,6 @@
+// components/landing/about/why_choose_us.tsx
+"use client";
+
 import { ArrowUp } from "lucide-react";
 import bgImage from "@/assets/images/in-content-10-image.png";
 import Animate from "@/components/animation/animate";
@@ -12,64 +15,59 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useTranslate } from "@/hooks/use_translate";
 
 export default function WhyChooseUs() {
+  const { t } = useTranslate();
+
   const features = [
     {
       icon: faHome,
-      title: "Legal Company",
-      description:
-        "Our company conducts absolutely legal activities in the legal field. We are certified to operate investment business, we are legal and legitimate.",
-      cta: "Join Us",
+      title: t.landing.whyChooseUs.features.legalCompany.title,
+      description: t.landing.whyChooseUs.features.legalCompany.description,
+      cta: t.landing.whyChooseUs.features.legalCompany.cta,
     },
     {
       icon: faKey,
-      title: "High reliability",
-      description:
-        "We are trusted by a huge number of people. We are working hard constantly to improve the level of our security system and maintain positive ux.",
-      cta: "Join Us",
+      title: t.landing.whyChooseUs.features.highReliability.title,
+      description: t.landing.whyChooseUs.features.highReliability.description,
+      cta: t.landing.whyChooseUs.features.highReliability.cta,
     },
     {
       icon: faBriefcase,
-      title: "Quick Withdrawal",
-      description:
-        "Our all minerals are treated spontaneously once requested. There are high maximum limits.",
-      cta: "Join Us",
+      title: t.landing.whyChooseUs.features.quickWithdrawal.title,
+      description: t.landing.whyChooseUs.features.quickWithdrawal.description,
+      cta: t.landing.whyChooseUs.features.quickWithdrawal.cta,
     },
     {
       icon: faUser,
-      title: "Referral Program",
-      description:
-        "We are offering 10% (percent) of referral income through our referral program. You can increase your income by simply referring people.",
-      cta: "Join Us",
+      title: t.landing.whyChooseUs.features.referralProgram.title,
+      description: t.landing.whyChooseUs.features.referralProgram.description,
+      cta: t.landing.whyChooseUs.features.referralProgram.cta,
     },
     {
       icon: faMicrophone,
-      title: "24/7 Support",
-      description:
-        "We provide 24/7 customer support through e-mail, telegram, whatsapp and thechat. Our support representatives are periodically available to elucidate any difficulty.",
-      cta: "Join Us",
+      title: t.landing.whyChooseUs.features.support247.title,
+      description: t.landing.whyChooseUs.features.support247.description,
+      cta: t.landing.whyChooseUs.features.support247.cta,
     },
     {
       icon: faServer,
-      title: "Dedicated Server",
-      description:
-        "We are using a dedicated server for the website which allows us exclusive use of the resources of the entire server.",
-      cta: "Join Us",
+      title: t.landing.whyChooseUs.features.dedicatedServer.title,
+      description: t.landing.whyChooseUs.features.dedicatedServer.description,
+      cta: t.landing.whyChooseUs.features.dedicatedServer.cta,
     },
     {
       icon: faLock,
-      title: "SSL Secured",
-      description:
-        "Comodo Essential-SSL Security encryption confirms that the presented content is genuine and legitimate.",
-      cta: "Join Us",
+      title: t.landing.whyChooseUs.features.sslSecured.title,
+      description: t.landing.whyChooseUs.features.sslSecured.description,
+      cta: t.landing.whyChooseUs.features.sslSecured.cta,
     },
     {
       icon: faShield,
-      title: "DDOS Protection",
-      description:
-        "We are using one of the most experienced, professional, and trusted DDOS protection and mitigation provider.",
-      cta: "Join Us",
+      title: t.landing.whyChooseUs.features.ddosProtection.title,
+      description: t.landing.whyChooseUs.features.ddosProtection.description,
+      cta: t.landing.whyChooseUs.features.ddosProtection.cta,
     },
   ];
 
@@ -87,10 +85,10 @@ export default function WhyChooseUs() {
                 backgroundRepeat: "no-repeat",
                 backgroundPositionY: "100%",
               }}
-              className="inline-block text-center reative center h-full bg-primary w-full rounded-md py-7 shadow-lg"
+              className="inline-block text-center relative center h-full bg-primary w-full rounded-md py-7 shadow-lg"
             >
               <h2 className="text-white text-2xl sm:text-[35px] text-center font-bold">
-                Why choose CrytalPoint Management
+                {t.landing.whyChooseUs.title}
               </h2>
             </div>
           </Animate>
@@ -103,7 +101,7 @@ export default function WhyChooseUs() {
                   key={index}
                   className="pl-6 xs:py-4 flex flex-col xs:flex-row flex-wrap border-r border-[#5c5c5c] pr-5 gap-2"
                 >
-                  <div className="flex-1 xs:min-w-xs space-y-2" >
+                  <div className="flex-1 xs:min-w-xs space-y-2">
                     <h3 className="text-white text-2xl font-semibold border-l-8 border-l- pl-2">
                       {feature.title}
                     </h3>
@@ -111,7 +109,7 @@ export default function WhyChooseUs() {
                       {feature.description}
                     </p>
                     <button className="group w-min whitespace-nowrap flex items-center gap-2 text-white">
-                      Join Us
+                      {feature.cta}
                       <div className="center bg-white w-4.5 h-4.5 rounded-full">
                         <ArrowUp className="text-black group-hover:rotate-90 rotate-45 duration-500 mx-auto" />
                       </div>
