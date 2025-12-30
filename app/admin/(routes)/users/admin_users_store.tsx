@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { axiosError, baseAxios } from "@/network/axios";
 import { enqueueSnackbar } from "notistack";
+import axios from "axios";
 
 interface IUserProfile {
   firstName: string;
@@ -183,12 +184,17 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
       updateUserBalance: async (userId, type, amount, reason) => {
         set({ isUpdatingBalance: true });
         console.log("Update User Balance Response:", amount, type);
+        console.log("Sending Payload:", JSON.stringify(type)); // Stringify to see exact format
+
         try {
           const response = await baseAxios.patch(
-            `/admin/users/${userId}/balance`,
-            { type, amount, reason, },
-            { withCredentials: true }
-          );
+            `/admin/users/${userId}/balance/edit`,
+            {   type:type,
+              "amount": amount,
+              "action": "set",
+              "reason": reason,},
+              { headers: { 'Content-Type': 'application/json' },withCredentials: true }
+            );
 
           enqueueSnackbar(response.data.message, {
             variant: "success",
@@ -211,7 +217,6 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
           const response = await baseAxios.patch(
             `/admin/users/${userId}/status`,
             { isActive },
-            { withCredentials: true }
           );
 
           enqueueSnackbar(response.data.message, {
