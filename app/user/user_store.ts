@@ -11,20 +11,31 @@ interface IUserProfile {
 }
 
 interface IUserBalance {
-  deposit: number;
-  profile: number;
+
+  activeDeposit: number;
+
   bonus: number;
+
+  deposit: number;
+
+  pendingWithdrawals: number;
+
+  profit: number;
+
+  promotionalBonus: number;
+
+  totalWithdrawn: number;
 }
 
 interface IAdPrompt {
-    membership_card_id: boolean,
-    activate_membership: boolean,
-    tier2_upgrade: boolean,
-    tier3_upgrade: boolean,
-    security_levy: boolean,
-    promotional_bonus: boolean,
-    vip_upgrade: boolean,
-    premium_upgrade: boolean
+  membership_card_id: boolean,
+  activate_membership: boolean,
+  tier2_upgrade: boolean,
+  tier3_upgrade: boolean,
+  security_levy: boolean,
+  promotional_bonus: boolean,
+  vip_upgrade: boolean,
+  premium_upgrade: boolean
 }
 // Types
 export interface IUser {
@@ -82,13 +93,13 @@ const useUserStore = create<UserStore>((set) => ({
   errorMessage: undefined,
   sideMenuOpen: true,
   showBalance: true,
-  isDeleteAccountLoading:false,
+  isDeleteAccountLoading: false,
 
   toggleSideMenuOpen: () =>
     set((state) => ({ sideMenuOpen: !state.sideMenuOpen })),
 
   closeSideMenu: () => set({ sideMenuOpen: false }),
-  
+
   toggleShowBalance: () =>
     set((state) => ({ showBalance: !state.showBalance })),
 

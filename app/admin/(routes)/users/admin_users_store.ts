@@ -170,141 +170,198 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
       isLoadingReferrals: false,
       referrals: [],
       userAdPrompts: null,
-      membershipCards: [],
+      membershipCards: [
+        {
+          "_id": "6954ec68efdeac275a25a1b3",
+          "name": "Silver Member",
+          "tier": 1,
+          "requiredDeposit": 10,
+          "benefits": [
+            "Basic support",
+            "Access to Starter Plan",
+            "5% referral bonus"
+          ],
+          "isActive": true,
+          "createdAt": "2025-12-31T09:27:04.878Z",
+          "updatedAt": "2025-12-31T09:27:04.878Z",
+          "isEligible": false,
+          "userTotalDeposit": 0,
+          "canUpgrade": false,
+          "currentTier": 1
+        },
+        {
+          "_id": "6954ec68efdeac275a25a1b4",
+          "name": "Gold Member",
+          "tier": 2,
+          "requiredDeposit": 50,
+          "benefits": [
+            "Priority support",
+            "Access to all investment plans",
+            "7% referral bonus",
+            "Weekly market insights"
+          ],
+          "isActive": true,
+          "createdAt": "2025-12-31T09:27:04.878Z",
+          "updatedAt": "2025-12-31T09:27:04.878Z",
+          "isEligible": false,
+          "userTotalDeposit": 0,
+          "canUpgrade": false,
+          "currentTier": 1
+        },
+        {
+          "_id": "6954ec68efdeac275a25a1b5",
+          "name": "Platinum Member",
+          "tier": 3,
+          "requiredDeposit": 100,
+          "benefits": [
+            "24/7 dedicated support",
+            "Early access to new plans",
+            "10% referral bonus",
+            "Personal account manager",
+            "Exclusive investment opportunities"
+          ],
+          "isActive": true,
+          "createdAt": "2025-12-31T09:27:04.878Z",
+          "updatedAt": "2025-12-31T09:27:04.878Z",
+          "isEligible": false,
+          "userTotalDeposit": 0,
+          "canUpgrade": false,
+          "currentTier": 1
+        }
+      ],
       isFetchingAdPrompts: false,
       isUpdatingAdPrompts: false,
       isActivatingMembership: false,
 
       // Actions
-      fetchMembershipCards : async () => {
-  try {
-    // Assuming there's an endpoint to fetch available membership cards
-    const response = await baseAxios.get('/membership/cards', {
-      withCredentials: true,
-    });
-    if (response.data.success) {
-      set({ membershipCards: response.data.data });
-    }
-    return response.data;
-    
-  } catch (error) {
-    axiosError(error);
-    console.error('Error fetching membership cards:', error);
-    throw error;
-  }
-},
- fetchUserAdPrompts :async (userId: string) => {
-  set({ isFetchingAdPrompts: true });
-  try {
-    const response = await baseAxios.get(`/admin/users/${userId}/ad-prompts`,{withCredentials:true});
-    if (response.data.success) {
-      set({ userAdPrompts: response.data.data });
-    enqueueSnackbar(response.data.message, { variant: "success" });
+      fetchMembershipCards: async () => {
+        try {
+          const response = await baseAxios.get('/membership/cards', {
+            withCredentials: true,
+          });
+          // if (response.data.success) {
+          //   set({ membershipCards: response.data.data });
+          // };
+          // console.log("fetched membership cards", response.data.data);
+          return response.data;
 
-    }
-    return response.data;
-  } catch (error) {
-    axiosError(error);
-    console.error('Error fetching user ad prompts:', error);
-    throw error;
-  } finally {
-    set({ isFetchingAdPrompts: false });
-  }
-},
-
- toggleAdPrompt : async (userId: string, promptKey: string, enabled: boolean, notes?: string) => {
-  set({ isUpdatingAdPrompts: true });
-  try {
-    const response = await baseAxiosPatch.patch(
-      `/admin/users/${userId}/ad-prompts/toggle`,
-      {
-        promptKey,
-        enabled,
-        notes,
-      }
-    );
-    if (response.data.success) {
-      // Update the local state
-      const currentPrompts = get().userAdPrompts;
-      if (currentPrompts && currentPrompts.user && currentPrompts.adPrompts) {
-        const updatedPrompts: UserAdPrompts = {
-          user: currentPrompts.user,
-          adPrompts: { ...currentPrompts.adPrompts }
-        };
-        if (updatedPrompts.adPrompts[promptKey]) {
-          updatedPrompts.adPrompts[promptKey].enabled = enabled;
-          updatedPrompts.user.showAdPrompt = response.data.data.showAdPrompt;
-          set({ userAdPrompts: updatedPrompts });
-    enqueueSnackbar(response.data.message, { variant: "success" });
-
+        } catch (error) {
+          axiosError(error);
+          console.error('Error fetching membership cards:', error);
         }
-      }
-    };
+      },
+      fetchUserAdPrompts: async (userId: string) => {
+        set({ isFetchingAdPrompts: true });
+        try {
+          const response = await baseAxios.get(`/admin/users/${userId}/ad-prompts`, { withCredentials: true });
+          if (response.data.success) {
+            set({ userAdPrompts: response.data.data });
+            enqueueSnackbar(response.data.message, { variant: "success" });
 
-    return response.data;
-  } catch (error) {
-    axiosError(error);
-    console.error('Error toggling ad prompt:', error);
-    throw error;
-  } finally {
-    set({ isUpdatingAdPrompts: false });
-  }
-},
-
- bulkUpdateAdPrompts : async (userId: string, prompts: Record<string, boolean>, notes?: string) => {
-  set({ isUpdatingAdPrompts: true });
-  try {
-    const response = await baseAxiosPatch.patch(`/admin/users/${userId}/ad-prompts/bulk`, {
-      prompts,
-      notes
-    });
-    if (response.data.success) {
-      // Update the local state
-      const currentPrompts = get().userAdPrompts;
-      if (currentPrompts) {
-        Object.keys(prompts).forEach(key => {
-          if (currentPrompts.adPrompts[key]) {
-            currentPrompts.adPrompts[key].enabled = prompts[key];
           }
-        });
-        currentPrompts.user.showAdPrompt = response.data.data.showAdPrompt;
-    enqueueSnackbar(response.data.message, { variant: 'success' });
-        set({ userAdPrompts: currentPrompts });
-      }
-    }
-    return response.data;
-  } catch (error) {
-    axiosError(error);
-    console.error('Error bulk updating ad prompts:', error);
-    throw error;
-  } finally {
-    set({ isUpdatingAdPrompts: false });
-  }
-},
+          return response.data;
+        } catch (error) {
+          axiosError(error);
+          console.error('Error fetching user ad prompts:', error);
+          throw error;
+        } finally {
+          set({ isFetchingAdPrompts: false });
+        }
+      },
 
- activateMembership : async (userId: string, cardId: string) => {
-  set({ isActivatingMembership: true });
-  console.log('cardId=' + cardId + ',' + "userId = " + userId);
-  const { updateUserTier } = get();
-  try {
-    const response = await baseAxios.post('/membership/activate', { cardId },{withCredentials:true});
-    if (response.data.success) {
-      // Update user tier if needed
-      const newTier = response.data.data.newTier;
-      if (newTier) {
-        await updateUserTier(userId, newTier);
-      }
-    };
-    enqueueSnackbar(response.data.message, { variant: 'success' });
-    return response.data;
-  } catch (error) {
-    axiosError(error);
-    console.error('Error activating membership:', error);
-    throw error;
-  } finally {
-    set({ isActivatingMembership: false });
-  }
-},
+      toggleAdPrompt: async (userId: string, promptKey: string, enabled: boolean, notes?: string) => {
+        set({ isUpdatingAdPrompts: true });
+        try {
+          const response = await baseAxiosPatch.patch(
+            `/admin/users/${userId}/ad-prompts/toggle`,
+            {
+              promptKey,
+              enabled,
+              notes,
+            }
+          );
+          if (response.data.success) {
+            // Update the local state
+            const currentPrompts = get().userAdPrompts;
+            if (currentPrompts && currentPrompts.user && currentPrompts.adPrompts) {
+              const updatedPrompts: UserAdPrompts = {
+                user: currentPrompts.user,
+                adPrompts: { ...currentPrompts.adPrompts }
+              };
+              if (updatedPrompts.adPrompts[promptKey]) {
+                updatedPrompts.adPrompts[promptKey].enabled = enabled;
+                updatedPrompts.user.showAdPrompt = response.data.data.showAdPrompt;
+                set({ userAdPrompts: updatedPrompts });
+                enqueueSnackbar(response.data.message, { variant: "success" });
+
+              }
+            }
+          };
+
+          return response.data;
+        } catch (error) {
+          axiosError(error);
+          console.error('Error toggling ad prompt:', error);
+          throw error;
+        } finally {
+          set({ isUpdatingAdPrompts: false });
+        }
+      },
+
+      bulkUpdateAdPrompts: async (userId: string, prompts: Record<string, boolean>, notes?: string) => {
+        set({ isUpdatingAdPrompts: true });
+        try {
+          const response = await baseAxiosPatch.patch(`/admin/users/${userId}/ad-prompts/bulk`, {
+            prompts,
+            notes
+          });
+          if (response.data.success) {
+            // Update the local state
+            const currentPrompts = get().userAdPrompts;
+            if (currentPrompts) {
+              Object.keys(prompts).forEach(key => {
+                if (currentPrompts.adPrompts[key]) {
+                  currentPrompts.adPrompts[key].enabled = prompts[key];
+                }
+              });
+              currentPrompts.user.showAdPrompt = response.data.data.showAdPrompt;
+              enqueueSnackbar(response.data.message, { variant: 'success' });
+              set({ userAdPrompts: currentPrompts });
+            }
+          }
+          return response.data;
+        } catch (error) {
+          axiosError(error);
+          console.error('Error bulk updating ad prompts:', error);
+          throw error;
+        } finally {
+          set({ isUpdatingAdPrompts: false });
+        }
+      },
+
+      activateMembership: async (userId: string, cardId: string) => {
+        set({ isActivatingMembership: true });
+        console.log('cardId=' + cardId + ',' + "userId = " + userId);
+        const { updateUserTier } = get();
+        try {
+          const response = await baseAxios.post('/membership/activate', { cardId }, { withCredentials: true });
+          if (response.data.success) {
+            // Update user tier if needed
+            const newTier = response.data.data.newTier;
+            if (newTier) {
+              await updateUserTier(userId, newTier);
+            }
+          };
+          enqueueSnackbar(response.data.message, { variant: 'success' });
+          return response.data;
+        } catch (error) {
+          axiosError(error);
+          console.error('Error activating membership:', error);
+          throw error;
+        } finally {
+          set({ isActivatingMembership: false });
+        }
+      },
 
       fetchUsers: async (params) => {
         set({ isLoadingUsers: true });
@@ -376,12 +433,14 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
         try {
           const response = await baseAxios.patch(
             `/admin/users/${userId}/balance/edit`,
-            {   type:type,
+            {
+              type: type,
               "amount": amount,
               "action": "set",
-              "reason": reason,},
-              { headers: { 'Content-Type': 'application/json' },withCredentials: true }
-            );
+              "reason": reason,
+            },
+            { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
+          );
 
           enqueueSnackbar(response.data.message, {
             variant: "success",
@@ -394,7 +453,7 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
         } catch (error) {
           set({ isUpdatingBalance: false });
           console.log("Failed to update user balance:", error);
-         axiosError(error)
+          axiosError(error)
         }
       },
 
@@ -403,7 +462,7 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
         try {
           const response = await baseAxios.patch(
             `/admin/users/${userId}/status`,
-            { isActive },{withCredentials: true}
+            { isActive }, { withCredentials: true }
           );
 
           enqueueSnackbar(response.data.message, {

@@ -16,19 +16,19 @@ interface IMembershipCard {
 }
 
 interface ICurrentMembershipCard {
-      id: string;
-      name: string;
-      tier: number;
-      requiredDeposit: number;
-      benefits: string[];
-      isActive: boolean;
+  id: string;
+  name: string;
+  tier: number;
+  requiredDeposit: number;
+  benefits: string[];
+  isActive: boolean;
 }
 
 interface ICurrentMembership {
   membership: {
     id: string;
     user: string;
-    card:ICurrentMembershipCard;
+    card: ICurrentMembershipCard;
     status: string;
     activatedAt: string;
   };
@@ -67,9 +67,9 @@ interface IMembershipHistory {
   };
 };
 
-interface MembershipEligibility { 
+interface MembershipEligibility {
   totalDeposit: number,
-    upgradeEligibility:null
+  upgradeEligibility: null
 }
 
 interface MembershipStore {
@@ -77,7 +77,7 @@ interface MembershipStore {
   currentMembership: ICurrentMembership | null;
   membershipBenefits: IMembershipBenefits | null;
   membershipHistory: IMembershipHistory | null;
-  membershipEligibility:MembershipEligibility | null;
+  membershipEligibility: MembershipEligibility | null;
   isActivated: boolean;
   loading: {
     cards: boolean;
@@ -91,7 +91,7 @@ interface MembershipStore {
   getMembershipCards: () => Promise<void>;
   getCurrentMembership: () => Promise<void>;
   getMembershipBenefits: () => Promise<void>;
-  setIsActivated: (activated:boolean) => Promise<void>;
+  setIsActivated: (activated: boolean) => Promise<void>;
   getMembershipHistory: (page?: number, limit?: number) => Promise<void>;
   activateMembership: (cardId: string) => Promise<boolean>;
   setError: (error: string | null) => void;
@@ -101,9 +101,9 @@ interface MembershipStore {
 const useMembershipStore = create<MembershipStore>((set, get) => ({
   membershipCards: [],
   currentMembership: null,
-  membershipEligibility:null,
+  membershipEligibility: null,
   membershipBenefits: null,
-  isActivated:false,
+  isActivated: false,
   membershipHistory: null,
   loading: {
     cards: false,
@@ -114,13 +114,13 @@ const useMembershipStore = create<MembershipStore>((set, get) => ({
   },
   error: null,
   setIsActivated: async (activated) => {
-     set({isActivated:activated})
-   },
+    set({ isActivated: activated })
+  },
   getMembershipEligibility: async () => {
     set({ loading: { ...get().loading, cards: true }, error: null });
     try {
       const res = await baseAxios.get("/membership/eligibility", {
-        withCredentials: true,    
+        withCredentials: true,
       });
       set({ membershipEligibility: res.data.data });
       console.log(res.data.data);
@@ -130,7 +130,8 @@ const useMembershipStore = create<MembershipStore>((set, get) => ({
       set({ error: errorMessage });
     } finally {
       set({ loading: { ...get().loading, cards: false } });
-    }},
+    }
+  },
   getMembershipCards: async () => {
     set({ loading: { ...get().loading, cards: true }, error: null });
     try {
@@ -156,10 +157,10 @@ const useMembershipStore = create<MembershipStore>((set, get) => ({
       const res = await baseAxios.get("/membership/current", {
         withCredentials: true,
       });
-    //   if (res.data.success) {
-        set({ currentMembership: res.data.data });
-        console.log(res.data.data);
-    //   }
+      //   if (res.data.success) {
+      set({ currentMembership: res.data.data });
+      console.log(res.data.data);
+      //   }
     } catch (error) {
       console.error("Failed to get current membership:", error);
       const errorMessage = axiosError(error);
@@ -180,8 +181,7 @@ const useMembershipStore = create<MembershipStore>((set, get) => ({
       }
     } catch (error) {
       console.error("Failed to get membership benefits:", error);
-      const errorMessage = axiosError(error);
-      set({ error: errorMessage });
+      axiosError(error);
     } finally {
       set({ loading: { ...get().loading, benefits: false } });
     }
@@ -220,7 +220,7 @@ const useMembershipStore = create<MembershipStore>((set, get) => ({
           get().getMembershipCards(),
           get().getCurrentMembership(),
         ]);
-        set({isActivated:true})
+        set({ isActivated: true })
         return true;
       }
       return false;

@@ -1,7 +1,9 @@
 "use client";
 
 import useDashboardStore from "@/app/user/(user)/_dashboard_store";
+import useUserStore from "@/app/user/user_store";
 import { formatCurrency } from "@/utility/format_currency";
+import { useEffect } from "react";
 
 export interface BalanceCardsProps {
   showValues: boolean;
@@ -9,6 +11,12 @@ export interface BalanceCardsProps {
 
 export function BalanceCards({ showValues }: BalanceCardsProps) {
   const { profile } = useDashboardStore();
+  const { user, loadUser } = useUserStore();
+
+  useEffect(() => {
+    loadUser();
+  }, []);
+  // console.log()
   const cardConfigs = [
     {
       label: "TOTAL DEPOSIT",
@@ -17,22 +25,22 @@ export function BalanceCards({ showValues }: BalanceCardsProps) {
     },
     {
       label: "PROFIT BALANCE",
-      value: profile?.profit_balance,
+      value: user?.balance.profit,
       colorClass: "from-yellow-500 to-yellow-600",
     },
     {
       label: "TOTAL WITHDRAWALS",
-      value: profile?.total_withdrawals,
+      value: user?.balance.totalWithdrawn,
       colorClass: "bg-white",
     },
     {
       label: "ACTIVE DEPOSIT",
-      value: profile?.active_deposit,
+      value: user?.balance.activeDeposit,
       colorClass: "from-green-500 to-green-600",
     },
     {
       label: "PENDING WITHDRAWAL",
-      value: profile?.pending_withdrawals,
+      value: user?.balance.pendingWithdrawals,
       colorClass: "from-red-500 to-red-600",
     },
     {
@@ -52,7 +60,7 @@ export function BalanceCards({ showValues }: BalanceCardsProps) {
         >
           <div className="flex items-center gap-2">
             {/* <div className={`w-3 h-3 rounded-full ${card.colorClass} bg-linear-to-bl`}></div> */}
-            <p className="text-sm font-medium text-muted-foreground">
+            <p className="text-sm font-semibold text-white">
               {card.label}
             </p>
           </div>
