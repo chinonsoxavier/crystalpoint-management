@@ -46,6 +46,7 @@ import {
   MessageSquare,
   Power,
   PowerOff,
+  CreditCard,
 } from "lucide-react";
 import { useAdminUsersStore } from "./admin_users_store";
 import { formatDate } from "@/utility/format_date";
@@ -57,6 +58,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 type IDepositType =
   | "deposit"
@@ -68,26 +71,6 @@ type IDepositType =
   | "activeDeposit";
 type ITierFilter = "all" | "1" | "2" | "3";
 type ITierString = "1" | "2" | "3" | undefined;
-
-// Define promotional messages
-const promotionalMessages = [
-  {
-    id: "membershipCard",
-    text: "Membership Card ID number required.",
-    enabled: false,
-  },
-  {
-    id: "activateMembership",
-    text: "Activate membership card.",
-    enabled: false,
-  },
-  { id: "tier2Upgrade", text: "Tier2 Upgrade required.", enabled: false },
-  { id: "tier3Upgrade", text: "Tier3 Upgrade required.", enabled: false },
-  { id: "securityLevy", text: "Security levy.", enabled: false },
-  { id: "promotionalBonus", text: "Promotional bonus!!!.", enabled: false },
-  { id: "vipUpgrade", text: "Vip Upgrade required.", enabled: false },
-  { id: "premiumUpgrade", text: "Premium Upgrade required.", enabled: false },
-];
 
 // Tier information for display
 const tierInfo = {
@@ -123,6 +106,16 @@ export default function UsersPage() {
     userFinancialSumary,
     fetchFinancialSummary,
     fetchUsers,
+    fetchUserAdPrompts,
+    toggleAdPrompt,
+    bulkUpdateAdPrompts,
+    activateMembership,
+    fetchMembershipCards,
+    userAdPrompts,
+    membershipCards,
+    isFetchingAdPrompts,
+    isUpdatingAdPrompts,
+    isActivatingMembership,
   } = useAdminUsersStore();
 
   const [search, setSearch] = useState("");
@@ -132,7 +125,7 @@ export default function UsersPage() {
   const [tierFilter, setTierFilter] = useState<ITierFilter>("all");
   const [showUserModal, setShowUserModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showPromotionalModal, setShowPromotionalModal] = useState(false);
+  const [showAdPromptsModal, setShowAdPromptsModal] = useState(false);
   const [page, setPage] = useState(1);
 
   // State for balance update
@@ -143,10 +136,13 @@ export default function UsersPage() {
   // State for tier update
   const [newTier, setNewTier] = useState<ITierString>("1");
 
-  // State for promotional messages
-  const [userPromotionalMessages, setUserPromotionalMessages] = useState(
-    promotionalMessages.map((msg) => ({ ...msg }))
-  );
+  // State for membership activation
+  const [selectedMembershipCard, setSelectedMembershipCard] =
+    useState<string>("");
+  const [membershipNotes, setMembershipNotes] = useState<string>("");
+
+  // State for ad prompts notes
+  const [adPromptNotes, setAdPromptNotes] = useState<string>("");
 
   useEffect(() => {
     fetchUsers({
@@ -199,16 +195,16 @@ export default function UsersPage() {
       setBalanceReason("");
       setDepositType("deposit");
       setNewTier(selectedUser.tier?.toString() as ITierString);
-
-      // Reset promotional messages to default
-      setUserPromotionalMessages(
-        promotionalMessages.map((msg) => ({
-          ...msg,
-          enabled: false, // Reset to false when selecting a new user
-        }))
-      );
+      setSelectedMembershipCard("");
+      setMembershipNotes("");
+      setAdPromptNotes("");
     }
   }, [selectedUser]);
+
+  // Fetch membership cards on component mount
+  useEffect(() => {
+    fetchMembershipCards();
+  }, []);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -232,61 +228,106 @@ export default function UsersPage() {
 
     const amount = Number(balanceAmount);
     if (isNaN(amount) || amount <= 0) {
-      // You can add a snackbar notification here
-      console.error("Invalid amount");
+      toast.error("Invalid amount");
       return;
     }
 
-    await updateUserBalance(
-      selectedUser._id,
-      depositType,
-      amount,
-      balanceReason || "Balance adjustment"
-    );
+    try {
+      await updateUserBalance(
+        selectedUser._id,
+        depositType,
+        amount,
+        balanceReason || "Balance adjustment"
+      );
+      toast.success("Balance updated successfully");
+    } catch (error) {
+      toast.error("Failed to update balance");
+    }
   };
 
   // Handler for updating tier
   const handleTierUpdate = async () => {
     if (!selectedUser || !newTier) return;
 
-    await updateUserTier(selectedUser._id, parseInt(newTier));
+    try {
+      await updateUserTier(selectedUser._id, parseInt(newTier));
+      toast.success("Tier updated successfully");
+    } catch (error) {
+      toast.error("Failed to update tier");
+    }
   };
 
   // Handler for toggling user activation status
   const handleToggleUserStatus = async (userId: string, isActive: boolean) => {
-    await updateUserStatus(userId, isActive ? true : false);
+    try {
+      await updateUserStatus(userId, isActive ? true : false);
+      toast.success(
+        `User ${isActive ? "activated" : "deactivated"} successfully`
+      );
+    } catch (error) {
+      toast.error(`Failed to ${isActive ? "activate" : "deactivate"} user`);
+    }
   };
 
-  // Toggle promotional message
-  const togglePromotionalMessage = (id: string) => {
-    setUserPromotionalMessages((prev) =>
-      prev.map((msg) =>
-        msg.id === id ? { ...msg, enabled: !msg.enabled } : msg
-      )
-    );
+  // Handler for toggling ad prompt
+  const handleToggleAdPrompt = async (promptKey: string, enabled: boolean) => {
+    if (!selectedUser) return;
+
+    try {
+      await toggleAdPrompt(selectedUser._id, promptKey, enabled, adPromptNotes);
+      toast.success(
+        `Ad prompt ${enabled ? "enabled" : "disabled"} successfully`
+      );
+    } catch (error) {
+      toast.error(`Failed to ${enabled ? "enable" : "disable"} ad prompt`);
+    }
   };
 
-  // Handler for updating promotional messages (UI only for now)
-  const handlePromotionalMessagesUpdate = () => {
-    // This would typically call an API to update the user's promotional messages
-    console.log("Updating promotional messages:", userPromotionalMessages);
-    console.log("For user:", selectedUser?._id);
-    // You can add a toast notification here to show success
-    alert("Promotional messages updated successfully!");
-    setShowPromotionalModal(false);
+  // Handler for bulk updating ad prompts
+  const handleBulkUpdateAdPrompts = async () => {
+    if (!selectedUser || !userAdPrompts) return;
+
+    const prompts: Record<string, boolean> = {};
+    Object.keys(userAdPrompts.adPrompts).forEach((key) => {
+      prompts[key] = userAdPrompts.adPrompts[key].enabled;
+    });
+
+    try {
+      await bulkUpdateAdPrompts(selectedUser._id, prompts, adPromptNotes);
+      toast.success("Ad prompts updated successfully");
+      setShowAdPromptsModal(false);
+    } catch (error) {
+      toast.error("Failed to update ad prompts");
+    }
   };
 
-  // Open promotional messages modal for a specific user
-  const openPromotionalMessagesModal = (user: (typeof users)[0]) => {
+  // Handler for activating membership
+  const handleActivateMembership = async () => {
+    if (!selectedUser || !selectedMembershipCard) {
+      toast.error("Please select a membership card");
+      return;
+    }
+
+    try {
+      await activateMembership(selectedUser._id, selectedMembershipCard);
+      toast.success("Membership activated successfully");
+      setSelectedMembershipCard("");
+      setMembershipNotes("");
+    } catch (error) {
+      toast.error("Failed to activate membership");
+    }
+  };
+
+  // Open ad prompts modal for a specific user
+  const openAdPromptsModal = async (user: (typeof users)[0]) => {
     setSelectedUser(user);
-    // Reset promotional messages to default
-    setUserPromotionalMessages(
-      promotionalMessages.map((msg) => ({
-        ...msg,
-        enabled: false, // Reset to false when selecting a new user
-      }))
-    );
-    setShowPromotionalModal(true);
+    setAdPromptNotes("");
+    try {
+      await fetchUserAdPrompts(user._id);
+      setShowAdPromptsModal(true);
+    } catch (error) {
+      toast.error("Failed to fetch ad prompts");
+    }
   };
 
   const handlePreviousPage = () => {
@@ -339,10 +380,18 @@ export default function UsersPage() {
                   <SelectValue placeholder="Filter by tier" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Tiers</SelectItem>
-                  <SelectItem value="1">Tier 1</SelectItem>
-                  <SelectItem value="2">Tier 2</SelectItem>
-                  <SelectItem value="3">Tier 3</SelectItem>
+                  <SelectItem key="all" value="all">
+                    All Tiers
+                  </SelectItem>
+                  <SelectItem key="tier1" value="1">
+                    Tier 1
+                  </SelectItem>
+                  <SelectItem key="tier2" value="2">
+                    Tier 2
+                  </SelectItem>
+                  <SelectItem key="tier3" value="3">
+                    Tier 3
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -432,15 +481,13 @@ export default function UsersPage() {
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={() =>
-                                  openPromotionalMessagesModal(user)
-                                }
+                                onClick={() => openAdPromptsModal(user)}
                               >
                                 <MessageSquare size={16} />
                               </Button>
                             </TooltipTrigger>
                             <TooltipContent>
-                              <p>Manage promotional messages</p>
+                              <p>Manage ad prompts</p>
                             </TooltipContent>
                           </Tooltip>
                           <Tooltip>
@@ -581,20 +628,19 @@ export default function UsersPage() {
             <DialogHeader>
               <DialogTitle>Edit User</DialogTitle>
               <DialogDescription>
-                Update user balance, status, or tier
+                Update user balance, status, tier, or membership
               </DialogDescription>
             </DialogHeader>
             {selectedUser && (
               <div className="grid grid-cols-1 w-full gap-6">
-                <Tabs defaultValue="balance?" className="w-full">
-                  <TabsList>
-                    <TabsTrigger value="balance?">
-                      Balance Management
-                    </TabsTrigger>
-                    <TabsTrigger value="tier">Tier Management</TabsTrigger>
+                <Tabs defaultValue="balance" className="w-full">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="balance">Balance</TabsTrigger>
+                    <TabsTrigger value="tier">Tier</TabsTrigger>
+                    <TabsTrigger value="membership">Membership</TabsTrigger>
                   </TabsList>
 
-                  <TabsContent value="balance?" className="w-full">
+                  <TabsContent value="balance" className="w-full">
                     {/* Balance Management Section */}
                     <Card className="bg-transparent border-none shadow-none">
                       <CardHeader>
@@ -628,21 +674,37 @@ export default function UsersPage() {
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="deposit">
+                                  <SelectItem key="deposit" value="deposit">
                                     Deposit
                                   </SelectItem>
-                                  <SelectItem value="bonus">Bonus</SelectItem>
-                                  <SelectItem value="profit">Profit</SelectItem>
-                                  <SelectItem value="promotionalBonus">
+                                  <SelectItem key="bonus" value="bonus">
+                                    Bonus
+                                  </SelectItem>
+                                  <SelectItem key="profit" value="profit">
+                                    Profit
+                                  </SelectItem>
+                                  <SelectItem
+                                    key="promotionalBonus"
+                                    value="promotionalBonus"
+                                  >
                                     Promotional Bonus
                                   </SelectItem>
-                                  <SelectItem value="totalWithdrawn">
+                                  <SelectItem
+                                    key="totalWithdrawn"
+                                    value="totalWithdrawn"
+                                  >
                                     Total Withdrawn
                                   </SelectItem>
-                                  <SelectItem value="pendingWithdrawals">
+                                  <SelectItem
+                                    key="pendingWithdrawals"
+                                    value="pendingWithdrawals"
+                                  >
                                     Pending Withdrawals
                                   </SelectItem>
-                                  <SelectItem value="activeDeposit">
+                                  <SelectItem
+                                    key="activeDeposit"
+                                    value="activeDeposit"
+                                  >
                                     Active Deposit
                                   </SelectItem>
                                 </SelectContent>
@@ -770,61 +832,174 @@ export default function UsersPage() {
                       </CardContent>
                     </Card>
                   </TabsContent>
+
+                  <TabsContent value="membership">
+                    {/* Membership Activation Section */}
+                    <Card className="bg-transparent shadow-none border-none">
+                      <CardHeader>
+                        <CardTitle className="text-lg flex items-center gap-2">
+                          <CreditCard className="h-5 w-5" />
+                          Membership Activation
+                        </CardTitle>
+                        <CardDescription>
+                          Activate a membership plan for this user
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="membership-card">
+                            Select Membership
+                          </Label>
+
+                          <Select
+                            value={selectedMembershipCard}
+                            onValueChange={setSelectedMembershipCard}
+                          >
+                            <SelectTrigger id="membership-card">
+                              <SelectValue placeholder="Choose a membership plan" />
+                            </SelectTrigger>
+                            <SelectContent position="popper" className="z-50">
+                              {membershipCards.map((card) => (
+                                <SelectItem key={card._id} value={card._id}>
+                                  <div className="flex flex-col">
+                                    <p className="font-medium">{card.name}</p>
+                                    
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="membership-notes">
+                            Notes (Optional)
+                          </Label>
+                          <Textarea
+                            id="membership-notes"
+                            value={membershipNotes}
+                            onChange={(e) => setMembershipNotes(e.target.value)}
+                            placeholder="Add any notes about this membership activation"
+                            rows={3}
+                          />
+                        </div>
+
+                        <Button
+                          onClick={handleActivateMembership}
+                          className="w-full mt-4"
+                          disabled={
+                            !selectedMembershipCard || isActivatingMembership
+                          }
+                        >
+                          {isActivatingMembership
+                            ? "Activating..."
+                            : "Activate Membership"}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
                 </Tabs>
               </div>
             )}
           </DialogContent>
         </Dialog>
 
-        {/* Promotional Messages Modal */}
-        <Dialog
-          open={showPromotionalModal}
-          onOpenChange={setShowPromotionalModal}
-        >
+        {/* Ad Prompts Modal */}
+        <Dialog open={showAdPromptsModal} onOpenChange={setShowAdPromptsModal}>
           <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <MessageSquare className="h-5 w-5" />
-                Promotional Messages
+                Ad Prompts Management
               </DialogTitle>
               <DialogDescription>
-                Select messages to display on {selectedUser?.username}`s
+                Configure ad prompts to display on {selectedUser?.username}`s
                 dashboard
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4">
-              <div className="space-y-3">
-                {userPromotionalMessages.map((message) => (
-                  <div
-                    key={message.id}
-                    className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors"
-                  >
-                    <p className="text-sm font-medium">{message.text}</p>
-                    <Switch
-                      checked={message.enabled}
-                      onCheckedChange={() =>
-                        togglePromotionalMessage(message.id)
-                      }
-                    />
+            {isFetchingAdPrompts ? (
+              <div className="flex justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              </div>
+            ) : userAdPrompts ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 rounded-lg border bg-muted/20">
+                  <div>
+                    <p className="font-medium text-sm">Show Ad Prompts</p>
+                    <p className="text-xs text-muted-foreground">
+                      Toggle to enable/disable all ad prompts for this user
+                    </p>
                   </div>
-                ))}
+                  <Switch
+                    checked={userAdPrompts.user.showAdPrompt}
+                    onCheckedChange={(checked) => {
+                      // Create a prompts object with all prompts set to the same value
+                      const prompts: Record<string, boolean> = {};
+                      Object.keys(userAdPrompts.adPrompts).forEach((key) => {
+                        prompts[key] = checked;
+                      });
+                      bulkUpdateAdPrompts(
+                        selectedUser!._id,
+                        prompts,
+                        adPromptNotes
+                      );
+                    }}
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  {Object.values(userAdPrompts.adPrompts).map((prompt) => (
+                    <div
+                      key={prompt.key}
+                      className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors"
+                    >
+                      <p className="text-sm font-medium">{prompt.label}</p>
+                      <Switch
+                        checked={prompt.enabled}
+                        onCheckedChange={(checked) =>
+                          handleToggleAdPrompt(prompt.key, checked)
+                        }
+                        disabled={isUpdatingAdPrompts}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="ad-prompt-notes">Notes (Optional)</Label>
+                  <Textarea
+                    id="ad-prompt-notes"
+                    value={adPromptNotes}
+                    onChange={(e) => setAdPromptNotes(e.target.value)}
+                    placeholder="Add any notes about these ad prompt changes"
+                    rows={3}
+                  />
+                </div>
+
+                <div className="flex gap-2">
+                  <Button
+                    onClick={handleBulkUpdateAdPrompts}
+                    className="flex-1"
+                    disabled={isUpdatingAdPrompts}
+                  >
+                    {isUpdatingAdPrompts ? "Updating..." : "Update All Prompts"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowAdPromptsModal(false)}
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                </div>
               </div>
-              <div className="flex gap-2">
-                <Button
-                  onClick={handlePromotionalMessagesUpdate}
-                  className="flex-1"
-                >
-                  Update Messages
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setShowPromotionalModal(false)}
-                  className="flex-1"
-                >
-                  Cancel
-                </Button>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">
+                  Failed to load ad prompts
+                </p>
               </div>
-            </div>
+            )}
           </DialogContent>
         </Dialog>
       </div>

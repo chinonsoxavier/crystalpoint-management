@@ -1,21 +1,27 @@
+"use client";
 import FinancialImage from "@/assets/images/1.jpg";
 import Animate from "@/components/animation/animate";
 import { faList } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import { useTranslate } from "@/hooks/use_translate";
+
 const FinancialPlanning = () => {
+  const { t } = useTranslate();
+  const { financialPlanning } = t.landing;
+
   return (
     <div className="wrapper py-12 md:py-20">
       <div className="max_width py-10 md:px-10">
         <Animate>
           <Animate>
             <h2 className="text-3xl md:text-4xl text-center font-bold text-primary-foreground mb-3 md:mb-5">
-              <span className="underline">Financial Planning</span>
+              <span className="underline">{financialPlanning.title}</span>
             </h2>
           </Animate>
 
           <div className=" flex justify-start max-w-4xl mx-auto">
-            <Animate className="justify-start my-6 overflow-hidden rounded-xl bg-[red]">
+            <Animate className="justify-start my-6 overflow-hidden rounded-xl">
               <Image
                 src={FinancialImage}
                 className=" duration-500 hover:scale-105 h-full rounded-xl"
@@ -34,15 +40,7 @@ const FinancialPlanning = () => {
               </div>
               <div className="flex-1 space-y-5">
                 <p className="text-secondary-foreground text-[16px] md:text-lg tracking-wide">
-                  Saving for retirement can be a daunting task, but with a sound
-                  strategy, it’s well within reach. Cristalpoint investment
-                  management is here to bring clarity to retirement planning and
-                  set you on your path to success. Here you’ll better understand
-                  your options and find the right investment. If you had the
-                  chance to double—or even quadruple—your retirement savings,
-                  you’d probably jump at that opportunity, right? Well, there’s
-                  one simple change you can make today that’s sure to boost your
-                  retirement savings.
+                  {financialPlanning.description}
                 </p>
               </div>
             </Animate>

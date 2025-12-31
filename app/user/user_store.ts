@@ -15,6 +15,17 @@ interface IUserBalance {
   profile: number;
   bonus: number;
 }
+
+interface IAdPrompt {
+    membership_card_id: boolean,
+    activate_membership: boolean,
+    tier2_upgrade: boolean,
+    tier3_upgrade: boolean,
+    security_levy: boolean,
+    promotional_bonus: boolean,
+    vip_upgrade: boolean,
+    premium_upgrade: boolean
+}
 // Types
 export interface IUser {
   email: string;
@@ -22,6 +33,7 @@ export interface IUser {
   profile: IUserProfile;
   balance: IUserBalance;
   _id: string;
+  adPrompts: IAdPrompt;
 }
 
 interface ILogin {
@@ -208,6 +220,7 @@ const useUserStore = create<UserStore>((set) => ({
           user,
           authStatus: "authenticated",
         });
+        console.log(user);
       } else {
         // Gracefully handle "user not found"
         set({

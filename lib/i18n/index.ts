@@ -539,6 +539,159 @@ export interface LandingTranslation {
     };
     learnMore: string;
   };
+  faqsHeader: {
+    title: string;
+    subtitle: string;
+  };
+  contactUsHeader: {
+    title: string;
+    subtitle: string;
+  };
+  contactUs: {
+    title: string;
+    subtitle: string;
+    address: string;
+    email: string;
+    fullName: string;
+    emailPlaceholder: string;
+    subject: string;
+    subjectPlaceholder: string;
+    message: string;
+    messagePlaceholder: string;
+    sendMessage: string;
+  };
+  marketHeader: {
+    title: string;
+    subtitle: string;
+  };
+  forexMarket: {
+    title: string;
+    description: string;
+  };
+  financialPlanning: {
+    title: string;
+    description: string;
+  };
+  pageHeader: {
+    services: string;
+    financialPlanning: string;
+  };
+  goldInvestments: {
+    title: string;
+    history: {
+      title: string;
+      paragraphs: string[];
+    };
+    considerations: {
+      title: string;
+      points: string[];
+    };
+  };
+  loansAndGrants: {
+    title: string;
+    easyWithCristalPoint: {
+      title: string;
+      description: string;
+    };
+  };
+  oilAndGas: {
+    title: string;
+    sections: {
+      oilTradingWithCFD: {
+        title: string;
+        description: string;
+      };
+      cfdsForInvesting: {
+        title: string;
+        description: string;
+      };
+      benefitsOfInvesting: {
+        title: string;
+        description: string;
+      };
+      easyWithCristalPoint: {
+        title: string;
+        description: string;
+      };
+      speculatingOnline: {
+        title: string;
+        description: string;
+      };
+      knowOilMarketWell: {
+        title: string;
+        description: string;
+      };
+      simpleExample: {
+        title: string;
+        description: string;
+      };
+      chooseTradingPlatform: {
+        title: string;
+        description: string;
+        features: {
+          spreads: string;
+          leverage: string;
+          tools: string;
+          quality: string;
+        };
+      };
+      assetWithFuture: {
+        title: string;
+        description: string;
+      };
+      investLongTerm: {
+        title: string;
+        description: string;
+      };
+      coverLongTermInvestment: {
+        title: string;
+        description: string;
+      };
+      tradingIndicators: {
+        title: string;
+        description: string;
+      };
+    };
+  };
+  realEstate: {
+    title: string;
+    history: {
+      title: string;
+      description: string;
+    };
+    hotDeals: {
+      title: string;
+    };
+    makeEnquiry: string;
+  };
+  retirementPlanning: {
+    title: string;
+    workforceOptimization: {
+      title: string;
+      description: string;
+    };
+    quadrupleRetirement: {
+      title: string;
+      description: string;
+    };
+  };
+  stockInvestment: {
+    title: string;
+    tradingStockOrShare: {
+      title: string;
+      description: string;
+    };
+    investInStocks: {
+      title: string;
+      description: string;
+      features: {
+        createAccount: string;
+        choosePlan: string;
+        makeDeposit: string;
+        getROI: string;
+      };
+    };
+  };
 };
 
 export interface AdminTranslation {

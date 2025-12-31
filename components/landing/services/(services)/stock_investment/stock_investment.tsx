@@ -3,13 +3,18 @@ import stockImage from "@/assets/images/stock-2.png";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faList } from "@fortawesome/free-solid-svg-icons";
+import { useTranslate } from "@/hooks/use_translate";
+
 const StockInvestment = () => {
+  const { t } = useTranslate();
+  const { stockInvestment } = t.landing;
+
   return (
     <div className="wrapper md:py20 py-12">
       <div className="max_width">
         <Animate>
           <h2 className="text-3xl md:text-4xl text-center font-bold text-primary-foreground mb-3 md:mb-5">
-            <span className="underline">Oil And Gas</span>
+            <span className="underline">{stockInvestment.title}</span>
           </h2>
         </Animate>
 
@@ -30,34 +35,19 @@ const StockInvestment = () => {
             </div>
             <div className="flex-1 space-y-5">
               <h3 className="sm:text-2xl text-xl font-bold text-primary-foreground mb-4">
-                Trading Stock or Share on CristalPoint
+                {stockInvestment.tradingStockOrShare.title}
               </h3>
               <p className="text-secondary-foreground text-[16px] md:text-lg tracking-wide">
-                A stock or share (also known as a company`s equity) is a
-                financial instrument that represents ownership in a company or
-                corporation and represents a proportionate claim on its assets
-                (what it owns) and earnings (what it generates in profits).
-                Stock ownership implies that the shareholder owns a slice of the
-                company equal to the number of shares held as a proportion of
-                the company{"'"}s total outstanding shares. For instance, an
-                individual or entity that owns 100,000 shares of a company with
-                one million outstanding shares would have a 10% ownership stake
-                in it. Most companies have outstanding shares that run into the
-                millions or billions.
+                {stockInvestment.tradingStockOrShare.description}
               </p>
 
               <div className="space-y-2">
                 <h3 className="sm:text-2xl text-xl font-bold text-primary-foreground mb-4">
-                  How do I invest in stocks with 0% commission
+                  {stockInvestment.investInStocks.title}
                 </h3>
 
                 <p className="text-secondary-foreground text-[16px] md:text-lg tracking-wide">
-                  As you will surely notice, the online trading platforms that
-                  offer the opportunity to speculate on the oil price are
-                  numerous. It is therefore necessary that you take the time to
-                  carefully compare them in order to choose the one that offers
-                  you the most advantages. You therefore need to verify certain
-                  important points such as:
+                  {stockInvestment.investInStocks.description}
                 </p>
                 <div className="flex items-center gap-2">
                   <div className="center bg-primary rounded-full h-4.5 w-4.5">
@@ -67,7 +57,7 @@ const StockInvestment = () => {
                     />
                   </div>
                   <p className="text-secondary-foreground text-[16px] md:text-lg tracking-wide">
-                    Create an account
+                    {stockInvestment.investInStocks.features.createAccount}
                   </p>
                 </div>
 
@@ -79,7 +69,7 @@ const StockInvestment = () => {
                     />
                   </div>
                   <p className="text-secondary-foreground text-[16px] md:text-lg tracking-wide">
-                    Choose a deposit plan
+                    {stockInvestment.investInStocks.features.choosePlan}
                   </p>
                 </div>
 
@@ -91,7 +81,7 @@ const StockInvestment = () => {
                     />
                   </div>
                   <p className="text-secondary-foreground text-[16px] md:text-lg tracking-wide">
-                    Make deposit
+                    {stockInvestment.investInStocks.features.makeDeposit}
                   </p>
                 </div>
 
@@ -103,7 +93,7 @@ const StockInvestment = () => {
                     />
                   </div>
                   <p className="text-secondary-foreground text-[16px] md:text-lg tracking-wide">
-                    Get your ROI on plan completion
+                    {stockInvestment.investInStocks.features.getROI}
                   </p>
                 </div>
               </div>

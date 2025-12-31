@@ -19,7 +19,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           </aside>
 
           <section className="w-full overflow-y-auto">
-            <div className="pt-4 h-[20%] px-4 md:pt-6 md:px-6">
+            <div className="pt-4 overflow-y-auto h-[20%] px-4 md:pt-6 md:px-6">
             <DashboardAdPrompt />
             </div>
             <div className="h-[80%]" >

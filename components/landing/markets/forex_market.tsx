@@ -13,7 +13,7 @@ import {
   X,
 } from "lucide-react";
 import Animate from "@/components/animation/animate";
-
+import { useTranslate } from "@/hooks/use_translate";
 // --- Type Definitions ---
 interface ForexPair {
   symbol: string;
@@ -135,7 +135,7 @@ export default function ForexMarket() {
   const ITEMS_PER_PAGE = 50;
   const [isMobileView, setIsMobileView] = useState(false);
   const [showMobileSort, setShowMobileSort] = useState(false);
-
+  const {t} = useTranslate();
   // Detect screen size
   useEffect(() => {
     const checkScreenSize = () => {
@@ -289,10 +289,15 @@ export default function ForexMarket() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Animate className="text-center mb-8 md:mb-12">
           <h1 className="text-3xl md:text-5xl font-bold">
-            Invest on <span className="underline">Forex</span> Market
+            {t.landing.forexMarket.title.split(" ")[0]}{" "}
+            {t.landing.forexMarket.title.split(" ")[1]}{" "}
+            <span className="underline">
+              {t.landing.forexMarket.title.split(" ")[2]}
+            </span>{" "}
+            {t.landing.forexMarket.title.split(" ")[3]}
           </h1>
           <p className="text-lg md:text-xl text-gray-300 mt-4">
-            Real-time rates • 24/7 trading • 300+ currency pairs
+            {t.landing.forexMarket.description}
           </p>
         </Animate>
 
@@ -345,101 +350,106 @@ export default function ForexMarket() {
               </Animate>
 
               {/* Scrollable Body */}
-              <div ref={tableContainerRef} className="h-[70vh] overflow-y-auto">
-                <table className="w-full">
-                  <tbody>
-                    {isLoading && sortedForexData.length === 0 ? (
-                      <tr>
-                        <td colSpan={9} className="text-center py-12">
-                          <Loader2
-                            className="mx-auto animate-spin text-blue-400"
-                            size={32}
-                          />
-                        </td>
-                      </tr>
-                    ) : (
-                      sortedForexData.map((item: ForexData) => {
-                        const rating: TechnicalRating = getTechnicalRating(
-                          item.changePercent
-                        );
-                        const isPositive: boolean = item.changePercent >= 0;
+              <Animate>
+                <div
+                  ref={tableContainerRef}
+                  className="h-[70vh] overflow-y-auto"
+                >
+                  <table className="w-full">
+                    <tbody>
+                      {isLoading && sortedForexData.length === 0 ? (
+                        <tr>
+                          <td colSpan={9} className="text-center py-12">
+                            <Loader2
+                              className="mx-auto animate-spin text-blue-400"
+                              size={32}
+                            />
+                          </td>
+                        </tr>
+                      ) : (
+                        sortedForexData.map((item: ForexData) => {
+                          const rating: TechnicalRating = getTechnicalRating(
+                            item.changePercent
+                          );
+                          const isPositive: boolean = item.changePercent >= 0;
 
-                        return (
-                          <tr
-                            key={item.pair}
-                            className="border-b border-gray-800/30 hover:bg-gray-800/20 transition"
-                          >
-                            <td className="p-4">
-                              <div className="flex items-center gap-3">
-                                <div className="flex gap-1 text-xl">
-                                  <span>{item.flag1}</span>
-                                  <span>{item.flag2}</span>
-                                </div>
-                                <div>
-                                  <div className="font-semibold text-blue-400">
-                                    {item.pair}
+                          return (
+                            <tr
+                              key={item.pair}
+                              className="border-b border-gray-800/30 hover:bg-gray-800/20 transition"
+                            >
+                              <td className="p-4">
+                                <div className="flex items-center gap-3">
+                                  <div className="flex gap-1 text-xl">
+                                    <span>{item.flag1}</span>
+                                    <span>{item.flag2}</span>
                                   </div>
-                                  {item.simulated && (
-                                    <div className="text-xs text-yellow-500">
-                                      Demo
+                                  <div>
+                                    <div className="font-semibold text-blue-400">
+                                      {item.pair}
                                     </div>
-                                  )}
+                                    {item.simulated && (
+                                      <div className="text-xs text-yellow-500">
+                                        Demo
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
-                              </div>
-                            </td>
-                            <td className="p-4 text-right font-mono font-semibold">
-                              {formatPrice(item.price)}
-                            </td>
-                            <td
-                              className={`p-4 text-right font-semibold ${
-                                isPositive ? "text-green-400" : "text-red-400"
-                              }`}
-                            >
-                              {formatPercent(item.changePercent)}
-                            </td>
-                            <td
-                              className={`p-4 text-right font-mono ${
-                                isPositive ? "text-green-400" : "text-red-400"
-                              }`}
-                            >
-                              {formatChange(item.change)}
-                            </td>
-                            <td className="p-4 text-right font-mono text-gray-300">
-                              {formatPrice(item.bid)}
-                            </td>
-                            <td className="p-4 text-right font-mono text-gray-300">
-                              {formatPrice(item.ask)}
-                            </td>
-                            <td className="p-4 text-right font-mono text-gray-300">
-                              {formatPrice(item.high)}
-                            </td>
-                            <td className="p-4 text-right font-mono text-gray-300">
-                              {formatPrice(item.low)}
-                            </td>
-                            <td
-                              className={`p-4 text-right ${rating.color} font-medium`}
-                            >
-                              <span>
-                                {rating.icon} {rating.rating}
-                              </span>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    )}
-                    {isFetchingNextPage && (
-                      <tr>
-                        <td colSpan={9} className="text-center py-6">
-                          <Loader2
-                            className="mx-auto animate-spin text-blue-400"
-                            size={24}
-                          />
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                              </td>
+                              <td className="p-4 text-right font-mono font-semibold">
+                                {formatPrice(item.price)}
+                              </td>
+                              <td
+                                className={`p-4 text-right font-semibold ${
+                                  isPositive ? "text-green-400" : "text-red-400"
+                                }`}
+                              >
+                                {formatPercent(item.changePercent)}
+                              </td>
+                              <td
+                                className={`p-4 text-right font-mono ${
+                                  isPositive ? "text-green-400" : "text-red-400"
+                                }`}
+                              >
+                                {formatChange(item.change)}
+                              </td>
+                              <td className="p-4 text-right font-mono text-gray-300">
+                                {formatPrice(item.bid)}
+                              </td>
+                              <td className="p-4 text-right font-mono text-gray-300">
+                                {formatPrice(item.ask)}
+                              </td>
+                              <td className="p-4 text-right font-mono text-gray-300">
+                                {formatPrice(item.high)}
+                              </td>
+                              <td className="p-4 text-right font-mono text-gray-300">
+                                {formatPrice(item.low)}
+                              </td>
+                              <td
+                                className={`p-4 text-right ${rating.color} font-medium`}
+                              >
+                                <span>
+                                  {rating.icon} {rating.rating}
+                                </span>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                      {isFetchingNextPage && (
+                        <tr>
+                          <td colSpan={9} className="text-center py-6">
+                            <Loader2
+                              className="mx-auto animate-spin text-blue-400"
+                              size={24}
+                            />
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </Animate>
             </>
           )}
 
@@ -462,6 +472,8 @@ export default function ForexMarket() {
 
               {/* Mobile Sort Options */}
               {showMobileSort && (
+              <Animate>
+
                 <div className="p-4 bg-gray-800/50 border-b border-gray-800">
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="font-medium">Sort by</h3>
@@ -499,6 +511,7 @@ export default function ForexMarket() {
                     ))}
                   </div>
                 </div>
+                </Animate>
               )}
 
               {/* Mobile Cards */}

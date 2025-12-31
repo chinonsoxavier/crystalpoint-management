@@ -101,27 +101,29 @@ export default function StockMarketPage() {
         </Animate>
 
         {/* Stock Selector Tabs */}
-        <div className="flex justify-center mb-8">
-          <Animate className="bg-gray-800/50 rounded-xl p-2 flex gap-2">
-            {STOCKS.map((stock) => (
-              <button
-                key={stock.id}
-                onClick={() => setSelectedStock(stock)}
-                className={`md:px-6 px-4 py-2 md:py-3 rounded-lg font-semibold transition-all duration-200 ${
-                  selectedStock.id === stock.id
-                    ? "bg-blue-600 text-white shadow-lg"
-                    : "text-gray-400 hover:text-white hover:bg-gray-700/50"
-                }`}
-              >
-                {stock.ticker === "GOOGL"
-                  ? "Google"
-                  : stock.ticker === "MSFT"
-                  ? "Microsoft"
-                  : "Apple"}
-              </button>
-            ))}
-          </Animate>
-        </div>
+        <Animate>
+          <div className="flex justify-center mb-8">
+            <Animate className="bg-gray-800/50 rounded-xl p-2 flex gap-2">
+              {STOCKS.map((stock) => (
+                <button
+                  key={stock.id}
+                  onClick={() => setSelectedStock(stock)}
+                  className={`md:px-6 px-4 py-2 md:py-3 rounded-lg font-semibold transition-all duration-200 ${
+                    selectedStock.id === stock.id
+                      ? "bg-blue-600 text-white shadow-lg"
+                      : "text-gray-400 hover:text-white hover:bg-gray-700/50"
+                  }`}
+                >
+                  {stock.ticker === "GOOGL"
+                    ? "Google"
+                    : stock.ticker === "MSFT"
+                    ? "Microsoft"
+                    : "Apple"}
+                </button>
+              ))}
+            </Animate>
+          </div>
+        </Animate>
         <Animate className="bg-[#181818] rounded-lg shadow-md overflow-hidden">
           {/* Price Display */}
           <div className="p-6 space-y-2">
@@ -259,32 +261,34 @@ export default function StockMarketPage() {
         </Animate>
 
         {/* Statistics */}
-        <div className="flex flex-wrap justify-center grid-cols-3 gap-6 pt-20">
-          <Animate className="text-center">
-            <div className="text-2xl font-bold mb-1">
-              {t.landing.stockMarket.statistics.transactions.value}
-            </div>
-            <div className="text-gray-400 text-sm">
-              {t.landing.stockMarket.statistics.transactions.label}
-            </div>
-          </Animate>
-          <Animate className="text-center">
-            <div className="text-2xl font-bold mb-1">
-              {t.landing.stockMarket.statistics.activeAccounts.value}
-            </div>
-            <div className="text-gray-400 text-sm">
-              {t.landing.stockMarket.statistics.activeAccounts.label}
-            </div>
-          </Animate>
-          <Animate className="text-center">
-            <div className="text-2xl font-bold mb-1">
-              {t.landing.stockMarket.statistics.runningDays.value}
-            </div>
-            <div className="text-gray-400 text-sm">
-              {t.landing.stockMarket.statistics.runningDays.label}
-            </div>
-          </Animate>
-        </div>
+        <Animate>
+          <div className="flex flex-wrap justify-center grid-cols-3 gap-6 pt-20">
+            <Animate className="text-center">
+              <div className="text-2xl font-bold mb-1">
+                {t.landing.stockMarket.statistics.transactions.value}
+              </div>
+              <div className="text-gray-400 text-sm">
+                {t.landing.stockMarket.statistics.transactions.label}
+              </div>
+            </Animate>
+            <Animate className="text-center">
+              <div className="text-2xl font-bold mb-1">
+                {t.landing.stockMarket.statistics.activeAccounts.value}
+              </div>
+              <div className="text-gray-400 text-sm">
+                {t.landing.stockMarket.statistics.activeAccounts.label}
+              </div>
+            </Animate>
+            <Animate className="text-center">
+              <div className="text-2xl font-bold mb-1">
+                {t.landing.stockMarket.statistics.runningDays.value}
+              </div>
+              <div className="text-gray-400 text-sm">
+                {t.landing.stockMarket.statistics.runningDays.label}
+              </div>
+            </Animate>
+          </div>
+        </Animate>
       </div>
     </div>
   );

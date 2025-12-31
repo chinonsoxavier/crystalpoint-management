@@ -48,16 +48,16 @@ export function BalanceCards({ showValues }: BalanceCardsProps) {
       {cardConfigs.map((card, idx) => (
         <div
           key={idx}
-          className={`bg-accent-foreground border rounded-2xl p-5 text-white relative overflow-hidden hover:shadow-xl transition-shadow`}
+          className={`bg-[#1fabe8] border rounded-2xl p-5 text-white relative overflow-hidden hover:shadow-xl transition-shadow`}
         >
           <div className="flex items-center gap-2">
-            <div className={`w-3 h-3 rounded-full ${card.colorClass} bg-linear-to-bl`}></div>
+            {/* <div className={`w-3 h-3 rounded-full ${card.colorClass} bg-linear-to-bl`}></div> */}
             <p className="text-sm font-medium text-muted-foreground">
               {card.label}
             </p>
           </div>
           <p className="text-3xl font-bold relative z-10">
-           $ {showValues ? formatCurrency(card.value ?? 0) : maskValue}
+            $ {showValues ? formatCurrency(card.value ?? 0) : maskValue}
           </p>
         </div>
       ))}

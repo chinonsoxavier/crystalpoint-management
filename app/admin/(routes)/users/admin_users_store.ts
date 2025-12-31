@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { axiosError, baseAxios } from "@/network/axios";
+import { axiosError, baseAxios, baseAxiosPatch } from "@/network/axios";
 import { enqueueSnackbar } from "notistack";
 import axios from "axios";
 
@@ -10,6 +10,39 @@ interface IUserProfile {
   country: string;
   phone: string;
   tier: number;
+}
+// Add these new state variables to your store
+interface AdPrompt {
+  key: string;
+  label: string;
+  enabled: boolean;
+}
+
+interface UserAdPrompts {
+  user: {
+    id: string;
+    username: string;
+    email: string;
+    showAdPrompt: boolean;
+  };
+  adPrompts: Record<string, AdPrompt>;
+}
+
+interface MembershipCard {
+  _id: string;
+  name: string;
+  tier: number;
+  requiredDeposit: number;
+  benefits: string[];
+  isActive: boolean;
+}
+
+interface ActivatedMembership {
+  id: string;
+  user: string;
+  card: MembershipCard;
+  status: string;
+  activatedAt: string;
 }
 
 interface IUserBalance {
@@ -68,8 +101,27 @@ interface AdminUsersStore {
   userFinancialSumary: IFinancialSummary;
   isLoadingReferrals: boolean;
   referrals: [];
-
+  userAdPrompts: UserAdPrompts | null;
+  membershipCards: MembershipCard[];
+  isFetchingAdPrompts: boolean;
+  isUpdatingAdPrompts: boolean;
+  isActivatingMembership: boolean;
   // Actions
+
+  fetchMembershipCards: () => Promise<void>;
+  fetchUserAdPrompts: (userId: string) => Promise<void>;
+  toggleAdPrompt: (
+    userId: string,
+    promptKey: string,
+    enabled: boolean,
+    notes?: string
+  ) => Promise<void>;
+  bulkUpdateAdPrompts: (
+    userId: string,
+    prompts: Record<string, boolean>,
+    notes?: string
+  ) => Promise<void>;
+  activateMembership: (userId: string, cardId: string) => Promise<void>;
 
   fetchFinancialSummary: (userId: string) => Promise<void>;
   fetchUsers: (params: {
@@ -117,8 +169,143 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
       isUpdatingTier: false,
       isLoadingReferrals: false,
       referrals: [],
+      userAdPrompts: null,
+      membershipCards: [],
+      isFetchingAdPrompts: false,
+      isUpdatingAdPrompts: false,
+      isActivatingMembership: false,
 
       // Actions
+      fetchMembershipCards : async () => {
+  try {
+    // Assuming there's an endpoint to fetch available membership cards
+    const response = await baseAxios.get('/membership/cards', {
+      withCredentials: true,
+    });
+    if (response.data.success) {
+      set({ membershipCards: response.data.data });
+    }
+    return response.data;
+    
+  } catch (error) {
+    axiosError(error);
+    console.error('Error fetching membership cards:', error);
+    throw error;
+  }
+},
+ fetchUserAdPrompts :async (userId: string) => {
+  set({ isFetchingAdPrompts: true });
+  try {
+    const response = await baseAxios.get(`/admin/users/${userId}/ad-prompts`,{withCredentials:true});
+    if (response.data.success) {
+      set({ userAdPrompts: response.data.data });
+    enqueueSnackbar(response.data.message, { variant: "success" });
+
+    }
+    return response.data;
+  } catch (error) {
+    axiosError(error);
+    console.error('Error fetching user ad prompts:', error);
+    throw error;
+  } finally {
+    set({ isFetchingAdPrompts: false });
+  }
+},
+
+ toggleAdPrompt : async (userId: string, promptKey: string, enabled: boolean, notes?: string) => {
+  set({ isUpdatingAdPrompts: true });
+  try {
+    const response = await baseAxiosPatch.patch(
+      `/admin/users/${userId}/ad-prompts/toggle`,
+      {
+        promptKey,
+        enabled,
+        notes,
+      }
+    );
+    if (response.data.success) {
+      // Update the local state
+      const currentPrompts = get().userAdPrompts;
+      if (currentPrompts && currentPrompts.user && currentPrompts.adPrompts) {
+        const updatedPrompts: UserAdPrompts = {
+          user: currentPrompts.user,
+          adPrompts: { ...currentPrompts.adPrompts }
+        };
+        if (updatedPrompts.adPrompts[promptKey]) {
+          updatedPrompts.adPrompts[promptKey].enabled = enabled;
+          updatedPrompts.user.showAdPrompt = response.data.data.showAdPrompt;
+          set({ userAdPrompts: updatedPrompts });
+    enqueueSnackbar(response.data.message, { variant: "success" });
+
+        }
+      }
+    };
+
+    return response.data;
+  } catch (error) {
+    axiosError(error);
+    console.error('Error toggling ad prompt:', error);
+    throw error;
+  } finally {
+    set({ isUpdatingAdPrompts: false });
+  }
+},
+
+ bulkUpdateAdPrompts : async (userId: string, prompts: Record<string, boolean>, notes?: string) => {
+  set({ isUpdatingAdPrompts: true });
+  try {
+    const response = await baseAxiosPatch.patch(`/admin/users/${userId}/ad-prompts/bulk`, {
+      prompts,
+      notes
+    });
+    if (response.data.success) {
+      // Update the local state
+      const currentPrompts = get().userAdPrompts;
+      if (currentPrompts) {
+        Object.keys(prompts).forEach(key => {
+          if (currentPrompts.adPrompts[key]) {
+            currentPrompts.adPrompts[key].enabled = prompts[key];
+          }
+        });
+        currentPrompts.user.showAdPrompt = response.data.data.showAdPrompt;
+    enqueueSnackbar(response.data.message, { variant: 'success' });
+        set({ userAdPrompts: currentPrompts });
+      }
+    }
+    return response.data;
+  } catch (error) {
+    axiosError(error);
+    console.error('Error bulk updating ad prompts:', error);
+    throw error;
+  } finally {
+    set({ isUpdatingAdPrompts: false });
+  }
+},
+
+ activateMembership : async (userId: string, cardId: string) => {
+  set({ isActivatingMembership: true });
+  console.log('cardId=' + cardId + ',' + "userId = " + userId);
+  const { updateUserTier } = get();
+  try {
+    const response = await baseAxios.post('/membership/activate', { cardId },{withCredentials:true});
+    if (response.data.success) {
+      // Update user tier if needed
+      const newTier = response.data.data.newTier;
+      if (newTier) {
+        await updateUserTier(userId, newTier);
+      }
+    };
+    enqueueSnackbar(response.data.message, { variant: 'success' });
+    return response.data;
+  } catch (error) {
+    axiosError(error);
+    console.error('Error activating membership:', error);
+    throw error;
+  } finally {
+    set({ isActivatingMembership: false });
+  }
+},
+
       fetchUsers: async (params) => {
         set({ isLoadingUsers: true });
         try {

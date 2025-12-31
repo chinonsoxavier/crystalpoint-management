@@ -1,7 +1,7 @@
+// components/landing/contact/contact_form.tsx
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,8 +10,10 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import Animate from "@/components/animation/animate";
+import { useTranslate } from "@/hooks/use_translate";
 
 export default function ContactForm() {
+  const { t } = useTranslate();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -54,8 +56,8 @@ export default function ContactForm() {
                   icon={faMapMarkerAlt}
                   className="w-6 h-6 text-primary-foreground shrink-0"
                 />
-                <h3 className="font-semibold text-primary-foreground ">
-                  Address
+                <h3 className="font-semibold text-primary-foreground">
+                  {t.landing.contactUs.address}
                 </h3>
               </div>
               <div>
@@ -70,8 +72,8 @@ export default function ContactForm() {
                   icon={faEnvelope}
                   className="w-6 h-6 text-primary-foreground shrink-0"
                 />
-                <h3 className="font-semibold text-primary-foreground ">
-                  Email
+                <h3 className="font-semibold text-primary-foreground">
+                  {t.landing.contactUs.email}
                 </h3>
               </div>
               <div>
@@ -89,11 +91,12 @@ export default function ContactForm() {
         {/* Header */}
         <Animate className="text-center mb-12">
           <p className="text-secondary-foreground text-lg md:text-xl">
-            Have a questions?
+            {t.landing.contactUs.subtitle}
           </p>
 
           <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-8">
-            Let&apos;s <span className="underline">get in touch</span>
+            Let&apos;s{" "}
+            <span className="underline">{t.landing.contactUs.title}</span>
           </h1>
         </Animate>
 
@@ -108,7 +111,7 @@ export default function ContactForm() {
                 name="fullName"
                 value={formData.fullName}
                 onChange={handleChange}
-                placeholder="Full name"
+                placeholder={t.landing.contactUs.fullName}
                 className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                 required
               />
@@ -125,7 +128,7 @@ export default function ContactForm() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Email address"
+                placeholder={t.landing.contactUs.emailPlaceholder}
                 className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                 required
               />
@@ -142,7 +145,7 @@ export default function ContactForm() {
                 name="subject"
                 value={formData.subject}
                 onChange={handleChange}
-                placeholder="Subject"
+                placeholder={t.landing.contactUs.subject}
                 className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                 required
               />
@@ -159,7 +162,7 @@ export default function ContactForm() {
               name="message"
               value={formData.message}
               onChange={handleChange}
-              placeholder="Briefly tell us what you want..."
+              placeholder={t.landing.contactUs.messagePlaceholder}
               rows={8}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent resize-none"
               required
@@ -172,7 +175,7 @@ export default function ContactForm() {
               type="submit"
               className="w-full px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition-colors duration-200"
             >
-              Send Message
+              {t.landing.contactUs.sendMessage}
             </button>
           </Animate>
         </form>

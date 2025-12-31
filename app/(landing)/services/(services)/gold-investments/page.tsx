@@ -1,11 +1,13 @@
+"use client";
 import Gold from "@/components/landing/services/(services)/gold/gold";
 import PageHeader from "@/components/landing/services/(services)/page_header";
 import Footer from "@/components/layouts/footer";
 import Header from "@/components/layouts/header";
 import Sidemenu from "@/components/layouts/sidemenu";
 import InvestorsChoice from "@/components/shared/investors_choice";
-
+import { useTranslate } from "@/hooks/use_translate";
 const Page = () => {
+  const { t } = useTranslate();
   return (
     <div className="overflow-x-clip">
       {/* header */}
@@ -16,13 +18,9 @@ const Page = () => {
 
       {/* real estate header */}
       <PageHeader
-        label="Our Services
-"
-        desc="Gold Investments
-
-"
+        label={t.landing.pageHeader.services}
+        desc={t.landing.goldInvestments.title}
       />
-
       {/* gold */}
       <Gold />
 

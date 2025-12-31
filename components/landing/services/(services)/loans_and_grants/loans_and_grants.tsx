@@ -1,3 +1,5 @@
+// components/landing/services/(services)/loans_and_grants/loans_and_grants.tsx
+"use client";
 import LoanImage from "@/assets/images/7.jpg";
 import Animate from "@/components/animation/animate";
 import { faList } from "@fortawesome/free-solid-svg-icons";
