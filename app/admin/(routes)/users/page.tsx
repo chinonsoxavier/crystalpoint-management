@@ -116,6 +116,8 @@ export default function UsersPage() {
     isFetchingAdPrompts,
     isUpdatingAdPrompts,
     isActivatingMembership,
+    currentMembership,
+    getCurrentMembership
   } = useAdminUsersStore();
 
   const [search, setSearch] = useState("");
@@ -143,6 +145,10 @@ export default function UsersPage() {
 
   // State for ad prompts notes
   const [adPromptNotes, setAdPromptNotes] = useState<string>("");
+
+  useEffect(() => {
+    // getCurrentMembership(selectedUser?._id ?? '');
+  }, [selectedUser])
 
   useEffect(() => {
     fetchUsers({
@@ -760,10 +766,9 @@ export default function UsersPage() {
                       <CardContent className="space-y-4">
                         {/* Current Tier Display */}
                         <div
-                          className={`p-4 rounded-lg border ${
-                            tierInfo[selectedUser.tier ?? "1"]?.borderColor ||
+                          className={`p-4 rounded-lg border ${tierInfo[selectedUser.tier ?? "1"]?.borderColor ||
                             "border-gray-300"
-                          }`}
+                            }`}
                         >
                           <div className="flex items-center gap-3">
                             {/* Extract Icon safely */}
@@ -802,11 +807,10 @@ export default function UsersPage() {
                                     setNewTier(tierNum as ITierString)
                                   }
                                   className={`p-3 rounded-xl border-2 cursor-pointer transition-all text-center
-                      ${
-                        isSelected
-                          ? `${info.borderColor} ${info.color} bg-opacity-20 shadow-md`
-                          : "border-gray-200 hover:border-gray-400 hover:shadow-sm"
-                      }`}
+                      ${isSelected
+                                      ? `${info.borderColor} ${info.color} bg-opacity-20 shadow-md`
+                                      : "border-gray-200 hover:border-gray-400 hover:shadow-sm"
+                                    }`}
                                 >
                                   <Icon className="h-6 w-6 mx-auto mb-3" />
                                   <p className="font-semibold text-base">
@@ -824,7 +828,7 @@ export default function UsersPage() {
                           disabled={
                             isUpdatingTier ||
                             newTier ===
-                              (selectedUser.tier?.toString() as ITierString)
+                            (selectedUser.tier?.toString() as ITierString)
                           }
                         >
                           {isUpdatingTier ? "Updating Tier..." : "Update Tier"}
@@ -850,20 +854,24 @@ export default function UsersPage() {
                           <Label htmlFor="membership-card">
                             Select Membership
                           </Label>
+                          {
+
+                            // currentMembership?.membership.card.name ?? 'name'
+                          }
 
                           <Select
                             value={selectedMembershipCard}
                             onValueChange={setSelectedMembershipCard}
                           >
                             <SelectTrigger id="membership-card">
-                              <SelectValue placeholder="Choose a membership plan" />
+                              <SelectValue defaultValue={currentMembership?.membership.card.name} placeholder="Choose a membership plan" />
                             </SelectTrigger>
                             <SelectContent position="popper" className="z-50">
                               {membershipCards.map((card) => (
                                 <SelectItem key={card._id} value={card._id}>
                                   <div className="flex flex-col">
                                     <p className="font-medium">{card.name}</p>
-                                    
+
                                   </div>
                                 </SelectItem>
                               ))}

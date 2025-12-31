@@ -88,9 +88,31 @@ interface IFinancialSummary {
   };
 }
 
+interface ICurrentMembershipCard {
+  id: string;
+  name: string;
+  tier: number;
+  requiredDeposit: number;
+  benefits: string[];
+  isActive: boolean;
+}
+
+interface ICurrentMembership {
+  membership: {
+    id: string;
+    user: string;
+    card: ICurrentMembershipCard;
+    status: string;
+    activatedAt: string;
+  };
+  currentTier: number;
+}
+
+
 interface AdminUsersStore {
   // State
   users: IAdminUser[];
+  currentMembership: ICurrentMembership | null;
   selectedUser: IAdminUser | null;
   pagination: IPagination | null;
   isLoadingUsers: boolean;
@@ -122,6 +144,9 @@ interface AdminUsersStore {
     notes?: string
   ) => Promise<void>;
   activateMembership: (userId: string, cardId: string) => Promise<void>;
+  deActivateMembership: (userId: string, cardId: string) => Promise<void>;
+  getCurrentMembership: (userId: string) => Promise<void>;
+
 
   fetchFinancialSummary: (userId: string) => Promise<void>;
   fetchUsers: (params: {
@@ -344,7 +369,7 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
         console.log('cardId=' + cardId + ',' + "userId = " + userId);
         const { updateUserTier } = get();
         try {
-          const response = await baseAxios.post('/membership/activate', { cardId }, { withCredentials: true });
+          const response = await baseAxios.post(`/admin/users/${userId}/membership/activate`, { cardId }, { withCredentials: true });
           if (response.data.success) {
             // Update user tier if needed
             const newTier = response.data.data.newTier;
@@ -357,9 +382,38 @@ export const useAdminUsersStore = create<AdminUsersStore>()(
         } catch (error) {
           axiosError(error);
           console.error('Error activating membership:', error);
-          throw error;
+          // throw error;
         } finally {
           set({ isActivatingMembership: false });
+        }
+      },
+      deActivateMembership: async (userId: string, cardId: string) => {
+        set({ isActivatingMembership: true });
+        try {
+          const response = await baseAxios.post(`/admin/users/${userId}/membership/deactivate`, { cardId }, { withCredentials: true });
+
+          enqueueSnackbar(response.data.message, { variant: 'success' });
+          return response.data;
+        } catch (error) {
+          axiosError(error);
+          console.error('Error activating membership:', error);
+          // throw error;
+        } finally {
+          set({ isActivatingMembership: false });
+        }
+      },
+      getCurrentMembership: async (userId: string) => {
+        try {
+          const res = await baseAxios.get(`/admin/users/${userId}/membership`, {
+            withCredentials: true,
+          });
+          console.log('membership', res.data.data);
+          set({ currentMembership: res.data.data });
+          console.log("membership", res.data.data);
+          return res.data.data;
+        } catch (error) {
+          console.error("Failed to get current membership:", error);
+          axiosError(error);
         }
       },
 

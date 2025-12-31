@@ -18,12 +18,12 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             <DashboardSidemenu totalDeposit={user?.balance?.deposit ?? 0} />
           </aside>
 
-          <section className="w-full overflow-y-auto">
-            <div className="pt-4 overflow-y-auto h-[20%] px-4 md:pt-6 md:px-6">
-            <DashboardAdPrompt />
+          <section className="w-full overflow-y-auto ">
+            <div className="pt-4 pb-5 overflow-y-auto h-[25%] px-4 md:pt-6 md:px-6">
+              <DashboardAdPrompt />
             </div>
-            <div className="h-[80%]" >
-             {children}
+            <div className="h-[75%]" >
+              {children}
             </div>
           </section>
         </section>
