@@ -60,193 +60,198 @@ const Page = () => {
         </Animate>
 
         {/* Action Buttons */}
-        <div className="flex justify-end gap-2 mb-6 print:hidden">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowToc(!showToc)}
-          >
-            {showToc ? "Hide" : "Show"} Table of Contents
-          </Button>
-          <Button variant="outline" size="sm" onClick={handlePrint}>
-            <Printer className="h-4 w-4 mr-2" />
-            Print
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleShare}>
-            <Share2 className="h-4 w-4 mr-2" />
-            Share
-          </Button>
-        </div>
+        <Animate>
 
-        <div className="flex gap-8">
-          {/* Table of Contents - Hidden on print */}
-          {showToc && (
-            <div className="hidden lg:block w-64 print:hidden">
-              <TableOfContents items={tocItems} />
-            </div>
-          )}
-
-          {/* Content */}
-          <div className="flex-1 space-y-6">
-            {/* Introduction */}
-            <ExpandableSection
-              id="introduction"
-              title={t.landing.privacyPolicy.sections.introduction.title}
-              defaultExpanded={true}
+          <div className="flex justify-end gap-2 mb-6 print:hidden">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowToc(!showToc)}
             >
-              <p className="text-gray-700 leading-relaxed">
-                {t.landing.privacyPolicy.sections.introduction.content}
-              </p>
-            </ExpandableSection>
-
-            {/* Information We Collect */}
-            <ExpandableSection
-              id="informationWeCollect"
-              title={
-                t.landing.privacyPolicy.sections.informationWeCollect.title
-              }
-            >
-              <p className="text-gray-700 leading-relaxed mb-4">
-                {t.landing.privacyPolicy.sections.informationWeCollect.content}
-              </p>
-
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-lg font-medium text-primary-foreground mb-2">
-                    {
-                      t.landing.privacyPolicy.sections.informationWeCollect
-                        .subsections.personalInfo.title
-                    }
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed">
-                    {
-                      t.landing.privacyPolicy.sections.informationWeCollect
-                        .subsections.personalInfo.content
-                    }
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-medium text-primary-foreground mb-2">
-                    {
-                      t.landing.privacyPolicy.sections.informationWeCollect
-                        .subsections.financialInfo.title
-                    }
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed">
-                    {
-                      t.landing.privacyPolicy.sections.informationWeCollect
-                        .subsections.financialInfo.content
-                    }
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-medium text-primary-foreground mb-2">
-                    {
-                      t.landing.privacyPolicy.sections.informationWeCollect
-                        .subsections.technicalInfo.title
-                    }
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed">
-                    {
-                      t.landing.privacyPolicy.sections.informationWeCollect
-                        .subsections.technicalInfo.content
-                    }
-                  </p>
-                </div>
-              </div>
-            </ExpandableSection>
-
-            {/* How We Use Your Information */}
-            <ExpandableSection
-              id="howWeUseInfo"
-              title={t.landing.privacyPolicy.sections.howWeUseInfo.title}
-            >
-              <p className="text-gray-700 leading-relaxed mb-4">
-                {t.landing.privacyPolicy.sections.howWeUseInfo.content}
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700">
-                {t.landing.privacyPolicy.sections.howWeUseInfo.list.map(
-                  (item, index) => (
-                    <li key={index}>{item}</li>
-                  )
-                )}
-              </ul>
-            </ExpandableSection>
-
-            {/* Information Sharing */}
-            <ExpandableSection
-              id="infoSharing"
-              title={t.landing.privacyPolicy.sections.infoSharing.title}
-            >
-              <p className="text-gray-700 leading-relaxed mb-4">
-                {t.landing.privacyPolicy.sections.infoSharing.content}
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700">
-                {t.landing.privacyPolicy.sections.infoSharing.list.map(
-                  (item, index) => (
-                    <li key={index}>{item}</li>
-                  )
-                )}
-              </ul>
-            </ExpandableSection>
-
-            {/* Data Security */}
-            <ExpandableSection
-              id="dataSecurity"
-              title={t.landing.privacyPolicy.sections.dataSecurity.title}
-            >
-              <p className="text-gray-700 leading-relaxed">
-                {t.landing.privacyPolicy.sections.dataSecurity.content}
-              </p>
-            </ExpandableSection>
-
-            {/* Cookies */}
-            <ExpandableSection
-              id="cookies"
-              title={t.landing.privacyPolicy.sections.cookies.title}
-            >
-              <p className="text-gray-700 leading-relaxed mb-4">
-                {t.landing.privacyPolicy.sections.cookies.content}
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700">
-                {t.landing.privacyPolicy.sections.cookies.list.map(
-                  (item, index) => (
-                    <li key={index}>{item}</li>
-                  )
-                )}
-              </ul>
-            </ExpandableSection>
-
-            {/* Your Rights */}
-            <ExpandableSection
-              id="yourRights"
-              title={t.landing.privacyPolicy.sections.yourRights.title}
-            >
-              <p className="text-gray-700 leading-relaxed mb-4">
-                {t.landing.privacyPolicy.sections.yourRights.content}
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700">
-                {t.landing.privacyPolicy.sections.yourRights.list.map(
-                  (item, index) => (
-                    <li key={index}>{item}</li>
-                  )
-                )}
-              </ul>
-            </ExpandableSection>
-
-            {/* Contact */}
-            <ExpandableSection
-              id="contact"
-              title={t.landing.privacyPolicy.sections.contact.title}
-            >
-              <p className="text-gray-700 leading-relaxed">
-                {t.landing.privacyPolicy.sections.contact.content}
-              </p>
-            </ExpandableSection>
+              {showToc ? "Hide" : "Show"} Table of Contents
+            </Button>
+            <Button variant="outline" size="sm" onClick={handlePrint}>
+              <Printer className="h-4 w-4 mr-2" />
+              Print
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleShare}>
+              <Share2 className="h-4 w-4 mr-2" />
+              Share
+            </Button>
           </div>
-        </div>
+        </Animate>
+        <Animate>
+
+          <div className="flex gap-8">
+            {/* Table of Contents - Hidden on print */}
+            {showToc && (
+              <div className="hidden lg:block w-64 print:hidden">
+                <TableOfContents items={tocItems} />
+              </div>
+            )}
+
+            {/* Content */}
+            <div className="flex-1 space-y-6">
+              {/* Introduction */}
+              <ExpandableSection
+                id="introduction"
+                title={t.landing.privacyPolicy.sections.introduction.title}
+                defaultExpanded={true}
+              >
+                <p className="text-gray-700 leading-relaxed">
+                  {t.landing.privacyPolicy.sections.introduction.content}
+                </p>
+              </ExpandableSection>
+
+              {/* Information We Collect */}
+              <ExpandableSection
+                id="informationWeCollect"
+                title={
+                  t.landing.privacyPolicy.sections.informationWeCollect.title
+                }
+              >
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  {t.landing.privacyPolicy.sections.informationWeCollect.content}
+                </p>
+
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-lg font-medium text-primary-foreground mb-2">
+                      {
+                        t.landing.privacyPolicy.sections.informationWeCollect
+                          .subsections.personalInfo.title
+                      }
+                    </h3>
+                    <p className="text-gray-700 leading-relaxed">
+                      {
+                        t.landing.privacyPolicy.sections.informationWeCollect
+                          .subsections.personalInfo.content
+                      }
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-medium text-primary-foreground mb-2">
+                      {
+                        t.landing.privacyPolicy.sections.informationWeCollect
+                          .subsections.financialInfo.title
+                      }
+                    </h3>
+                    <p className="text-gray-700 leading-relaxed">
+                      {
+                        t.landing.privacyPolicy.sections.informationWeCollect
+                          .subsections.financialInfo.content
+                      }
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-medium text-primary-foreground mb-2">
+                      {
+                        t.landing.privacyPolicy.sections.informationWeCollect
+                          .subsections.technicalInfo.title
+                      }
+                    </h3>
+                    <p className="text-gray-700 leading-relaxed">
+                      {
+                        t.landing.privacyPolicy.sections.informationWeCollect
+                          .subsections.technicalInfo.content
+                      }
+                    </p>
+                  </div>
+                </div>
+              </ExpandableSection>
+
+              {/* How We Use Your Information */}
+              <ExpandableSection
+                id="howWeUseInfo"
+                title={t.landing.privacyPolicy.sections.howWeUseInfo.title}
+              >
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  {t.landing.privacyPolicy.sections.howWeUseInfo.content}
+                </p>
+                <ul className="list-disc list-inside space-y-2 text-gray-700">
+                  {t.landing.privacyPolicy.sections.howWeUseInfo.list.map(
+                    (item, index) => (
+                      <li key={index}>{item}</li>
+                    )
+                  )}
+                </ul>
+              </ExpandableSection>
+
+              {/* Information Sharing */}
+              <ExpandableSection
+                id="infoSharing"
+                title={t.landing.privacyPolicy.sections.infoSharing.title}
+              >
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  {t.landing.privacyPolicy.sections.infoSharing.content}
+                </p>
+                <ul className="list-disc list-inside space-y-2 text-gray-700">
+                  {t.landing.privacyPolicy.sections.infoSharing.list.map(
+                    (item, index) => (
+                      <li key={index}>{item}</li>
+                    )
+                  )}
+                </ul>
+              </ExpandableSection>
+
+              {/* Data Security */}
+              <ExpandableSection
+                id="dataSecurity"
+                title={t.landing.privacyPolicy.sections.dataSecurity.title}
+              >
+                <p className="text-gray-700 leading-relaxed">
+                  {t.landing.privacyPolicy.sections.dataSecurity.content}
+                </p>
+              </ExpandableSection>
+
+              {/* Cookies */}
+              <ExpandableSection
+                id="cookies"
+                title={t.landing.privacyPolicy.sections.cookies.title}
+              >
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  {t.landing.privacyPolicy.sections.cookies.content}
+                </p>
+                <ul className="list-disc list-inside space-y-2 text-gray-700">
+                  {t.landing.privacyPolicy.sections.cookies.list.map(
+                    (item, index) => (
+                      <li key={index}>{item}</li>
+                    )
+                  )}
+                </ul>
+              </ExpandableSection>
+
+              {/* Your Rights */}
+              <ExpandableSection
+                id="yourRights"
+                title={t.landing.privacyPolicy.sections.yourRights.title}
+              >
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  {t.landing.privacyPolicy.sections.yourRights.content}
+                </p>
+                <ul className="list-disc list-inside space-y-2 text-gray-700">
+                  {t.landing.privacyPolicy.sections.yourRights.list.map(
+                    (item, index) => (
+                      <li key={index}>{item}</li>
+                    )
+                  )}
+                </ul>
+              </ExpandableSection>
+
+              {/* Contact */}
+              <ExpandableSection
+                id="contact"
+                title={t.landing.privacyPolicy.sections.contact.title}
+              >
+                <p className="text-gray-700 leading-relaxed">
+                  {t.landing.privacyPolicy.sections.contact.content}
+                </p>
+              </ExpandableSection>
+            </div>
+          </div>
+        </Animate>
 
         {/* CTA Section */}
         <Animate className="mt-12 text-center">

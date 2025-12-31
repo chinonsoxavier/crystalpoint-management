@@ -206,7 +206,7 @@ const Footer = () => {
                 <div className="flex flex-col md:items-center gap-4 text-[17px] text-secondary-foreground">
                   <div className="flex justify-start text-sm items-center w-full">
                     <a
-                      href="/terms-of-use"
+                      href="/terms-of-service"
                       className="hover:text-primary-foreground"
                     >
                       {t.landing.footer.legal.termsOfUse}
