@@ -17,7 +17,7 @@ import useAdminStore from "@/app/admin/_admin_store";
 
 const AdminSidemenu = () => {
   const router = useRouter();
-  const { sideMenuOpen, closeSideMenu,admin } = useAdminStore();
+  const { sideMenuOpen, closeSideMenu, admin, logout } = useAdminStore();
   const pathname = usePathname(); // ← Track current route
 
   // Close menu whenever route changes
@@ -26,7 +26,13 @@ const AdminSidemenu = () => {
       closeSideMenu();
     }
   }, [pathname]);
-
+  const handleLogout = async () => {
+    // logout returns void (no result to check)
+    const res = await logout();
+    if (res === "success") {
+      router.push("/");
+    }
+  };
   const navItems = [
     { label: "Dashboard", icon: faDashboard, link: "/admin" },
     { label: "Admin Management", icon: faShield, link: "/admin/management" },
@@ -43,54 +49,74 @@ const AdminSidemenu = () => {
       link: "/admin/settings",
     },
     { label: "Help & Support", icon: faHeadphones, link: "/admin/support" },
-    { label: "Logout", icon: faDoorOpen },
+    { label: "Logout", icon: faDoorOpen, eventHandler: handleLogout },
   ];
 
   return (
     <div className="relative z-20">
       <div
-        className={`${
-          sideMenuOpen
-            ? "w-dvw h-dvh md:w-0 md:bg-transparent bg-[rgba(0,0,0,0.6)]"
-            : "w-0 h-0"
-        } absolute inset-0`}
+        className={`${sideMenuOpen
+          ? "w-dvw h-dvh md:w-0 md:bg-transparent bg-[rgba(0,0,0,0.6)]"
+          : "w-0 h-0"
+          } absolute inset-0`}
         onClick={() => {
           closeSideMenu();
         }}
       />
       <div
-        className={`bg-accent-foreground hidden-foreground scrollbar_hidden overflow-y-auto overflow-x-clip h-[calc(100dvh-80px)] dark:shadow md:border border-none z-20 max-w-70 duration-500 ${
-          sideMenuOpen
-            ? "w-70 fixed md:relative left-0 border-r md:border-r-transparent"
-            : "md:w-20 fixed md:relative w-70 -translate-x-full md:translate-x-0 border-none"
-        } duration-300 flex flex-col`}
+        className={`bg-accent-foreground hidden-foreground scrollbar_hidden overflow-y-auto overflow-x-clip h-[calc(100dvh-80px)] dark:shadow md:border border-none z-20 max-w-70 duration-500 ${sideMenuOpen
+          ? "w-70 fixed md:relative left-0 border-r md:border-r-transparent"
+          : "md:w-20 fixed md:relative w-70 -translate-x-full md:translate-x-0 border-none"
+          } duration-300 flex flex-col`}
       >
         <nav className="flex-1 p-1 text-white space-y-">
           {navItems.map((item) => {
             const isActive = item.link && pathname === item.link;
-            if(admin.role !== 'super_admin' && item.link==='/admin/management') return;
-            return (
-              <div key={item.label}>
-                <Link
-                  href={item.link || "/admin"}
-                  className={`w-full cursor-pointer flex items-center justify-between md:justify-between large:justify-start gap-3 px-4 py-2 rounded-lg transition-colors ${
-                    isActive
-                      ? "bg-transparent flex items-center justify-start w-full text-black dark:text-white"
-                      : "text-accent-text hover:text-[#0A8A9F]"
-                  } ${!sideMenuOpen && "center"}`}
+            if (admin.role !== 'super_admin' && item.link === '/admin/management') return;
+            if (!item.link) {
+              return (
+                <button onClick={item.eventHandler} key={item.label}
+                  className={`w-full cursor-pointer flex items-center justify-between md:justify-between large:justify-start gap-3 px-4 py-2 rounded-lg transition-colors ${isActive
+                    ? "bg-transparent flex items-center justify-start w-full text-black dark:text-white"
+                    : "text-accent-text hover:text-[#0A8A9F]"
+                    } ${!sideMenuOpen && "center"}`}
                 >
                   <div className="flex items-center gap-3 justify-start">
                     <div
-                      className={`${
-                        isActive && "bg-primary"
-                      } center rounded-full min-w-10 h-10`}
+                      className={`${isActive && "bg-primary"
+                        } center rounded-full min-w-10 h-10`}
                     >
                       <FontAwesomeIcon icon={item.icon} />
                     </div>
                     <span
-                      className={`${
-                        sideMenuOpen ? "flex" : "flex md:hidden"
-                      } text-[15px] whitespace-nowrap`}
+                      className={`${sideMenuOpen ? "flex" : "flex md:hidden"
+                        } text-[15px] whitespace-nowrap`}
+                    >
+                      {item.label}
+                    </span>
+                  </div>{" "}
+                </button>
+              )
+            }
+            return (
+              <div key={item.label}>
+                <Link
+                  href={item.link || "/admin"}
+                  className={`w-full cursor-pointer flex items-center justify-between md:justify-between large:justify-start gap-3 px-4 py-2 rounded-lg transition-colors ${isActive
+                    ? "bg-transparent flex items-center justify-start w-full text-black dark:text-white"
+                    : "text-accent-text hover:text-[#0A8A9F]"
+                    } ${!sideMenuOpen && "center"}`}
+                >
+                  <div className="flex items-center gap-3 justify-start">
+                    <div
+                      className={`${isActive && "bg-primary"
+                        } center rounded-full min-w-10 h-10`}
+                    >
+                      <FontAwesomeIcon icon={item.icon} />
+                    </div>
+                    <span
+                      className={`${sideMenuOpen ? "flex" : "flex md:hidden"
+                        } text-[15px] whitespace-nowrap`}
                     >
                       {item.label}
                     </span>
