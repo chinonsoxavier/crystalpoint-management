@@ -166,6 +166,7 @@ export default function UsersPage() {
   }, [showEditModal, selectedUser]);
 
   useEffect(() => {
+
     switch (depositType) {
       case "promotionalBonus":
         setBalanceAmount(userFinancialSumary?.balances?.promotionalBonus ?? 0);
@@ -192,7 +193,7 @@ export default function UsersPage() {
         return;
       default:
     }
-  }, [depositType, users]);
+  }, [depositType]);
 
   // Reset form when a new user is selected
   useEffect(() => {
