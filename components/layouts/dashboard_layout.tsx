@@ -9,7 +9,7 @@ import DashboardAdPrompt from "../shared/ad_prompt";
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const { user } = useUserStore();
 
-  const 
+   
   return (
     <AuthGuard>
       <main className={`relative bg-accent overflow-hidden`}>

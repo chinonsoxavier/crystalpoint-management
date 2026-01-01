@@ -192,7 +192,7 @@ export default function UsersPage() {
         return;
       default:
     }
-  }, [depositType, selectedUser, users]);
+  }, [depositType, users]);
 
   // Reset form when a new user is selected
   useEffect(() => {
@@ -233,22 +233,13 @@ export default function UsersPage() {
     if (!selectedUser) return;
 
     const amount = Number(balanceAmount);
-    if (isNaN(amount) || amount <= 0) {
-      toast.error("Invalid amount");
-      return;
-    }
-
-    try {
+   
       await updateUserBalance(
         selectedUser._id,
         depositType,
         amount,
         balanceReason || "Balance adjustment"
       );
-      toast.success("Balance updated successfully");
-    } catch (error) {
-      toast.error("Failed to update balance");
-    }
   };
 
   // Handler for updating tier

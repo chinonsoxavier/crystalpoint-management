@@ -102,15 +102,15 @@ const Page = () => {
             Ledger Balance: ${profile?.ledger_balance}
           </p>
           <p className="text-[#8b98d] dark:text-[#666e70]  md:text-lg">
+            Active Deposit : ${profile?.active_deposit || 0}
+          </p>
+          <p className="text-[#8b98d] dark:text-[#666e70]  md:text-lg">
             Profit Balance: ${profile?.profit_balance || 0}
           </p>
    
-          <p className="text-[#8b98d] dark:text-[#666e70]  md:text-lg">
-            Available Withdrawal : ${withdrawalBalance?.available_balance || 0}
-          </p>
 
           <p className="text-[#8b98d] dark:text-[#666e70]  md:text-lg">
-            Deposit Balance : ${withdrawalBalance?.breakdown.deposit_balance || 0}
+            Promo Balance : ${profile?.promotional_balance || 0}
           </p>
         </div>
 
