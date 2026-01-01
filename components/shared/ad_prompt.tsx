@@ -96,8 +96,8 @@ const DashboardAdPrompt = () => {
               key={item.key}
               className={`${item.color} h-full flex p-4 border rounded-lg shadow-sm items-center gap-3 whitespace-nowrap text-center transition-all hover:shadow-md`}
             >
-              <Icon className="h-5 w-5 text-white flex-shrink-0" />
-              <span className="text-lg text-center font-bold text-white">
+              {/* <Icon className="h-5 w-5 text-white shrink-0" /> */}
+              <span className="md:text-lg text-base text-center font-bold text-white">
                 {item.text}
               </span>
             </div>

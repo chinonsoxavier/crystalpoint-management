@@ -9,7 +9,7 @@ import DashboardAdPrompt from "../shared/ad_prompt";
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const { user } = useUserStore();
 
-  const 
+  // const
   return (
     <AuthGuard>
       <main className={`relative bg-accent overflow-hidden`}>
@@ -22,19 +22,18 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
           <section className="w-full overflow-y-auto ">
             <div
-              className={`pt-4 pb-5 overflow-y-auto h-[25%] px-4 md:pt-6 md:px-6 ${
-                user?.showAdPrompt ? "" : "hidden"
-              }`}
+              className={`pt-4 pb-5 overflow-y-auto h-[25%] px-4 md:pt-6 md:px-6 ${user?.showAdPrompt ? "" : "hidden"
+                }`}
             >
               <DashboardAdPrompt />
             </div>
-            <div className="h-[75%]">{children}</div>
+            <div className={`${user?.showAdPrompt ? 'h-[75%]' : 'h-full'}`}>{children}</div>
           </section>
         </section>
 
         {/* footer */}
         <footer
-          className={`center ${user?.showAdPrompt ? '' : 'h-full'} z-20 relative w-full bg-accent-foreground h-12 text-white `}
+          className={`center z-20 relative w-full bg-accent-foreground h-12 text-white `}
         >
           <p className="sm:text-[15px] text-accent-text text-sm text-center px-4">
             Copyright © 2019 - 2025 | CristalPoint Management. All Right
