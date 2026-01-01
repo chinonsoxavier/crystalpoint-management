@@ -46,10 +46,11 @@ useEffect(() => {
         </p> */}
         <div className="bg-accent-foreground backdrop-blur-sm rounded-xl p-5 mb-6">
           <p className="text-base text-foreground mb-3 font-medium">
-            Share this link with friends to earn rewards
+            {t.admin.overview.shareLink}
+          
           </p>
           <div className="flex flex-col w-full sm:flex-row items-start sm:items-center gap-4">
-            <div className="flex-1 bg-accent w-full rounded-lg px-4 py-3 flex items-center justify-start border border-border">
+            <div className="flex-1 bg-accent w-full rounded-lg px-4 py-4 flex items-center justify-start border border-border">
               <p className="text-sm font-mono text-foreground break-all">
                 {showBalance ? referralLink : "••••••••••••••••••••••••"}
               </p>
@@ -66,12 +67,12 @@ useEffect(() => {
                 {copied ? (
                   <>
                     <Check size={18} />
-                    <span>Copied!</span>
+                  
                   </>
                 ) : (
                   <>
                     <Copy size={18} className="text-white"/>
-                    <span className="text-white">Copy</span>
+                  
                   </>
                 )}
               </Button>

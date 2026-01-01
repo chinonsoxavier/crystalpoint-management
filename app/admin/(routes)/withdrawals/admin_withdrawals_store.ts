@@ -26,20 +26,22 @@ interface IPagination {
 
 interface IWithdrawalStats {
   period: string;
- overview: {
-    total_withdrawals: number,
-    pending_withdrawals: number,
-    approved_withdrawals: number,
-    processed_withdrawals: number,
-    total_processed_amount: number,
-    average_withdrawal: number
-}
+  overview: {
+    total_withdrawals: number;
+    pending_withdrawals: number;
+    approved_withdrawals: number;
+    processed_withdrawals: number;
+    total_processed_amount: number;
+    average_withdrawal: number;
+  };
   // [key: string]: any;
 }
 
 interface AdminWithdrawalsStore {
   // State
   withdrawals: IWithdrawal[];
+  isActivatedSuccess: boolean;
+  isRejectedSuccess: boolean;
   pagination: IPagination | null;
   withdrawalStats: IWithdrawalStats | null;
   isLoadingWithdrawals: boolean;
@@ -56,6 +58,8 @@ interface AdminWithdrawalsStore {
     method?: "bitcoin" | "ethereum" | "usdt" | "bank_transfer";
   }) => Promise<void>;
   fetchWithdrawalStats: (period: "7d" | "30d" | "90d" | "1y") => Promise<void>;
+  setIsActivatedSuccess: (value: boolean) => void;
+  setIsRejectedSuccess: (value: boolean) => void;
   approveWithdrawal: (withdrawalId: string) => Promise<void>;
   rejectWithdrawal: (withdrawalId: string, reason: string) => Promise<void>;
   processWithdrawal: (
@@ -71,6 +75,8 @@ export const useAdminWithdrawalsStore = create<AdminWithdrawalsStore>()(
       // Initial State
       withdrawals: [],
       pagination: null,
+      isActivatedSuccess:false,
+      isRejectedSuccess:false,
       withdrawalStats: null,
       isLoadingWithdrawals: false,
       isLoadingStats: false,
@@ -79,6 +85,12 @@ export const useAdminWithdrawalsStore = create<AdminWithdrawalsStore>()(
       isProcessingWithdrawal: false,
 
       // Actions
+      setIsActivatedSuccess: (value: boolean) => {
+        set({ isActivatedSuccess: value });
+      } ,
+      setIsRejectedSuccess: (value: boolean) => {
+        set({ isRejectedSuccess: value });
+      } ,
       fetchWithdrawals: async (params) => {
         set({ isLoadingWithdrawals: true });
         try {
@@ -100,11 +112,10 @@ export const useAdminWithdrawalsStore = create<AdminWithdrawalsStore>()(
             isLoadingWithdrawals: false,
           });
           console.log(response.data.data);
-
         } catch (error) {
           set({ isLoadingWithdrawals: false });
           console.log("Failed to fetch withdrawals:", error);
-         axiosError(error);
+          axiosError(error);
         }
       },
 
@@ -124,7 +135,7 @@ export const useAdminWithdrawalsStore = create<AdminWithdrawalsStore>()(
         } catch (error) {
           set({ isLoadingStats: false });
           console.log("Failed to fetch withdrawal stats:", error);
-     axiosError(error)
+          axiosError(error);
         }
       },
 
@@ -137,7 +148,7 @@ export const useAdminWithdrawalsStore = create<AdminWithdrawalsStore>()(
             { withCredentials: true }
           );
 
-          enqueueSnackbar("Withdrawal approved successfully", {
+          enqueueSnackbar(response.data.message, {
             variant: "success",
           });
 
@@ -149,7 +160,12 @@ export const useAdminWithdrawalsStore = create<AdminWithdrawalsStore>()(
                 : withdrawal
             ),
             isApprovingWithdrawal: false,
+            
           }));
+
+           setTimeout(() => {
+             set({ isActivatedSuccess: true });
+           }, 500);
 
           get().fetchWithdrawals({ page: 1 });
         } catch (error) {
@@ -160,15 +176,16 @@ export const useAdminWithdrawalsStore = create<AdminWithdrawalsStore>()(
       },
 
       rejectWithdrawal: async (withdrawalId, reason) => {
+        console.log(reason);
         set({ isRejectingWithdrawal: true });
         try {
           const response = await baseAxios.patch(
             `/admin/withdrawals/${withdrawalId}/reject`,
-            { reason },
+            { reason:'mhchgcxgxjfj' },
             { withCredentials: true }
           );
 
-          enqueueSnackbar("Withdrawal rejected successfully", {
+          enqueueSnackbar(response.data.message, {
             variant: "success",
           });
 
@@ -180,13 +197,18 @@ export const useAdminWithdrawalsStore = create<AdminWithdrawalsStore>()(
                 : withdrawal
             ),
             isRejectingWithdrawal: false,
+            
           }));
+
+            setTimeout(() => {
+              set({ isRejectedSuccess: true });
+            }, 500);
 
           get().fetchWithdrawals({ page: 1 });
         } catch (error) {
           set({ isRejectingWithdrawal: false });
           console.log("Failed to reject withdrawal:", error);
-          enqueueSnackbar("Failed to reject withdrawal", { variant: "error" });
+          axiosError(error);
         }
       },
 
@@ -199,7 +221,7 @@ export const useAdminWithdrawalsStore = create<AdminWithdrawalsStore>()(
             { withCredentials: true }
           );
 
-          enqueueSnackbar("Withdrawal processed successfully", {
+          enqueueSnackbar(response.data.message, {
             variant: "success",
           });
 

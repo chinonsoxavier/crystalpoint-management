@@ -115,7 +115,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="flex bg-accent p-4 md:p-6">
+    <div className="flex bg-accent">
       <div className="flex-1 flex flex-col overflow-hidden">
         <main className="flex-1 overflow-auto">
           <div className="flex flex-wrap gap-4 md:gap-6">
@@ -242,7 +242,7 @@ export default function SettingsPage() {
 
                 <div className="space-y-6">
                   {/* First Row */}
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid medium:grid-cols-2 grid-cols-1 gap-6">
                     <div>
                       <Label className="block text-foreground text-sm font-medium mb-2">
                         Username

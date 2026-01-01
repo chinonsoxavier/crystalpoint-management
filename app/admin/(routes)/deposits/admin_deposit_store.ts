@@ -12,7 +12,7 @@ export interface IDeposit {
     email:string
   };
   amount: number;
-  status: "pending" | "confirmed" | "failed";
+  status: "pending_approval" | "confirmed" | "failed";
   method: string;
   transactionHash?: string;
   createdAt: string;
@@ -61,7 +61,7 @@ interface AdminDepositsStore {
   fetchDeposits: (params: {
     page?: number;
     limit?: number;
-    status?: "pending" | "confirmed" | "failed";
+    status?: "pending_approval" | "confirmed" | "failed";
   }) => Promise<void>;
   fetchDepositStats: (period: "7d" | "30d" | "90d" | "1y") => Promise<void>;
   confirmDeposit: (depositId: string) => Promise<void>;

@@ -1,5 +1,6 @@
 "use client";
 import useUserStore from "@/app/user/user_store";
+import { useTranslate } from "@/hooks/use_translate";
 import {
   faArrowLeft,
   faEye,
@@ -12,6 +13,7 @@ import Link from "next/link";
 
 const DashboardHeader = () => {
   const { user } = useUserStore();
+  const {t} = useTranslate();
 
   const { showBalance, toggleShowBalance, toggleSideMenuOpen, sideMenuOpen } =
     useUserStore();
@@ -95,7 +97,7 @@ const DashboardHeader = () => {
               )}
             </div>
             <p className="font-medium text-lg hidden md:block">
-              Hello,
+              {t.admin.header.greetings},
               <span>
                 {" "}
                 <b className="text-xl">{user?.username}</b>

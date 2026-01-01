@@ -1,17 +1,42 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Badge } from "@/components/ui/badge"
-import { Search, ChevronLeft, ChevronRight, Check, X } from "lucide-react"
+import { useEffect, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Search, ChevronLeft, ChevronRight, Check, X } from "lucide-react";
 import { useAdminWithdrawalsStore } from "./admin_withdrawals_store";
+import { formatDate } from "@/utility/format_date";
 type Period = "7d" | "30d" | "90d" | "1y";
-
 
 const mockWithdrawals = [
   {
@@ -60,49 +85,70 @@ const mockWithdrawals = [
     date: "2024-01-11",
     method: "bitcoin",
   },
-]
+];
 
 export default function WithdrawalsPage() {
-  const {fetchWithdrawalStats,fetchWithdrawals,withdrawalStats,withdrawals} = useAdminWithdrawalsStore();
-  const [search, setSearch] = useState("")
+  const {
+    fetchWithdrawalStats,
+    isActivatedSuccess,
+    isRejectedSuccess,
+    fetchWithdrawals,
+    withdrawalStats,
+    withdrawals,
+    approveWithdrawal,
+    rejectWithdrawal,
+    isApprovingWithdrawal,
+    isRejectingWithdrawal,
+    setIsActivatedSuccess,
+    setIsRejectedSuccess,
+  } = useAdminWithdrawalsStore();
+  const [reason, setReason] = useState("");
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-      const [period, setPeriod] = useState<Period>("1y");
+  const [period, setPeriod] = useState<Period>("1y");
   const [methodFilter, setMethodFilter] = useState<
     "bitcoin" | "ethereum" | "usdt" | "bank_transfer" | undefined
   >();
   const [statusFilter, setStatusFilter] = useState<
     "pending" | "approved" | "processed" | "rejected" | undefined
   >();
-  const [selectedWithdrawal, setSelectedWithdrawal] = useState<(typeof withdrawals)[0] | null>(null)
-  const [showActionModal, setShowActionModal] = useState(false)
-  const [action, setAction] = useState<"approve" | "reject" | "process" | null>(null);
+  const [selectedWithdrawal, setSelectedWithdrawal] = useState<
+    (typeof withdrawals)[0] | null
+  >(null);
+  const [showActionModal, setShowActionModal] = useState(false);
+  const [action, setAction] = useState<"approve" | "reject" | "process" | null>(
+    null
+  );
 
   useEffect(() => {
-fetchWithdrawalStats(period);
-fetchWithdrawals({page:1,status:statusFilter,method:methodFilter})
-  }, [action,statusFilter])
-  
+    fetchWithdrawalStats(period);
+    fetchWithdrawals({ page: 1, status: statusFilter, method: methodFilter });
+  }, [action, statusFilter]);
 
-  // const filteredWithdrawals = mockWithdrawals.filter(
-  //   (withdrawal) =>
-  //     (withdrawal.username.toLowerCase().includes(search.toLowerCase()) || withdrawal.id.includes(search)) &&
-  //     (statusFilter === "all" || withdrawal.status === statusFilter),
-  // )
+useEffect(() => { 
+  if(isActivatedSuccess || isRejectedSuccess){
+    setShowActionModal(false);
+    setSelectedWithdrawal(null);
+    setReason("");
+    setIsActivatedSuccess(false);
+    setIsRejectedSuccess(false);
+  }
+}, [isActivatedSuccess, isRejectedSuccess]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "pending":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-yellow-100 text-yellow-800";
       case "approved":
-        return "bg-blue-100 text-blue-800"
+        return "bg-blue-100 text-blue-800";
       case "processed":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       case "rejected":
-        return "bg-red-100 text-red-800"
+        return "bg-red-100 text-red-800";
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -128,7 +174,7 @@ fetchWithdrawals({page:1,status:statusFilter,method:methodFilter})
           <SelectItem value="1y">1 Year</SelectItem>
         </SelectContent>
       </Select>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-5 w-full">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 grid-cols-1 gap-5 w-full">
         <Card className="">
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground">Total Withdrawals</p>
@@ -283,7 +329,7 @@ fetchWithdrawals({page:1,status:statusFilter,method:methodFilter})
                         {withdrawal.status}
                       </Badge>
                     </TableCell>
-                    <TableCell>{withdrawal.processedAt}</TableCell>
+                    <TableCell>{formatDate(withdrawal.createdAt)}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
                         {withdrawal.status === "pending" && (
@@ -316,6 +362,7 @@ fetchWithdrawals({page:1,status:statusFilter,method:methodFilter})
                         )}
                         {withdrawal.status === "approved" && (
                           <Button
+                            className="text-xs"
                             size="sm"
                             variant="outline"
                             onClick={() => {
@@ -396,12 +443,19 @@ fetchWithdrawals({page:1,status:statusFilter,method:methodFilter})
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">User</p>
-                <p className="font-semibold">{selectedWithdrawal.user.username}</p>
+                <p className="font-semibold">
+                  {selectedWithdrawal.user.username}
+                </p>
               </div>
-            
 
               {action === "reject" && (
-                <Input placeholder="Reason for rejection" />
+                <Input
+                  value={reason}
+                  onChange={(e) => {
+                    setReason(e.target.value);
+                  }}
+                  placeholder="Reason for rejection"
+                />
               )}
               {action === "process" && (
                 <>
@@ -411,14 +465,16 @@ fetchWithdrawals({page:1,status:statusFilter,method:methodFilter})
               )}
 
               <div className="flex gap-2 pt-4">
+                <Button variant="outline">Cancel</Button>
                 <Button
-                  variant="outline"
-                  onClick={() => setShowActionModal(false)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={() => setShowActionModal(false)}
+                  disabled={isApprovingWithdrawal || isRejectingWithdrawal}
+                  onClick={() => {
+                    if (action === "approve") {
+                      approveWithdrawal(selectedWithdrawal._id);
+                    } else if (action === "reject") {
+                      rejectWithdrawal(selectedWithdrawal._id, reason);
+                    }
+                  }}
                   className={
                     action === "approve"
                       ? "bg-green-600 hover:bg-green-700"
@@ -427,12 +483,18 @@ fetchWithdrawals({page:1,status:statusFilter,method:methodFilter})
                       : "bg-blue-600 hover:bg-blue-700"
                   }
                 >
-                  {action === "approve"
-                    ? "Approve"
-                    : action === "reject"
-                    ? "Reject"
-                    : "Process"}{" "}
-                  Withdrawal
+                  {isApprovingWithdrawal || isRejectingWithdrawal ? (
+                    "Processing..."
+                  ) : (
+                    <>
+                      {action === "approve"
+                        ? "Approve"
+                        : action === "reject"
+                        ? "Reject"
+                        : "Process"}{" "}
+                      Withdrawal
+                    </>
+                  )}
                 </Button>
               </div>
             </div>

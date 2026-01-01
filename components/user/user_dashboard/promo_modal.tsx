@@ -97,75 +97,67 @@ export function PromoModal({ isOpen, onClose }: PromoModalProps) {
 
         {/* Grid */}
         <div className="md:p-8 p-4.5">
-          <div className="grid grid-cols-1 w-full md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 w-full md:grid-cols-2 lg:grid-cols-2 gap-8">
             {promoPlans.map((plan) => (
-                  <div  key={plan.name}
-                    className={`group relative overflow-hidden rounded-2xl 
+              <div
+                key={plan.name}
+                className={`group relative overflow-hidden rounded-2xl 
                                transition-all duration-500 bg-accent-foreground hover:shadow-2xl border border-accent-border hover:border-primary`}
-                  >
-                    <div className="relative p-5 md:p-8 space-y-3.5 md:space-y-6">
-                  
-
-                      {/* Plan Name */}
-                      <div className="text-center">
-                        <div className="flex justify-center mb-2.5 md:mb-4">
-                          <div
-                            className={`inline-flex p-3 md:p-5 rounded-2xl bg-linear-to-br ${plan.color} text-white shadow-2xl group-hover:scale-110 transition-transform duration-300`}
-                          >
-                            {plan.icon}
-                          </div>
-                        </div>
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-accent-text">
-                          {plan.name}
-                        </h3>
-                        <p className="mt-3 text-sm md:text-base text-accent-text leading-relaxed">
-                          {plan.description}
-                        </p>
-                      </div>
-
-                      <Button asChild>
-              <DialogClose key={plan.name}>
-                        <Link href='/user/deposit'
-                          className={`w-full h-10 md:h-14 text-lg font-bold rounded-xl bg-linear-to-r ${plan.color}`}
-                        >
-                          Select {plan.name === "VIP" ? "VIP" : plan.name} Plan
-                          <svg
-                            className="w-6 h-6 ml-2"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M13 7l5 5m0 0l-5 5m5-5H6"
-                              />
-                          </svg>
-                        </Link>
-                              </DialogClose>
-                      </Button>
-
-                      {/* Trust Badge */}
-                      <div className="flex items-center justify-center gap-2 text-xs text-accent-text pt-4 border-t border-gray-800/50">
-                        <svg
-                          className="w-5 h-5 text-green-500"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        <span>
-                          100% Capital Protection • Daily Profit • Instant
-                          Withdrawals
-                        </span>
+              >
+                <div className="relative p-5 md:p-8 space-y-3.5 md:space-y-6">
+                  {/* Plan Name */}
+                  <div className="text-center">
+                    <div className="flex justify-center mb-2.5 md:mb-4">
+                      <div
+                        className={`inline-flex p-3 md:p-5 rounded-2xl bg-linear-to-br ${plan.color} text-white shadow-2xl group-hover:scale-110 transition-transform duration-300`}
+                      >
+                        {plan.icon}
                       </div>
                     </div>
+                    <h3 className="text-2xl md:text-3xl font-extrabold text-accent-text">
+                      {plan.name}
+                    </h3>
+                    <p className="mt-3 text-sm md:text-base text-accent-text leading-relaxed">
+                      {plan.description}
+                    </p>
                   </div>
+
+                  <DialogClose onClick={() => onClose(false)}
+                    key={plan.name}
+                    className={`w-full ${plan.color}`}
+                  >
+                    <Link
+                      href="/user/deposit"
+                      className={`w-full py-3 text-lg font-bold rounded-xl bg-linear-to-r ${plan.color}`}
+                    >
+                      <Button asChild className="bg-[] w-full py-2">
+                        <div>
+                          Select {plan.name === "VIP" ? "VIP" : plan.name} Plan
+                        </div>
+                      </Button>
+                    </Link>
+                  </DialogClose>
+
+                  {/* Trust Badge */}
+                  <div className="flex items-center justify-center gap-2 text-xs text-accent-text pt-4 border-t border-gray-800/50">
+                    <svg
+                      className="w-5 h-5 text-green-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>
+                      100% Capital Protection • Daily Profit • Instant
+                      Withdrawals
+                    </span>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
 

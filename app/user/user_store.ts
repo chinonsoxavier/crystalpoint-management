@@ -46,6 +46,7 @@ export interface IUser {
   _id: string;
   adPrompts: IAdPrompt;
   showAdPrompt: boolean;
+  isActive:boolean
 }
 
 interface ILogin {

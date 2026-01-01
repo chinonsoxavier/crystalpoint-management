@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { useAdminDepositsStore } from "./admin_deposit_store";
 import DepositsTable from "@/components/admin/deposits/deposits_table";
+import { formatCurrency } from "@/utility/format_currency";
 
 
 type Period = "7d" | "30d" | "90d" | "1y";
@@ -54,12 +55,12 @@ export default function DepositsPage() {
             </SelectContent>
           </Select>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 medium:grid-cols-3 gap-4">
           <Card>
             <CardContent className="">
               <p className="text-sm text-muted-foreground">Total Deposits</p>
               <p className="text-2xl font-bold mt-2">
-                $ {depositStats?.stats?.total_deposits || 0}
+                $ {formatCurrency(depositStats?.stats?.total_deposits || 0)}
               </p>
             </CardContent>
           </Card>
@@ -67,7 +68,7 @@ export default function DepositsPage() {
             <CardContent className="">
               <p className="text-sm text-muted-foreground">Pending</p>
               <p className="text-2xl font-bold mt-2">
-                $ {depositStats?.stats?.pending_deposits || 0}
+                $ {formatCurrency(depositStats?.stats?.pending_deposits || 0)}
               </p>
             </CardContent>
           </Card>
@@ -75,7 +76,7 @@ export default function DepositsPage() {
             <CardContent className="">
               <p className="text-sm text-muted-foreground">Confirmed</p>
               <p className="text-2xl font-bold mt-2">
-                ${depositStats?.stats?.confirmed_deposits || 0}
+                $ {formatCurrency(depositStats?.stats?.confirmed_deposits || 0)}
               </p>
             </CardContent>
           </Card>
@@ -91,7 +92,7 @@ export default function DepositsPage() {
             <CardContent className="">
               <p className="text-sm text-muted-foreground">Total Amount </p>
               <p className="text-2xl font-bold mt-2">
-                $ {depositStats?.stats?.total_amount || 0}
+                $ {formatCurrency(depositStats?.stats?.total_amount || 0)}
               </p>
             </CardContent>
           </Card>

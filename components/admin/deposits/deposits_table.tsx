@@ -51,7 +51,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-type DepositStatus = "pending" | "confirmed" | "failed";
+type DepositStatus = "pending_approval" | "confirmed" | "failed";
 
 const DepositsTable = () => {
   const {
@@ -72,7 +72,7 @@ const DepositsTable = () => {
 
   const getStatusProps = (status: string) => {
     switch (status) {
-      case "pending":
+      case "pending_approval":
         return {
           variant: "secondary" as const,
           icon: <Clock className="h-3 w-3 mr-1" />,
@@ -157,7 +157,7 @@ const DepositsTable = () => {
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="pending_approval">Pending</SelectItem>
                 <SelectItem value="confirmed">Confirmed</SelectItem>
                 <SelectItem value="failed">Failed</SelectItem>
               </SelectContent>
@@ -188,10 +188,10 @@ const DepositsTable = () => {
                       ${deposit?.amount.toLocaleString() ?? ""}
                     </TableCell>
                     <TableCell className="capitalize">
-                      {deposit?.method?.replace("_", " ") ?? ""}
+                      {deposit?.method?.replace("_", " ") ?? ""} 
                     </TableCell>
                     <TableCell>
-                      {deposit?.status === "pending" ? (
+                      {deposit?.status === "pending_approval" ? (
                         <div className="flex items-center gap-2">
                           <Badge variant="secondary" className="text-xs">
                             <Clock className="h-3 w-3 mr-1" />
@@ -292,7 +292,7 @@ const DepositsTable = () => {
                         </Badge>
                       )}
                     </TableCell>
-                    <TableCell>{formatDate(deposit?.createdAt)}</TableCell>
+                    <TableCell>{formatDate(deposit?.createdAt)} {deposit.createdAt}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
