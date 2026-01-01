@@ -1,3 +1,5 @@
+"use client";
+
 import Investment from "@/components/investment"
 import OurServices from "@/components/landing/services/our_services"
 import ServicesHeader from "@/components/landing/services/services_header"

@@ -1,3 +1,5 @@
+"use client";
+
 import goldImage from "@/assets/images/9.jpg";
 import Animate from "@/components/animation/animate";
 import { faList } from "@fortawesome/free-solid-svg-icons";

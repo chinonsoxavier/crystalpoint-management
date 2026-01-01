@@ -1,3 +1,5 @@
+"use client";
+
 import LoansAndGrants from "@/components/landing/services/(services)/loans_and_grants/loans_and_grants";
 import PageHeader from "@/components/landing/services/(services)/page_header";
 import Footer from "@/components/layouts/footer";

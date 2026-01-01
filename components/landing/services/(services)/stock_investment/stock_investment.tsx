@@ -1,3 +1,5 @@
+"use client";
+
 import Animate from "@/components/animation/animate";
 import stockImage from "@/assets/images/stock-2.png";
 import Image from "next/image";

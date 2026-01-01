@@ -1,3 +1,5 @@
+"use client";
+
 import RetirementImage from "@/assets/images/1.jpg";
 import Animate from "@/components/animation/animate";
 import { faList } from "@fortawesome/free-solid-svg-icons";
