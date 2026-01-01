@@ -12,9 +12,10 @@ const Page = () => {
   );
 
  const pendingWithdrawalTotal = pendingWithdrawals.reduce(
-  (total, withdrawal) => total + withdrawal.amount,
+  (total, withdrawal) => total + (Number(withdrawal.amount) || 0),
   0
 );
+
 
   useEffect(() => {
     fetchWithdrawalsHistory();
