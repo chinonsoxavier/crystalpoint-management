@@ -1,5 +1,5 @@
 import PreviousTransactions from "@/components/user/user_dashboard/previous_transactions";
-import UserDashboard from "@/components/user/user_dashboard/user_dashboard"
+import UserDashboard from "@/components/user/user_dashboard/user_dashboard";
 
 const Page = () => {
   return (
@@ -11,6 +11,6 @@ const Page = () => {
       <PreviousTransactions />
     </div>
   );
-}
+};
 
-export default Page
+export default Page;

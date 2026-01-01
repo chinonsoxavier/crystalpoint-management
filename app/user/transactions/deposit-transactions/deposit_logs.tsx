@@ -126,13 +126,13 @@ export default function DepositLogs() {
                   <AlertDialogHeader>
                     <AlertDialogTitle>Cancel Deposit</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Are you sure you want to cancel this pending deposit of{" "}
+                      Are you sure you want to cancel this pending deposit of
                       <span className="font-semibold">
                         {new Intl.NumberFormat("en-US", {
                           style: "currency",
                           currency: "USD",
                         }).format(deposit.amount)}
-                      </span>{" "}
+                      </span>
                       via {deposit.method}? This action cannot be undone.
                     </AlertDialogDescription>
                   </AlertDialogHeader>

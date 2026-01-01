@@ -44,7 +44,7 @@ export function BalanceCards({ showValues }: BalanceCardsProps) {
       colorClass: "from-red-500 to-red-600",
     },
     {
-      label: "PROMOTION BALANCE",
+      label: "PROMOTION BONUS",
       value: profile?.promotional_balance,
       colorClass: "from-orange-400 to-orange-500",
     },
@@ -59,7 +59,7 @@ export function BalanceCards({ showValues }: BalanceCardsProps) {
           className={`bg-[#1fabe8] border rounded-2xl p-5 text-white relative overflow-hidden hover:shadow-xl transition-shadow`}
         >
           <div className="flex items-center gap-2">
-            {/* <div className={`w-3 h-3 rounded-full ${card.colorClass} bg-linear-to-bl`}></div> */}
+            <div className={`w-3 h-3 rounded-full ${card.colorClass} bg-linear-to-bl`}></div>
             <p className="text-sm font-semibold text-white">
               {card.label}
             </p>

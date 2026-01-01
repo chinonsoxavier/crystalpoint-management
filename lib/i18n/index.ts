@@ -4,11 +4,11 @@ import { landing as esLanding } from "./es/landing";
 import { landing as frLanding } from "./fr/landing";
 import { landing as ptLanding } from "./pt/landing";
 import { landing as zhLanding } from "./zh/landing";
-// import { admin as enAdmin } from "./en/admin";
-// import { admin as esAdmin } from "./es/admin";
-// import { admin as frAdmin } from "./fr/admin";
-// import { admin as ptAdmin } from "./pt/admin";
-// import { admin as zhAdmin } from "./zh/admin";
+import { admin as enAdmin } from "./en/admin";
+import { admin as esAdmin } from "./es/admin";
+import { admin as frAdmin } from "./fr/admin";
+import { admin as ptAdmin } from "./pt/admin";
+import { admin as zhAdmin } from "./zh/admin";
 
 export type Language = "en" | "es" | "fr" | "pt" | "zh";
 
@@ -696,44 +696,55 @@ export interface LandingTranslation {
 
 export interface AdminTranslation {
   header: {
-    title: string;
-    overview: string;
-    users: string;
-    analytics: string;
-    settings: string;
-    logout: string;
+  greetings: string;
   };
+overview:{
+  dashboard: string;
+  welcomeBack: string;
+  shareLink: string;
+  balanceCards:{
+    totalDeposit: string;
+    profitBalance: string;
+    totalWithdrawals: string;
+    activeDeposits: string;
+    pendingWithdrawals: string;
+    promotionalBalance: string;
+  },
+  transactions:{
+    label: string;
+    previousTransactions:  {
+      deposit: string;
+      withdrawal: string;
+      investments: string;
+    };
+    depositTableHeader:{
+     id: string;
+     date: string;
+     method: string;
+     amount: string;
+     status: string;
+     pending: string;
+      confirmed: string;
+      failed: string;
 
-  users: {
-    title: string;
-    total: string;
-    active: string;
-    inactive: string;
-    actions: string;
-    delete: string;
-    edit: string;
-  };
-  analytics: {
-    title: string;
-    revenue: string;
-    growth: string;
-    transactions: string;
-  };
+    },
+  }
+},
+
   
 }
 
 export interface AllTranslations {
   landing: LandingTranslation;
-  // admin: AdminTranslation;
+  admin: AdminTranslation;
 }
 
 export const translations: Record<Language, AllTranslations> = {
-  en: { landing: enLanding },
-  // en: { landing: enLanding, admin: enAdmin },
-  es: { landing: esLanding },
-  fr: { landing: frLanding },
-  pt: { landing: ptLanding },
-  zh: { landing: zhLanding },
+  en: { landing: enLanding, admin: enAdmin },
+  es: { landing: esLanding, admin: esAdmin },
+  fr: { landing: frLanding,admin: frAdmin },
+  pt: { landing: ptLanding ,admin: ptAdmin },
+  zh: { landing: zhLanding,admin: zhAdmin },
 };
 
 export const languages: Record<Language, string> = {
