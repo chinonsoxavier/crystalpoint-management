@@ -28,7 +28,7 @@ const Page = () => {
         </div>
 
         {/* Investment Plans Grid */}
-        <div className="grid grid-cols-1 w-full sm:grid-cols-2 lg:grid-cols-3 md:gap-8 sm:gap-5 gap-3">
+        <div className="grid grid-cols-1 w-full medium:grid-cols-2 lg:grid-cols-3 md:gap-6 sm:gap-4 gap-3">
           {isFetchingInvestPlans ? (
             <div className="col-span-3 flex justify-center items-center">
               <p className="text-accent-text text-lg">Loading plans...</p>
@@ -44,7 +44,7 @@ const Page = () => {
                   <div className="relative space-y-5 md:space-y-8 z-10 flex flex-col justify-between h-full">
                     {/* Plan Name */}
                     <div className="text-center">
-                      <h3 className="text-2xl smedium:text-3xl font-extrabold text-accent-text">
+                      <h3 className="text-xl smedium:text-2xl font-extrabold text-accent-text">
                         {plan.name}
                       </h3>
                       <p className="text-sm smedium:text-base text-accent-text leading-relaxed">
@@ -52,27 +52,83 @@ const Page = () => {
                       </p>
                     </div>
 
+                    {/* Plan Details */}
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-2">
+                        <span className="text-gray-400 mt-0.5">•</span>
+                        <div>
+                          <span className="text-gray-300">Minimum:</span>
+                          <span className="ml-2 font-semibold">
+                            {plan.minAmount
+                              ? `$${plan.minAmount.toLocaleString()}`
+                              : "Unlimited"}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-2">
+                        <span className="text-gray-400 mt-0.5">•</span>
+                        <div>
+                          <span className="text-gray-300">Maximum Amount:</span>
+                          <span className="ml-2 font-semibold">
+                            {plan.maxAmount
+                              ? `$${plan.maxAmount.toLocaleString()}`
+                              : "Unlimited"}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="text-gray-400 mt-0.5">•</span>
+                        <div>
+                          <span className="text-gray-300">
+                            Return of investment:
+                          </span>
+                          <span className="ml-2 font-semibold">
+                            {plan.roiPercentage ? `${plan.roiPercentage}%` : ""}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-2">
+                        <span className="text-gray-400 mt-0.5">•</span>
+                        <div>
+                          <span className="text-gray-300">Duration Days:</span>
+                          <span className="ml-2 font-semibold">
+                            {plan.durationDays
+                              ? `${plan.durationDays} days`
+                              : ""}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="text-gray-400 mt-0.5">•</span>
+                        <div>
+                          <span className="text-gray-300">Refferal Bonus:</span>
+                          <span className="ml-2 font-semibold">
+                            {plan.referralBonus
+                              ? `${plan.referralBonus} days`
+                              : ""}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="text-gray-400 mt-0.5">•</span>
+                        <div>
+                          <span className="text-gray-300">wWelcome Bonus:</span>
+                          <span className="ml-2 font-semibold">
+                            {plan.welcomeBonus
+                              ? `${plan.welcomeBonus} days`
+                              : ""}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="">
                       {/* Invest Button */}
-                      <Link
-                        href={`/user/deposit`}
-                        className="w-full"
-                      >
+                      <Link href={`/user/deposit`} className="w-full">
                         <Button variant="outline" className="w-full">
                           Select {plan.name.split(" ")[1]} Package
-                          <svg
-                            className="w-6 h-6 ml-2"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M13 7l5 5m0 0l-5 5m5-5H6"
-                            />
-                          </svg>
                         </Button>
                       </Link>
 

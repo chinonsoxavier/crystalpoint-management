@@ -2,6 +2,7 @@
 
 import useDashboardStore from "@/app/user/(user)/_dashboard_store";
 import useUserStore from "@/app/user/user_store";
+import { useTranslate } from "@/hooks/use_translate";
 import { formatCurrency } from "@/utility/format_currency";
 import { useEffect } from "react";
 
@@ -12,39 +13,39 @@ export interface BalanceCardsProps {
 export function BalanceCards({ showValues }: BalanceCardsProps) {
   const { profile } = useDashboardStore();
   const { user, loadUser } = useUserStore();
-
+const {t} = useTranslate();
   useEffect(() => {
     loadUser();
   }, []);
   // console.log()
   const cardConfigs = [
     {
-      label: "TOTAL DEPOSIT",
+      label: t.admin.overview.balanceCards.totalDeposit,
       value: profile?.total_deposit,
       colorClass: "from-blue-500 to-blue-600",
     },
     {
-      label: "PROFIT BALANCE",
+      label: t.admin.overview.balanceCards.profitBalance,
       value: user?.balance.profit,
       colorClass: "from-yellow-500 to-yellow-600",
     },
     {
-      label: "TOTAL WITHDRAWALS",
+      label: t.admin.overview.balanceCards.totalWithdrawals,
       value: user?.balance.totalWithdrawn,
       colorClass: "bg-white",
     },
     {
-      label: "ACTIVE DEPOSIT",
+      label: t.admin.overview.balanceCards.activeDeposits,
       value: user?.balance.activeDeposit,
       colorClass: "from-green-500 to-green-600",
     },
     {
-      label: "PENDING WITHDRAWAL",
+      label:t.admin.overview.balanceCards.pendingWithdrawals,
       value: user?.balance.pendingWithdrawals,
       colorClass: "from-red-500 to-red-600",
     },
     {
-      label: "PROMOTION BONUS",
+      label:t.admin.overview.balanceCards.promotionalBalance,
       value: profile?.promotional_balance,
       colorClass: "from-orange-400 to-orange-500",
     },

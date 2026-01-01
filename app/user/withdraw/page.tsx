@@ -22,20 +22,17 @@ const Page = () => {
   const [walletAddress, setWalletAddres] = useState('');
   const [amount, setAmount] = useState(0);
   const {
-    approvedWithdrawals,
+    
     pendingWithdrawals,
     fetchWithdrawalsApproved,
     fetchWithdrawalsPending,
     requestWithdrawal,
     loadingWithdrawal,
-    withdrawalBalance
   } = useWithdrawStore();
   const {
-    depositMethods,
     fetchDepositMethods,
     setSelectedDepositMethod,
     selectedDepositMethod,
-    
   } = useDepositStore();
 
   const {profile} = useDashboardStore();
@@ -48,7 +45,6 @@ const Page = () => {
       walletAddress: "TCi5CsQnzDCfZdRp9jYZoGpe1qD6Zpy6Je",
     },
   ];
-  const selectedWithdrawalMethod = selectedDepositMethod;
 
   useEffect(() => {
     fetchDepositMethods();
@@ -57,10 +53,7 @@ const Page = () => {
   }, [])
 
 
-  const pendingWithdrawalsTotal = pendingWithdrawals.reduce(
-    (total, withdrawal) => total + withdrawal,
-    0
-  );
+ 
 
   const handleWithdrawal = (e:React.FormEvent)=>{
     e.preventDefault();
@@ -86,7 +79,7 @@ const Page = () => {
             PENDING
           </p>
           <p className="text-[#8b98d] dark:text-[#666e70] font-medium">
-            ${withdrawalBalance?.pending_withdrawals || 0}
+            ${pendingWithdrawals.reduce<number>((total, withdrawal) => total + withdrawal.amount, 0) || 0}
           </p>
         </div>
       </div>
@@ -101,7 +94,10 @@ const Page = () => {
           </button>
 
           <p className="text-[#8b98d] dark:text-gray-400  md:text-lg">
-            Ledger Balance: ${profile?.ledger_balance}
+            Ledger Balance: $
+            {(profile?.profit_balance || 0) +
+              (user?.balance.activeDeposit || 0) +
+              (profile?.promotional_balance || 0)}
           </p>
           <p className="text-[#8b98d] dark:text-gray-400  md:text-lg">
             Active Deposit : ${user?.balance.activeDeposit || 0}

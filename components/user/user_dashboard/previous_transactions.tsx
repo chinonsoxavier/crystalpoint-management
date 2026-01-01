@@ -3,13 +3,14 @@
 import DepositLogs from "@/app/user/transactions/deposit-transactions/deposit_logs";
 import InvestMentLogs from "@/app/user/transactions/investment-logs/investment_logs";
 import WithdrawalsTable from "@/app/user/transactions/withdrawal-logs/withdrawal_logs";
+import { useTranslate } from "@/hooks/use_translate";
 import { useState } from "react";
 
 const PreviousTransactions = () => {
   const [activeTab, setActiveTab] = useState<
     "deposit" | "withdrawals" | "investments"
   >("deposit");
-
+const {t} = useTranslate()
   return (
     <div className="flex flex-col">
       <div className="my-7 md:p-6 p-4 flex-wrap gap-7 bg-[#1e2746] flex items-center justify-between rounded-xl py-8 px-5">

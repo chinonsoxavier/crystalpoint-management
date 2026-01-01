@@ -11,6 +11,8 @@ interface IInvestPlans {
   durationDays: number;
   minAmount: number;
   maxAmount: number;
+  referralBonus: number;
+  welcomeBonus: number;
   isActive: true;
   isFetchingMethods: boolean;
 }

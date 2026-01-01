@@ -147,7 +147,7 @@ export default function UsersPage() {
   const [adPromptNotes, setAdPromptNotes] = useState<string>("");
 
   useEffect(() => {
-    // getCurrentMembership(selectedUser?._id ?? '');
+    getCurrentMembership(selectedUser?._id ?? '');
   }, [selectedUser]);
 
   useEffect(() => {
@@ -847,9 +847,11 @@ export default function UsersPage() {
                           <Label htmlFor="membership-card">
                             Select Membership
                           </Label>
-                          {
-                            // currentMembership?.membership.card.name ?? 'name'
-                          }
+                          <Label className="text-xs" >
+                            Current Membership:{" "}
+                            {currentMembership?.membership?.card?.name ??
+                              "name"}
+                          </Label>
 
                           <Select
                             value={selectedMembershipCard}
@@ -858,7 +860,7 @@ export default function UsersPage() {
                             <SelectTrigger id="membership-card">
                               <SelectValue
                                 defaultValue={
-                                  currentMembership?.membership.card.name
+                                  currentMembership?.membership?.card.name
                                 }
                                 placeholder="Choose a membership plan"
                               />

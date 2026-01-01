@@ -26,9 +26,18 @@ interface IWithdrawalBalance {
   minimum_withdrawal: 0;
 }
 
+interface IPendingWithdrawal {
+      _id: string;
+      user: string;
+      amount: number;
+      walletAddress: string;
+      status: string;
+      createdAt: string;
+      updatedAt: string;
+}
 interface IWithdrawStore {
   approvedWithdrawals: [];
-  pendingWithdrawals: [];
+  pendingWithdrawals: IPendingWithdrawal[];
   withdrawalBalance?: IWithdrawalBalance;
   loadingWithdrawal: boolean;
   withdrawalHistory: IWithdrawals[];
