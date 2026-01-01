@@ -5,11 +5,12 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, Copy } from "lucide-react";
 import useDashboardStore from "@/app/user/(user)/_dashboard_store";
-import AdPrompt from "@/components/shared/ad_prompt";
+import { useTranslate } from "@/hooks/use_translate";
 const UserDashboard = () => {
   const {referralLink,loadProfile} = useDashboardStore();
   const [copied, setCopied] = useState(false);
   const {user} = useUserStore();
+  const {t}= useTranslate();
 
 useEffect(() => {
     loadProfile();
@@ -34,10 +35,11 @@ useEffect(() => {
       {/* Welcome Section */}
       <div className="mb-8">
         <h1 className="text-3xl text-black dark:text-white font-bold mb">
-          Dashboard
+          {t.admin.overview.dashboard}
+          
         </h1>
         <p className="dark:text-white text-black text-lg font-semibold mb-6">
-          Welcome : <span className="text-accent-text">{user?.profile?.firstName} {' '} {user?.profile?.lastName}</span>
+          {t.admin.overview.welcomeBack} : <span className="text-accent-text">{user?.profile?.firstName} {' '} {user?.profile?.lastName}</span>
         </p>
         {/* <p className="text-lg font-semibold text-black dark:text-white mb-8">
           Current Account Type: <span className="text-accent-text">Newbie</span>

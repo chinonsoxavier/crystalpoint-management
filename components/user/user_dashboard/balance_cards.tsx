@@ -2,6 +2,7 @@
 
 import useDashboardStore from "@/app/user/(user)/_dashboard_store";
 import useUserStore from "@/app/user/user_store";
+import { useTranslate } from "@/hooks/use_translate";
 import { formatCurrency } from "@/utility/format_currency";
 import { useEffect } from "react";
 
@@ -10,6 +11,7 @@ export interface BalanceCardsProps {
 }
 
 export function BalanceCards({ showValues }: BalanceCardsProps) {
+  const {t} = useTranslate();
   const { profile } = useDashboardStore();
   const { user, loadUser } = useUserStore();
 

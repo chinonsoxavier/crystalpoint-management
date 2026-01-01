@@ -45,6 +45,7 @@ export interface IUser {
   balance: IUserBalance;
   _id: string;
   adPrompts: IAdPrompt;
+  showAdPrompt: boolean;
 }
 
 interface ILogin {

@@ -1,7 +1,4 @@
 // lib/i18n/en/landing.ts
-
-import ForexMarket from "@/components/landing/markets/forex_market";
-
 export const landing = {
   header: {
     company: "Company",
