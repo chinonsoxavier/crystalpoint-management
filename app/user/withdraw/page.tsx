@@ -16,6 +16,7 @@ import useWithdrawStore from "./_withdraw_store";
 import useDashboardStore from "../(user)/_dashboard_store";
 import useDepositStore from "../deposit/_deposit_store";
 import { useEffect, useState } from "react";
+import useUserStore from "../user_store";
 
 const Page = () => {
   const [walletAddress, setWalletAddres] = useState('');
@@ -38,6 +39,7 @@ const Page = () => {
   } = useDepositStore();
 
   const {profile} = useDashboardStore();
+  const {user} = useUserStore();
   const withdrawalMethods = [
     {
       _id: "USDT-TRC20",
@@ -98,19 +100,18 @@ const Page = () => {
             Withdraw
           </button>
 
-          <p className="text-[#8b98d] dark:text-[#666e70]  md:text-lg">
+          <p className="text-[#8b98d] dark:text-gray-400  md:text-lg">
             Ledger Balance: ${profile?.ledger_balance}
           </p>
-          <p className="text-[#8b98d] dark:text-[#666e70]  md:text-lg">
+          <p className="text-[#8b98d] dark:text-gray-400  md:text-lg">
+            Active Deposit : ${user?.balance.activeDeposit || 0}
+          </p>
+          <p className="text-[#8b98d] dark:text-gray-400  md:text-lg">
             Profit Balance: ${profile?.profit_balance || 0}
           </p>
-   
-          <p className="text-[#8b98d] dark:text-[#666e70]  md:text-lg">
-            Available Withdrawal : ${withdrawalBalance?.available_balance || 0}
-          </p>
 
-          <p className="text-[#8b98d] dark:text-[#666e70]  md:text-lg">
-            Deposit Balance : ${withdrawalBalance?.breakdown.deposit_balance || 0}
+          <p className="text-[#8b98d] dark:text-gray-400  md:text-lg">
+            Promo Balance : ${profile?.promotional_balance || 0}
           </p>
         </div>
 
@@ -213,10 +214,10 @@ const Page = () => {
                 placeholder=""
                 className="w-full text-accent-text"
               />
-              <p className="text-sm text-accent-text mt-2">
+              {/* <p className="text-sm text-accent-text mt-2">
                 Must be a number (E.g 100 not $100) minimum (
                 {withdrawalBalance?.minimum_withdrawal || 0})
-              </p>
+              </p> */}
             </div>
           </div>
 
