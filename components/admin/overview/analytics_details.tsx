@@ -2,6 +2,7 @@
 import { useAdminDashboardStore } from '@/app/admin/(routes)/(admin)/_admin_dashboard_store';
 import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { formatCurrency } from '@/utility/format_currency';
 import React, { useEffect, useState } from 'react'
 type Period = "7d" | "30d" | "90d" | "1y";
 
@@ -36,7 +37,7 @@ console.log(analytics);
       0
     );
   const depositCount = analytics?.deposits?.reduce((acc, curr) => acc + curr.count, 0);
-  return (  
+  return (
     <div>
       <Card className="bg-accent-foreground p-6">
         <div className="mb-6 flex items-start justify-between">
@@ -85,14 +86,15 @@ console.log(analytics);
                 <span className="text-muted-foreground">Avg per day</span>
                 <span className="font-medium text-foreground">
                   {(
-                    totalUsers ?? 0 /
-                    (period === "7d"
-                      ? 7
-                      : period === "30d"
-                      ? 30
-                      : period === "90d"
-                      ? 90
-                      : 365)
+                    totalUsers ??
+                    0 /
+                      (period === "7d"
+                        ? 7
+                        : period === "30d"
+                        ? 30
+                        : period === "90d"
+                        ? 90
+                        : 365)
                   ).toFixed(1)}
                 </span>
               </div>
@@ -115,8 +117,7 @@ console.log(analytics);
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Total Amount</span>
                 <span className="font-medium text-foreground">
-                  ${totalDeposits}
-                  {analytics.deposits?.length}
+                  ${formatCurrency(totalDeposits)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
@@ -124,7 +125,7 @@ console.log(analytics);
                 <span className="font-medium text-foreground">
                   $
                   {depositCount > 0
-                    ? (totalDeposits / depositCount).toFixed(2)
+                    ? formatCurrency(totalDeposits / depositCount)
                     : "0.00"}
                 </span>
               </div>
@@ -153,7 +154,7 @@ console.log(analytics);
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Total Amount</span>
                 <span className="font-medium text-foreground">
-                  ${totalInvestments}
+                  ${formatCurrency(totalInvestments)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
@@ -161,7 +162,7 @@ console.log(analytics);
                 <span className="font-medium text-foreground">
                   $
                   {totalInvestmentsCount > 0
-                    ? (totalInvestments ?? 0 / totalInvestmentsCount).toFixed(2)
+                    ? formatCurrency(totalInvestments / totalInvestmentsCount)
                     : "0.00"}
                 </span>
               </div>

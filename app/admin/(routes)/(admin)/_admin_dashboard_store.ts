@@ -85,6 +85,7 @@ export const useAdminDashboardStore = create<AdminDashboardStore>((set) => ({
             recentActivities: response.data?.data?.recent_activities,
             isLoadingOverview: false,
           });
+          console.log(response.data.data);
         } catch (error) {
           set({ isLoadingOverview: false });
           console.log("Failed to fetch dashboard overview:", error);

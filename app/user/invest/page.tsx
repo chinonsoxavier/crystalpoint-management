@@ -15,7 +15,7 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="bg-accent p-4 md:p-6 text-white">
+    <div className="bg-accent p-4 md:p-6 text-[#4b556d]">
       <LedgerBalance />
 
       {/* Main Content */}
@@ -39,15 +39,16 @@ const Page = () => {
                 <div
                   key={index}
                   className="group p-4 smedium:p-6 relative overflow-hidden rounded-2xl 
-                         transition-all duration-500 bg-accent-foreground hover:shadow-2xl border border-accent-border hover:border-primary"
+                         transition-all duration-500 bg-gray-400 hover:shadow-2xl border border-slate-700/50 hover:border-primary backdrop-blur-sm"
                 >
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="relative space-y-5 md:space-y-8 z-10 flex flex-col justify-between h-full">
                     {/* Plan Name */}
                     <div className="text-center">
-                      <h3 className="text-xl smedium:text-2xl font-extrabold text-accent-text">
+                      <h3 className="text-xl smedium:text-2xl font-extrabold text-black">
                         {plan.name}
                       </h3>
-                      <p className="text-sm smedium:text-base text-accent-text leading-relaxed">
+                      <p className="text-sm smedium:text-base text-[#181f39] leading-relaxed">
                         {plan.description}
                       </p>
                     </div>
@@ -55,10 +56,10 @@ const Page = () => {
                     {/* Plan Details */}
                     <div className="space-y-4">
                       <div className="flex items-start gap-2">
-                        <span className="text-gray-400 mt-0.5">•</span>
+                        <span className="text-slate-400 mt-0.5">•</span>
                         <div>
-                          <span className="text-gray-300">Minimum:</span>
-                          <span className="ml-2 font-semibold">
+                          <span className="text-[#181f39]">Minimum:</span>
+                          <span className="ml-2 font-semibold text-[#4b556d]">
                             {plan.minAmount
                               ? `$${plan.minAmount.toLocaleString()}`
                               : "Unlimited"}
@@ -67,10 +68,12 @@ const Page = () => {
                       </div>
 
                       <div className="flex items-start gap-2">
-                        <span className="text-gray-400 mt-0.5">•</span>
+                        <span className="text-slate-400 mt-0.5">•</span>
                         <div>
-                          <span className="text-gray-300">Maximum Amount:</span>
-                          <span className="ml-2 font-semibold">
+                          <span className="text-[#181f39]">
+                            Maximum Amount:
+                          </span>
+                          <span className="ml-2 font-semibold text-[#4b556d]">
                             {plan.maxAmount
                               ? `$${plan.maxAmount.toLocaleString()}`
                               : "Unlimited"}
@@ -78,22 +81,22 @@ const Page = () => {
                         </div>
                       </div>
                       <div className="flex items-start gap-2">
-                        <span className="text-gray-400 mt-0.5">•</span>
+                        <span className="text-slate-400 mt-0.5">•</span>
                         <div>
-                          <span className="text-gray-300">
+                          <span className="text-[#181f39]">
                             Return of investment:
                           </span>
-                          <span className="ml-2 font-semibold">
+                          <span className="ml-2 font-semibold text-[#4b556d]">
                             {plan.roiPercentage ? `${plan.roiPercentage}%` : ""}
                           </span>
                         </div>
                       </div>
 
                       <div className="flex items-start gap-2">
-                        <span className="text-gray-400 mt-0.5">•</span>
+                        <span className="text-slate-400 mt-0.5">•</span>
                         <div>
-                          <span className="text-gray-300">Duration Days:</span>
-                          <span className="ml-2 font-semibold">
+                          <span className="text-[#181f39]">Duration Days:</span>
+                          <span className="ml-2 font-semibold text-[#4b556d]">
                             {plan.durationDays
                               ? `${plan.durationDays} days`
                               : ""}
@@ -101,24 +104,22 @@ const Page = () => {
                         </div>
                       </div>
                       <div className="flex items-start gap-2">
-                        <span className="text-gray-400 mt-0.5">•</span>
+                        <span className="text-slate-400 mt-0.5">•</span>
                         <div>
-                          <span className="text-gray-300">Refferal Bonus:</span>
-                          <span className="ml-2 font-semibold">
-                            {plan.referralBonus
-                              ? `${plan.referralBonus} days`
-                              : ""}
+                          <span className="text-[#181f39]">
+                            Referral Bonus:
+                          </span>
+                          <span className="ml-2 font-semibold text-[#4b556d]">
+                            {plan.referralBonus ? `${plan.referralBonus}%` : ""}
                           </span>
                         </div>
                       </div>
                       <div className="flex items-start gap-2">
-                        <span className="text-gray-400 mt-0.5">•</span>
+                        <span className="text-slate-400 mt-0.5">•</span>
                         <div>
-                          <span className="text-gray-300">wWelcome Bonus:</span>
-                          <span className="ml-2 font-semibold">
-                            {plan.welcomeBonus
-                              ? `${plan.welcomeBonus} days`
-                              : ""}
+                          <span className="text-[#181f39]">Welcome Bonus:</span>
+                          <span className="ml-2 font-semibold text-[#4b556d]">
+                            {plan.welcomeBonus ? `${plan.welcomeBonus}%` : ""}
                           </span>
                         </div>
                       </div>
@@ -127,13 +128,15 @@ const Page = () => {
                     <div className="">
                       {/* Invest Button */}
                       <Link href={`/user/deposit`} className="w-full">
-                        <Button variant="outline" className="w-full">
+                        <Button
+                          className="w-full text-white"
+                        >
                           Select {plan.name.split(" ")[1]} Package
                         </Button>
                       </Link>
 
                       {/* Trust Badge */}
-                      <div className="flex items-center justify-center gap-2 text-xs text-accent-text pt-4 border-t border-gray-800/50">
+                      <div className="flex items-center justify-center gap-2 text-xs text-[#181f39] pt-4 border-t border-slate-700/50">
                         <svg
                           className="w-5 h-5 text-green-500"
                           fill="currentColor"

@@ -41,7 +41,6 @@ const Page = () => {
     getDepositIntructions,
     depositRequestSuccessful,
   } = useDepositStore();
-
   const [step, setStep] = useState(1); // 1: Setup, 2: Instructions/Payment, 3: Success
   const [copied, setCopied] = useState(false);
   const [depositAmount, setDepositAmount] = useState<number>(0);
@@ -224,21 +223,7 @@ const Page = () => {
                   </p>
                 </div>
 
-                {/* QR Code Section */}
-                {depositInstructions?.qrCodeUrl && (
-                  <div className="flex flex-col items-center space-y-3">
-                    <div className="p-6 bg-white rounded-xl border-2 border-slate-200 shadow-md">
-                      <Image
-                        src={depositInstructions.qrCodeUrl}
-                        alt="Payment QR Code"
-                        className="w-48 h-48"
-                      />
-                    </div>
-                    <p className="text-sm text-slate-500">
-                      Scan this QR code with your wallet
-                    </p>
-                  </div>
-                )}
+               
 
                 {/* Wallet Address Box */}
                 <div className="space-y-2">
@@ -398,7 +383,7 @@ const Page = () => {
                       (window.location.href =
                         "/user/transactions/deposit-transactions")
                     }
-                    className="flex-1 h-12 border-slate-200"
+                    className="flex-1 text-sm md:text-base h-12 border-slate-200"
                   >
                     View Transaction History
                   </Button>
