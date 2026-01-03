@@ -1,3 +1,5 @@
+"use client";
+
 import PageHeader from "@/components/landing/services/(services)/page_header";
 import RealEstate from "@/components/landing/services/(services)/real_estate/real_estate";
 import Footer from "@/components/layouts/footer";

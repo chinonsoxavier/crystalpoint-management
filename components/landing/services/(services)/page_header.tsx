@@ -1,3 +1,5 @@
+"use client";
+
 import bgImage from "@/assets/svg/in-equity-decor-1.svg";
 import Animate from "@/components/animation/animate";
 import { useTranslate } from "@/hooks/use_translate";
