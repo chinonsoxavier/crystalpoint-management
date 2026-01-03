@@ -16,6 +16,7 @@ import {
 import { formatDate } from "@/utility/format_date";
 import { Shield, Clock, CheckCircle, AlertTriangle } from "lucide-react";
 import useSettingsStore from "@/app/user/settings/_settings_store";
+import { useTranslate } from "@/hooks/use_translate";
 
 export function SecuritySettings() {
   const {
@@ -25,6 +26,8 @@ export function SecuritySettings() {
     isSecurityLoading,
     isTwoFactorLoading,
   } = useSettingsStore();
+
+  const { t } = useTranslate();
 
   useEffect(() => {
     getSecuritySettings();
@@ -47,17 +50,19 @@ export function SecuritySettings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="h-5 w-5" />
-                Two-Factor Authentication
+                {t.admin.settings.security.twoFactorAuthentication}
               </CardTitle>
               <CardDescription>
-                Add an extra layer of security to your account
+                {t.admin.settings.security.twoFactorAuthenticationDesc}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <Label htmlFor="twoFactor">Two-Factor Authentication</Label>
+                    <Label htmlFor="twoFactor">
+                      {t.admin.settings.security.twoFactorAuthentication}
+                    </Label>
                     <Badge
                       variant={
                         securitySettings.twoFactorEnabled
@@ -66,14 +71,14 @@ export function SecuritySettings() {
                       }
                     >
                       {securitySettings.twoFactorEnabled
-                        ? "Enabled"
-                        : "Disabled"}
+                        ? t.admin.settings.security.enabled
+                        : t.admin.settings.security.disabled}
                     </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground">
                     {securitySettings.twoFactorEnabled
-                      ? "Your account is protected with 2FA"
-                      : "Enable 2FA to add an extra layer of security"}
+                      ? t.admin.settings.security.twoFactorEnabledDesc
+                      : t.admin.settings.security.twoFactorDisabledDesc}
                   </p>
                 </div>
                 <Switch
@@ -85,8 +90,6 @@ export function SecuritySettings() {
               </div>
             </CardContent>
           </Card>
-
-    
         </>
       )}
     </div>

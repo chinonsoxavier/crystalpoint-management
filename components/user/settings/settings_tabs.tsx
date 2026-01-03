@@ -9,6 +9,7 @@ import {
   Settings as SettingsIcon,
   Trash2,
 } from "lucide-react";
+import { useTranslate } from "@/hooks/use_translate";
 
 interface SettingsTabsProps {
   activeTab: string;
@@ -23,11 +24,21 @@ const tabs = [
 ];
 
 export function SettingsTabs({ activeTab, setActiveTab }: SettingsTabsProps) {
+  const { t } = useTranslate();
+
+  // Create dynamic tabs with translations
+  const tabsWithTranslations = [
+    { id: "profile", label: t.admin.settings.tabs.profile, icon: User },
+    { id: "preferences", label: t.admin.settings.tabs.preferences, icon: Bell },
+    { id: "security", label: t.admin.settings.tabs.security, icon: Shield },
+    { id: "account", label: t.admin.settings.tabs.account, icon: SettingsIcon },
+  ];
+
   return (
     <>
       {/* Desktop & Tablet: Horizontal Tabs */}
       <div className="hidden sm:flex border-b border-border">
-        {tabs.map((tab) => {
+        {tabsWithTranslations.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
 
@@ -51,7 +62,7 @@ export function SettingsTabs({ activeTab, setActiveTab }: SettingsTabsProps) {
 
       {/* Mobile: Bottom Navigation Bar */}
       <div className="inset-x-0  z-50 flex sm:hidden bg-background border-t border-border shadow-lg">
-        {tabs.map((tab) => {
+        {tabsWithTranslations.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
 

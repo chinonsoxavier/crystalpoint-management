@@ -25,11 +25,13 @@ import {
   ArrowRight,
   Clock,
 } from "lucide-react";
-import Image from "next/image";
+
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import { useTranslate } from "@/hooks/use_translate";
 
 const Page = () => {
+  const { t } = useTranslate();
   const {
     depositMethods,
     fetchDepositMethods,
@@ -46,6 +48,7 @@ const Page = () => {
   const [depositAmount, setDepositAmount] = useState<number>(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const pathname = usePathname();
+
   useEffect(() => {
     fetchDepositMethods();
     getDepositIntructions(selectedDepositMethod?._id || "");
@@ -122,8 +125,7 @@ const Page = () => {
                 <div className="bg-accent p-4 rounded-lg border border-blue-100 flex gap-3">
                   <Info className="w-5 h-5 text-accent-text shrink-0 mt-0.5" />
                   <p className="text-sm text-accent-text">
-                    Select your preferred payment method and enter the amount
-                    you wish to deposit.
+                    {t.admin.deposit.infoMessage}
                   </p>
                 </div>
 
@@ -134,7 +136,7 @@ const Page = () => {
                       className="text-base font-medium flex items-center gap-2"
                     >
                       <Wallet className="w-4 h-4" />
-                      Deposit Method
+                      {t.admin.deposit.depositMethod}
                     </Label>
                     <Select
                       required
@@ -146,7 +148,9 @@ const Page = () => {
                       }}
                     >
                       <SelectTrigger className="h-12 w-full text-base">
-                        <SelectValue placeholder="Choose a cryptocurrency" />
+                        <SelectValue
+                          placeholder={t.admin.deposit.chooseCrypto}
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         {depositMethods.map((method, index) => (
@@ -169,7 +173,7 @@ const Page = () => {
                       className="text-base font-medium flex items-center gap-2"
                     >
                       <DollarSign className="w-4 h-4" />
-                      Amount
+                      {t.admin.deposit.amount}
                     </Label>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-medium">
@@ -190,9 +194,17 @@ const Page = () => {
                       depositInstructions?.minimumAmount &&
                       depositAmount < depositInstructions.minimumAmount && (
                         <p className="text-[red] text-sm">
-                          Minimum deposit amount for{" "}
-                          {selectedDepositMethod?.name} is $
-                          {depositInstructions?.minimumAmount ?? 0}
+                          {t.admin.deposit.minimumDepositMessage
+                            .replace(
+                              "{method}",
+                              selectedDepositMethod?.name || ""
+                            )
+                            .replace(
+                              "{amount}",
+                              (
+                                depositInstructions?.minimumAmount ?? 0
+                              ).toString()
+                            )}
                         </p>
                       )}
                   </div>
@@ -206,29 +218,27 @@ const Page = () => {
                     depositAmount <= (depositInstructions?.minimumAmount ?? 0)
                   }
                 >
-                  Continue to Payment
+                  {t.admin.deposit.continueToPayment}
                 </Button>
               </form>
             ) : step === 2 ? (
               /* --- STEP 2: INSTRUCTIONS & QR CODE --- */
               <div className={cn("space-y-6", isTransitioning && "opacity-0")}>
                 <div className="text-center space-y-2">
-                  <h2 className="text-xl font-bold">Complete Your Payment</h2>
+                  <h2 className="text-xl font-bold">
+                    {t.admin.deposit.completePayment}
+                  </h2>
                   <p className="text-slate-600">
-                    Send exactly{" "}
-                    <span className="text-green-500 font-bold text-lg">
-                      ${depositAmount}
-                    </span>{" "}
-                    worth of {selectedDepositMethod?.name}
+                    {t.admin.deposit.sendExactAmount
+                      .replace("{amount}", depositAmount.toString())
+                      .replace("{method}", selectedDepositMethod?.name || "")}
                   </p>
                 </div>
-
-               
 
                 {/* Wallet Address Box */}
                 <div className="space-y-2">
                   <Label className="text-xs uppercase tracking-wider text-muted-foreground">
-                    Your Personal Deposit Address
+                    {t.admin.deposit.personalDepositAddress}
                   </Label>
                   <div className="flex gap-2">
                     <div className="flex-1 bg-muted p-3 rounded-lg font-mono text-sm break-all border">
@@ -260,7 +270,8 @@ const Page = () => {
                 {depositInstructions?.instructions && (
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
                     <h4 className="text-sm font-bold mb-2 flex items-center gap-2 text-blue-800">
-                      <QrCode className="w-4 h-4" /> Instructions
+                      <QrCode className="w-4 h-4" />{" "}
+                      {t.admin.deposit.instructions}
                     </h4>
                     <p className="text-sm leading-relaxed text-blue-700">
                       {depositInstructions.instructions}
@@ -272,10 +283,12 @@ const Page = () => {
                 <div className="bg-amber-50 p-4 rounded-lg border border-amber-200 flex gap-3">
                   <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
                   <p className="text-sm text-amber-800 leading-tight">
-                    Only send <strong>{selectedDepositMethod?.name}</strong> via
-                    the <strong>{selectedDepositMethod?.network}</strong>{" "}
-                    network. Sending any other coin or using a different network
-                    will result in permanent loss.
+                    {t.admin.deposit.warningMessage
+                      .replace("{method}", selectedDepositMethod?.name || "")
+                      .replace(
+                        "{network}",
+                        selectedDepositMethod?.network || ""
+                      )}
                   </p>
                 </div>
 
@@ -285,7 +298,7 @@ const Page = () => {
                     onClick={() => setStep(1)}
                     className="flex-1 h-12 border-slate-200"
                   >
-                    Go Back
+                    {t.admin.deposit.goBack}
                   </Button>
                   <Button
                     onClick={handleFinalSubmit}
@@ -295,10 +308,10 @@ const Page = () => {
                     {isDepositLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Processing...
+                        {t.admin.deposit.processing}
                       </>
                     ) : (
-                      "I have made the payment"
+                      t.admin.deposit.paymentMade
                     )}
                   </Button>
                 </div>
@@ -313,18 +326,12 @@ const Page = () => {
                     </div>
                   </div>
                   <h2 className="text-2xl font-bold">
-                    Deposit Alert Successfully!
+                    {t.admin.deposit.depositSuccess}
                   </h2>
                   <p className="text-accent-text max-w-md mx-auto">
-                    Your deposit of alert{" "}
-                    <span className="font-bold text-green-600">
-                      ${depositAmount}{" "}
-                    </span>
-                    via{" "}
-                    <span className="font-bold text-accent-text">
-                      {selectedDepositMethod?.name}
-                    </span>{" "}
-                    has been received and is being processed.
+                    {t.admin.deposit.depositProcessedMessage
+                      .replace("{amount}", depositAmount.toString())
+                      .replace("{method}", selectedDepositMethod?.name || "")}
                   </p>
                 </div>
 
@@ -333,12 +340,10 @@ const Page = () => {
                     <Clock className="w-5 h-5 text-accent-text shrink-0 mt-0.5" />
                     <div>
                       <h3 className="font-semibold text-accent-text mb-1">
-                        Processing Time
+                        {t.admin.deposit.processingTime}
                       </h3>
                       <p className="text-sm text-accent-text">
-                        Your deposit will be credited to your account shortly.
-                        Typically, this process takes between 10-30 minutes,
-                        depending on network congestion.
+                        {t.admin.deposit.processingTimeMessage}
                       </p>
                     </div>
                   </div>
@@ -346,31 +351,39 @@ const Page = () => {
 
                 <div className="bg-accent p-6 rounded-lg border">
                   <h3 className="font-semibold text-black dark:text-white mb-3">
-                    Transaction Details
+                    {t.admin.deposit.transactionDetails}
                   </h3>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-sm text-slate-600">Amount</span>
+                      <span className="text-sm text-slate-600">
+                        {t.admin.deposit.amount}
+                      </span>
                       <span className="text-sm font-medium">
                         ${depositAmount}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm text-slate-600">Method</span>
+                      <span className="text-sm text-slate-600">
+                        {t.admin.deposit.method}
+                      </span>
                       <span className="text-sm font-medium">
                         {selectedDepositMethod?.name}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm text-slate-600">Network</span>
+                      <span className="text-sm text-slate-600">
+                        {t.admin.deposit.network}
+                      </span>
                       <span className="text-sm font-medium">
                         {selectedDepositMethod?.network}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm text-slate-600">Status</span>
+                      <span className="text-sm text-slate-600">
+                        {t.admin.deposit.status}
+                      </span>
                       <span className="text-sm font-medium text-amber-600">
-                        Processing
+                        {t.admin.deposit.status}
                       </span>
                     </div>
                   </div>
@@ -385,13 +398,13 @@ const Page = () => {
                     }
                     className="flex-1 text-sm md:text-base h-12 border-slate-200"
                   >
-                    View Transaction History
+                    {t.admin.deposit.viewTransactionHistory}
                   </Button>
                   <Button
                     onClick={handleNewDeposit}
                     className="flex-1 h-12 shadow-md"
                   >
-                    Make Another Deposit
+                    {t.admin.deposit.makeAnotherDeposit}
                   </Button>
                 </div>
               </div>

@@ -60,7 +60,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         <DashboardHeader />
 
         {/* Account deactivation warning - positioned prominently */}
-        {!user?.isActive && (
+        
+        {!user?.isActive && user && (
           <div className="absolute top-20 left-0 right-0 z-30 p-4">
             <AccountDeactivatedWarning />
           </div>
@@ -81,7 +82,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             </div>
             <div className={`${user?.showAdPrompt ? "h-[75%]" : "h-full"}`}>
               {/* If account is deactivated, show a message instead of the regular content */}
-              {!user?.isActive ? (
+              {!user?.isActive && user ? (
                 <div className="flex flex-col items-center justify-center h-full">
                   <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
                     <svg

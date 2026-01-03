@@ -1,3 +1,4 @@
+// app/user/transactions/deposit-transactions/deposit_logs.tsx
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useTranslate } from "@/hooks/use_translate";
 
 export default function DepositLogs() {
   const {
@@ -28,10 +30,19 @@ export default function DepositLogs() {
     isDepositCancelLoading,
   } = useDepositStore();
 
+  const { t } = useTranslate();
+
+  // Helper function for string interpolation
+  const interpolate = (template: string, values: Record<string, string | number>) => {
+    return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+      return String(values[key] || match);
+    });
+  };
+
   const transactionColumns: ColumnDef<IDepositMethod>[] = [
     {
       accessorKey: "_id",
-      header: "Transaction ID",
+      header: t.admin.transactions.transactionId,
       cell: ({ row }) => (
         <div className="font-mono text-xs text-muted-foreground max-w-[100px] truncate">
           {row.getValue("_id")}
@@ -40,7 +51,7 @@ export default function DepositLogs() {
     },
     {
       accessorKey: "createdAt",
-      header: "Date",
+      header: t.admin.transactions.date,
       cell: ({ row }) => {
         return (
           <div className="font-semibold">
@@ -51,11 +62,11 @@ export default function DepositLogs() {
     },
     {
       accessorKey: "method",
-      header: "Method",
+      header: t.admin.transactions.method,
     },
     {
       accessorKey: "amount",
-      header: "Amount",
+      header: t.admin.transactions.amount,
       cell: ({ row }) => {
         const amount = parseFloat(row.getValue("amount"));
         const formatted = new Intl.NumberFormat("en-US", {
@@ -67,7 +78,7 @@ export default function DepositLogs() {
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: t.admin.transactions.status,
       cell: ({ row }) => {
         const deposit = row.original;
         const status = deposit.status as string;
@@ -79,7 +90,7 @@ export default function DepositLogs() {
               return {
                 variant: "default" as const,
                 icon: <CheckCircle className="h-3 w-3 mr-1" />,
-                text: "CONFIRMED",
+                text: t.admin.transactions.confirmed.toUpperCase(),
               };
             case "failed":
               return {
@@ -92,7 +103,7 @@ export default function DepositLogs() {
               return {
                 variant: "secondary" as const,
                 icon: <Clock className="h-3 w-3 mr-1" />,
-                text: "PENDING",
+                text: t.admin.transactions.pending.toUpperCase(),
               };
           }
         };
@@ -124,25 +135,31 @@ export default function DepositLogs() {
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Cancel Deposit</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      {t.admin.transactions.cancelDeposit}
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
-                      Are you sure you want to cancel this pending deposit of
-                      <span className="font-semibold">
-                        {new Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        }).format(deposit.amount)}
-                      </span>
-                      via {deposit.method}? This action cannot be undone.
+                      {interpolate(
+                        t.admin.transactions.cancelDepositDescription,
+                        {
+                          amount: new Intl.NumberFormat("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          }).format(deposit.amount),
+                          method: deposit.method,
+                        }
+                      )}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Keep Deposit</AlertDialogCancel>
+                    <AlertDialogCancel>
+                      {t.admin.transactions.keepDeposit}
+                    </AlertDialogCancel>
                     <AlertDialogAction
                       onClick={() => cancelPendingDeposit(deposit._id)}
                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     >
-                      Yes, Cancel Deposit
+                      {t.admin.transactions.yesCancelDeposit}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -171,7 +188,7 @@ export default function DepositLogs() {
       columns={transactionColumns}
       data={depositHistory}
       searchColumn="method"
-      searchPlaceholder="Filter by method..."
+      searchPlaceholder={t.admin.transactions.filterByMethod}
       isDataLoading={isDepositLoading}
     />
   );

@@ -4,11 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useSupportStore } from "@/app/user/support/_support";
+import { useTranslate } from "@/hooks/use_translate";
 
 export default function CreateTicketForm() {
   const { createNewTicket, isCreatingTicket } = useSupportStore();
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const { t } = useTranslate();
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,13 +37,13 @@ export default function CreateTicketForm() {
   return (
     <form onSubmit={handleSend} className="space-y-4">
       <h2 className="text-xl font-bold text-black dark:text-white mb-4">
-        Create New Support Ticket
+        {t.admin.support.createNewTicket}
       </h2>
 
       <Input
         required
         type="text"
-        placeholder="Subject:"
+        placeholder={t.admin.support.subjectPlaceholder}
         value={subject}
         onChange={(e) => setSubject(e.target.value)}
         className={cn(
@@ -52,7 +54,7 @@ export default function CreateTicketForm() {
       />
 
       <textarea
-        placeholder="Enter text ..."
+        placeholder={t.admin.support.messagePlaceholder}
         value={message}
         required
         onChange={(e) => setMessage(e.target.value)}
@@ -72,10 +74,10 @@ export default function CreateTicketForm() {
           {isCreatingTicket ? (
             <div className="center gap-2">
               <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-              SENDING...
+              {t.admin.support.sending}
             </div>
           ) : (
-            <div className="center gap-2">SEND</div>
+            <div className="center gap-2">{t.admin.support.send}</div>
           )}
         </Button>
 
@@ -83,7 +85,7 @@ export default function CreateTicketForm() {
           onClick={handleDiscard}
           className="bg-destructive flex-1 hover:bg-destructive/90 min-w-[100px] text-white md:min-w-[150px] max-w-xs flex items-center gap-2"
         >
-          Discard
+          {t.admin.support.discard}
         </Button>
       </div>
     </form>

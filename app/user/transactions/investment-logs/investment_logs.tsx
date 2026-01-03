@@ -1,3 +1,4 @@
+// app/user/transactions/investment-logs/investment_logs.tsx
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
@@ -5,9 +6,7 @@ import { TransactionTable } from "@/components/layouts/transaction_table";
 import useInvestStore, { IInvestLog } from "../../invest/_invest_store";
 import { useEffect } from "react";
 import { formatDate } from "@/utility/format_date";
-
-// Define the specific type for this data
-
+import { useTranslate } from "@/hooks/use_translate";
 
 // Define the columns for this type
 const PlanColumns: ColumnDef<IInvestLog>[] = [
@@ -15,21 +14,25 @@ const PlanColumns: ColumnDef<IInvestLog>[] = [
     accessorKey: "name",
     header: "Investment Name",
     cell: ({ row }) => (
-      <div className="font-medium">{row.original.plan?.name ?? ''}</div>
+      <div className="font-medium">{row.original.plan?.name ?? ""}</div>
     ),
   },
   {
     accessorKey: "startDate",
     header: "Start Date",
     cell: ({ row }) => (
-      <div className="max-w-[200px] truncate">{formatDate(row.original?.startDate ?? '')}</div>
+      <div className="max-w-[200px] truncate">
+        {formatDate(row.original?.startDate ?? "")}
+      </div>
     ),
   },
   {
     accessorKey: "endDate",
     header: "End Date",
     cell: ({ row }) => (
-      <div className="max-w-[200px] truncate">{formatDate(row.original?.endDate ?? '')}</div>
+      <div className="max-w-[200px] truncate">
+        {formatDate(row.original?.endDate ?? "")}
+      </div>
     ),
   },
   {
@@ -40,7 +43,7 @@ const PlanColumns: ColumnDef<IInvestLog>[] = [
   {
     accessorKey: "durationDays",
     header: "Duration",
-    cell: ({ row }) => <div>{row.original.plan?.durationDays ?? ''} Days</div>,
+    cell: ({ row }) => <div>{row.original.plan?.durationDays ?? ""} Days</div>,
   },
   {
     accessorKey: "isActive",
@@ -57,7 +60,9 @@ const PlanColumns: ColumnDef<IInvestLog>[] = [
 ];
 
 export default function InvestMentLogs() {
-  const { fetchInvestHistory, investHistory ,isFetchingInvestHistory} = useInvestStore();
+  const { fetchInvestHistory, investHistory, isFetchingInvestHistory } =
+    useInvestStore();
+  const { t } = useTranslate();
 
   useEffect(() => {
     fetchInvestHistory(1);
@@ -67,9 +72,9 @@ export default function InvestMentLogs() {
     <TransactionTable
       columns={PlanColumns}
       data={investHistory}
-      isDataLoading= {isFetchingInvestHistory}
+      isDataLoading={isFetchingInvestHistory}
       searchColumn="name"
-      searchPlaceholder="Filter by investment name..."
+      searchPlaceholder={t.admin.transactions.filterByInvestmentName}
     />
   );
 }

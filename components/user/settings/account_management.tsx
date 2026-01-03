@@ -25,11 +25,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Trash2, AlertTriangle } from "lucide-react";
 import useUserStore from "@/app/user/user_store";
+import { useTranslate } from "@/hooks/use_translate";
 
 export function AccountManagement() {
   const { deleteAccount, isDeleteAccountLoading } = useUserStore();
   const [confirmationText, setConfirmationText] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslate();
 
   const handleDeleteAccount = () => {
     if (confirmationText === "DELETE_MY_ACCOUNT") {
@@ -43,10 +45,10 @@ export function AccountManagement() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-destructive">
             <Trash2 className="h-5 w-5" />
-            Delete Account
+            {t.admin.settings.account.deleteAccount}
           </CardTitle>
           <CardDescription>
-            Permanently delete your account and all associated data
+            {t.admin.settings.account.deleteAccountDesc}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -54,16 +56,23 @@ export function AccountManagement() {
             <div className="flex items-start gap-3">
               <AlertTriangle className="h-5 w-5 text-destructive mt-0.5" />
               <div className="space-y-1">
-                <p className="text-sm font-medium text-destructive">Warning:</p>
+                <p className="text-sm font-medium text-destructive">
+                  {t.admin.settings.account.warning}
+                </p>
                 <p className="text-sm text-destructive-foreground">
-                  This action cannot be undone. Deleting your account will
-                  permanently remove all your data, including:
+                  {t.admin.settings.account.warningDesc}
                 </p>
                 <ul className="list-disc list-inside text-sm text-destructive-foreground ml-2">
-                  <li>Personal information and profile</li>
-                  <li>Transaction history</li>
-                  <li>Account settings and preferences</li>
-                  <li>Any associated funds or assets</li>
+                  <li>{t.admin.settings.account.warningList.personalInfo}</li>
+                  <li>
+                    {t.admin.settings.account.warningList.transactionHistory}
+                  </li>
+                  <li>
+                    {t.admin.settings.account.warningList.accountSettings}
+                  </li>
+                  <li>
+                    {t.admin.settings.account.warningList.associatedFunds}
+                  </li>
                 </ul>
               </div>
             </div>
@@ -71,35 +80,47 @@ export function AccountManagement() {
 
           <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
             <AlertDialogTrigger asChild>
-              <Button disabled={isDeleteAccountLoading} variant="destructive">{isDeleteAccountLoading ? 'DELETING ACOUNT' : 'Delete Account'}</Button>
+              <Button disabled={isDeleteAccountLoading} variant="destructive">
+                {isDeleteAccountLoading
+                  ? t.admin.settings.account.deleting
+                  : t.admin.settings.account.deleteAccountButton}
+              </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogTitle>
+                  {t.admin.settings.account.areYouSure}
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your account and remove your data from our servers.
+                  {t.admin.settings.account.areYouSureDesc}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <div className="py-4 space-y-2">
-                <Label htmlFor="confirmation">Type DELETE_MY_ACCOUNT to confirm</Label>
+                <Label htmlFor="confirmation">
+                  {t.admin.settings.account.typeToDelete}
+                </Label>
                 <Input
                   id="confirmation"
                   value={confirmationText}
                   onChange={(e) => setConfirmationText(e.target.value)}
-                  placeholder="TYPE DELETE_MY_ACCOUNT"
+                  placeholder={t.admin.settings.account.typeToDeletePlaceholder}
                 />
               </div>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel>
+                  {t.admin.settings.account.cancel}
+                </AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleDeleteAccount}
                   disabled={
-                    confirmationText !== "DELETE_MY_ACCOUNT" || isDeleteAccountLoading
+                    confirmationText !== "DELETE_MY_ACCOUNT" ||
+                    isDeleteAccountLoading
                   }
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 >
-                  {isDeleteAccountLoading ? "Deleting..." : "Delete Account"}
+                  {isDeleteAccountLoading
+                    ? "Deleting..."
+                    : t.admin.settings.account.deleteAccountConfirm}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

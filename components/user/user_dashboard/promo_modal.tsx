@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Sparkles, TrendingUp, Crown, Zap, Building2 } from "lucide-react";
+import { useTranslate } from "@/hooks/use_translate";
 
 interface PromoModalProps {
   isOpen: boolean;
@@ -22,76 +23,104 @@ const promoPlans = [
     name: "Accessories",
     icon: <Sparkles className="w-7 h-7 md:w-10 md:h-10" />,
     color: "from-purple-500 to-pink-500",
-    description: "Luxury goods & premium accessories",
     maxInvestment: 10000,
     dailyInterest: "2.5%",
     totalROI: "75%",
     duration: "30 days",
     referralCommission: "5%",
-    risk: "Low",
+    risk: "low",
   },
   {
     name: "Oil and Gas",
     icon: <Zap className="w-7 h-7 md:w-10 md:h-10" />,
     color: "from-amber-500 to-orange-600",
-    description: "High-yield energy sector investments",
     maxInvestment: 25000,
     dailyInterest: "3.2%",
     totalROI: "96%",
     duration: "30 days",
     referralCommission: "7%",
-    risk: "Medium",
+    risk: "medium",
   },
   {
     name: "Agriculture",
     icon: <TrendingUp className="w-7 h-7 md:w-10 md:h-10" />,
     color: "from-emerald-500 to-teal-600",
-    description: "Sustainable farming & food production",
     maxInvestment: 15000,
     dailyInterest: "2.8%",
     totalROI: "84%",
     duration: "30 days",
     referralCommission: "6%",
-    risk: "Low",
+    risk: "low",
   },
   {
     name: "Real Estate",
     icon: <Building2 className="w-7 h-7 md:w-10 md:h-10" />,
     color: "from-blue-600 to-indigo-600",
-    description: "Commercial & residential properties",
     maxInvestment: 50000,
     dailyInterest: "3.5%",
     totalROI: "105%",
     duration: "30 days",
     referralCommission: "8%",
-    risk: "Medium",
+    risk: "medium",
   },
   {
     name: "VIP",
     icon: <Crown className="w-7 h-7 md:w-10 md:h-10" />,
     color: "from-yellow-500 via-amber-500 to-orange-500",
-    description: "Exclusive elite investment access",
     maxInvestment: 100000,
     dailyInterest: "4.5%",
     totalROI: "135%",
     duration: "30 days",
     referralCommission: "10%",
-    risk: "Low",
+    risk: "low",
     featured: true,
   },
 ];
 
 export function PromoModal({ isOpen, onClose }: PromoModalProps) {
+  const { t } = useTranslate();
+
+  // Helper function to translate plan name
+  const translatePlanName = (planName: string) => {
+    const key = planName.toLowerCase().replace(/\s+/g, "");
+    return t.admin.promoModal.plans[key as keyof typeof t.admin.promoModal.plans]?.name || planName;
+  };
+
+  // Helper function to translate plan description
+  const translatePlanDescription = (planName: string) => {
+    const key = planName.toLowerCase().replace(/\s+/g, "");
+    return t.admin.promoModal.plans[key as keyof typeof t.admin.promoModal.plans]?.description || "";
+  };
+
+  // Helper function to translate risk level
+  const translateRisk = (risk: string) => {
+    return (
+      t.admin.promoModal.risk[risk as keyof typeof t.admin.promoModal.risk] ||
+      risk
+    );
+  };
+
+  // Helper function to interpolate the select plan text
+  const getSelectPlanText = (planName: string) => {
+    if (planName === "VIP") {
+      return t.admin.promoModal.selectVIPPlan;
+    }
+    return t.admin.promoModal.selectPlan.replace(
+      "{planName}",
+      translatePlanName(planName)
+    );
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className=" max-h-[77vh] md:max-h-[90vh] max-w-[90vw] bg-accent scrollbar_hidden overflow-y-auto p-0">
         {/* Header */}
         <DialogHeader className="sticky top-0 z-10 bg-accent border-b border-accent-border px-8 py-3.5 md:py-6">
           <DialogTitle className="text-2xl md:text-4xl text-center font-semibold text-accent-text">
-            Promotional Bonus Plans
+            {t.admin.promoModal.title}
           </DialogTitle>
           <p className="text-center text-gray-400 mt-3 text-sm md:text-lg">
-            Unlock exclusive high-return opportunities
+            {t.admin.promoModal.subtitle}
           </p>
         </DialogHeader>
 
@@ -115,14 +144,15 @@ export function PromoModal({ isOpen, onClose }: PromoModalProps) {
                       </div>
                     </div>
                     <h3 className="text-2xl md:text-3xl font-extrabold text-accent-text">
-                      {plan.name}
+                      {translatePlanName(plan.name)}
                     </h3>
                     <p className="mt-3 text-sm md:text-base text-accent-text leading-relaxed">
-                      {plan.description}
+                      {translatePlanDescription(plan.name)}
                     </p>
                   </div>
 
-                  <DialogClose onClick={() => onClose(false)}
+                  <DialogClose
+                    onClick={() => onClose(false)}
                     key={plan.name}
                     className={`w-full ${plan.color}`}
                   >
@@ -131,9 +161,7 @@ export function PromoModal({ isOpen, onClose }: PromoModalProps) {
                       className={`w-full py-3 text-lg font-bold rounded-xl bg-linear-to-r ${plan.color}`}
                     >
                       <Button asChild className="bg-[] w-full py-2">
-                        <div>
-                          Select {plan.name === "VIP" ? "VIP" : plan.name} Plan
-                        </div>
+                        <div>{getSelectPlanText(plan.name)}</div>
                       </Button>
                     </Link>
                   </DialogClose>
@@ -152,8 +180,9 @@ export function PromoModal({ isOpen, onClose }: PromoModalProps) {
                       />
                     </svg>
                     <span>
-                      100% Capital Protection • Daily Profit • Instant
-                      Withdrawals
+                      {t.admin.promoModal.capitalProtection} •{" "}
+                      {t.admin.promoModal.dailyProfit} •{" "}
+                      {t.admin.promoModal.instantWithdrawals}
                     </span>
                   </div>
                 </div>
@@ -164,9 +193,9 @@ export function PromoModal({ isOpen, onClose }: PromoModalProps) {
           {/* Footer Note */}
           <div className="mt-12 text-center">
             <p className="text-gray-400 text-sm">
-              These promotional plans offer limited-time bonuses.
+              {t.admin.promoModal.limitedTimeBonus}
               <span className="text-blue-400 font-medium">
-                Act fast — availability ends soon!
+                {t.admin.promoModal.actFast}
               </span>
             </p>
           </div>

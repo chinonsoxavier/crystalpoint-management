@@ -9,11 +9,13 @@ import { PreferencesSettings } from "@/components/user/settings/settings_prefren
 import { SecuritySettings } from "@/components/user/settings/security_settings";
 import { AccountManagement } from "@/components/user/settings/account_management";
 import { SettingsTabs } from "@/components/user/settings/settings_tabs";
+import { useTranslate } from "@/hooks/use_translate";
 
 export default function SettingsPage() {
   const { getUserDetails } = useSettingsStore();
   const { authStatus } = useUserStore();
   const [activeTab, setActiveTab] = useState("profile");
+  const { t } = useTranslate();
 
   useEffect(() => {
     if (authStatus === "authenticated") {
@@ -40,10 +42,8 @@ export default function SettingsPage() {
     <div className="py-6 px-4 md:px-6">
       <div className="pt-6 bg-accent sticky top-0">
         <div className="md:mb-8 mb-5">
-          <h1 className="text-3xl font-bold">Settings</h1>
-          <p className="text-muted-foreground">
-            Manage your account settings and preferences
-          </p>
+          <h1 className="text-3xl font-bold">{t.admin.settings.title}</h1>
+          <p className="text-muted-foreground">{t.admin.settings.subtitle}</p>
         </div>
 
         <SettingsTabs activeTab={activeTab} setActiveTab={setActiveTab} />

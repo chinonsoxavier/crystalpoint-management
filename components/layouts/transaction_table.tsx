@@ -1,3 +1,4 @@
+// components/layouts/transaction_table.tsx
 "use client";
 
 import {
@@ -23,6 +24,7 @@ import React, { useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { useTranslate } from "@/hooks/use_translate";
 
 // This component is generic! It accepts a type `T` that extends object.
 interface TransactionTableProps<T extends object> {
@@ -47,6 +49,7 @@ export function TransactionTable<T extends object>({
 
   // Add a state to track when data is loaded
   const [isDataLoaded, setIsDataLoaded] = React.useState(false);
+  const { t } = useTranslate();
 
   const table = useReactTable({
     data,
@@ -143,7 +146,9 @@ export function TransactionTable<T extends object>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  {isDataLoading ? "Loading data..." : "No results."}
+                  {isDataLoading
+                    ? t.admin.transactions.loadingData
+                    : t.admin.transactions.noResults}
                 </TableCell>
               </TableRow>
             )}
@@ -154,7 +159,8 @@ export function TransactionTable<T extends object>({
       {/* Pagination Controls */}
       <div className="flex items-center justify-between space-x-2 py-4">
         <div className="text-sm text-muted-foreground">
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
+          {t.admin.transactions.page}{" "}
+          {table.getState().pagination.pageIndex + 1} {t.admin.transactions.of}{" "}
           {table.getPageCount()}
         </div>
         <div className="flex items-center space-x-2">
@@ -165,7 +171,7 @@ export function TransactionTable<T extends object>({
             disabled={!table.getCanPreviousPage()}
           >
             <ChevronLeft className="h-4 w-4" />
-            Previous
+            {t.admin.transactions.previous}
           </Button>
           <Button
             variant="outline"
@@ -173,7 +179,7 @@ export function TransactionTable<T extends object>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            {t.admin.transactions.next}
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

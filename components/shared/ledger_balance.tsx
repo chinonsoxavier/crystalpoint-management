@@ -3,15 +3,18 @@ import useDashboardStore from "@/app/user/(user)/_dashboard_store";
 import useUserStore from "@/app/user/user_store";
 import { formatCurrency } from "@/utility/format_currency";
 import { WalletMinimal } from "lucide-react";
+import { useTranslate } from "@/hooks/use_translate";
 
 const LedgerBalance = () => {
-const {showBalance,user} =  useUserStore();
-const {profile} = useDashboardStore();
+  const { showBalance, user } = useUserStore();
+  const { profile } = useDashboardStore();
+  const { t } = useTranslate();
+
   return (
     <div className="w-full">
       {/* Header */}
       <h1 className="text-2xl md:text-3xl font-bold text-accent-text mb-6 tracking-tight">
-        My Wallet
+        {t.admin.dashboard.myWallet}
       </h1>
 
       {/* Balance Card */}
@@ -33,7 +36,7 @@ const {profile} = useDashboardStore();
 
             <div>
               <p className="text-sm font-medium text-accent-text/70 uppercase tracking-wider mb-1">
-                Ledger Balance
+                {t.admin.dashboard.ledgerBalance}
               </p>
 
               {/* Balance with toggle */}
@@ -59,7 +62,7 @@ const {profile} = useDashboardStore();
           {/* Right: Account Holder */}
           <div className="text-right lg:text-left">
             <p className="text-xs md:text-sm font-medium text-accent-text/60 uppercase tracking-wider">
-              Account Holder
+              {t.admin.dashboard.accountHolder}
             </p>
             <p className="text-xl md:text-2xl font-semibold text-accent-text mt-1">
               {user?.profile?.firstName}

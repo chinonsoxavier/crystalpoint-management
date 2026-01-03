@@ -1,4 +1,4 @@
-// Main page component - app/support/page.tsx
+// app/support/page.tsx
 "use client";
 import { useEffect, useState } from "react";
 import { useSupportStore } from "./_support";
@@ -9,15 +9,23 @@ import CreateTicketForm from "@/components/user/support/create_ticket_form";
 import TicketDetails from "@/components/user/support/ticket_detail";
 import SupportEmptyState from "@/components/user/support/support_empty_state";
 import TicketList from "@/components/user/support/ticket_list";
+import { useTranslate } from "@/hooks/use_translate";
 
 export default function Page() {
-  const { tickets, activeTab, fetchTickets, fetchStats, setActiveTab,showTicketDetails,setShowTicketDetails } =
-    useSupportStore();
+  const {
+    tickets,
+    activeTab,
+    fetchTickets,
+    fetchStats,
+    setActiveTab,
+    showTicketDetails,
+    setShowTicketDetails,
+  } = useSupportStore();
 
   const [activeSection, setActiveSection] = useState<"messages" | "compose">(
     "messages"
   );
-//   const [showTicketDetails, setShowTicketDetails] = useState<boolean>(false);
+  const { t } = useTranslate();
 
   useEffect(() => {
     fetchTickets({ status: activeTab, page: 1, limit: 100 });

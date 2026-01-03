@@ -1,13 +1,15 @@
+// app/user/transactions/investment-logs/page.tsx
 "use client";
 import { useEffect } from "react";
 import InvestMentLogs from "./investment_logs";
 import useInvestStore from "../../invest/_invest_store";
 import LedgerBalance from "@/components/shared/ledger_balance";
-
+import { useTranslate } from "@/hooks/use_translate";
 
 const Page = () => {
-  const { fetchInvestHistory,investmentStats,fetchInvestStats } = useInvestStore();
-
+  const { fetchInvestHistory, investmentStats, fetchInvestStats } =
+    useInvestStore();
+  const { t } = useTranslate();
 
   useEffect(() => {
     fetchInvestHistory(1);
@@ -20,7 +22,7 @@ const Page = () => {
         <div className="rounded-lg border bg-accent-foreground text-card-foreground shadow-sm p-6">
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium text-muted-foreground">
-              Total Investments
+              {t.admin.transactions.totalInvestments}
             </p>
           </div>
           <p className="text-2xl font-bold">
@@ -30,26 +32,32 @@ const Page = () => {
         <div className="rounded-lg border bg-accent-foreground text-card-foreground shadow-sm p-6">
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium text-muted-foreground">
-              Total Profit
+              {t.admin.transactions.totalProfit}
             </p>
           </div>
-          <p className="text-2xl font-bold">$ {investmentStats.totalProfit ?? 0}</p>
+          <p className="text-2xl font-bold">
+            $ {investmentStats.totalProfit ?? 0}
+          </p>
         </div>
         <div className="rounded-lg border bg-accent-foreground text-card-foreground shadow-sm p-6">
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium text-muted-foreground">
-              Completed Investment
+              {t.admin.transactions.completedInvestments}
             </p>
           </div>
-          <p className="text-2xl font-bold">{investmentStats.completedCount ?? 0}</p>
+          <p className="text-2xl font-bold">
+            {investmentStats.completedCount ?? 0}
+          </p>
         </div>
         <div className="rounded-lg border bg-accent-foreground text-card-foreground shadow-sm p-6">
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium text-muted-foreground">
-              Active Investments
+              {t.admin.transactions.activeInvestments}
             </p>
           </div>
-          <p className="text-2xl font-bold">{investmentStats.activeCount ?? 0}</p>
+          <p className="text-2xl font-bold">
+            {investmentStats.activeCount ?? 0}
+          </p>
         </div>
       </div>
       <InvestMentLogs />

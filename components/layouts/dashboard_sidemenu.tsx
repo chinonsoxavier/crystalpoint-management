@@ -1,3 +1,4 @@
+"use client";
 import useUserStore from "@/app/user/user_store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -20,6 +21,7 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { PromoModal } from "../user/user_dashboard/promo_modal";
 import useMembershipStore from "@/app/user/membership/_membership_store";
+import { useTranslate } from "@/hooks/use_translate";
 
 interface IDashboardSidemenu {
   totalDeposit: number;
@@ -29,7 +31,9 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
   const router = useRouter();
   const { sideMenuOpen, closeSideMenu, logout } = useUserStore();
   const pathname = usePathname(); // ← Track current route
-  const {getCurrentMembership,currentMembership} = useMembershipStore();
+  const { getCurrentMembership, currentMembership } = useMembershipStore();
+  const { t } = useTranslate();
+
   const handleLogout = async () => {
     // logout returns void (no result to check)
     const res = await logout();
@@ -39,9 +43,9 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
   };
 
   useEffect(() => {
-   getCurrentMembership();
-  }, [])
-  
+    getCurrentMembership();
+  }, []);
+
   // Close menu whenever route changes
   useEffect(() => {
     if (sideMenuOpen && window.innerWidth <= 768) {
@@ -71,40 +75,66 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
 
   const transactionsLinks = [
     {
-      label: "Deposit Transactions",
+      label: t.admin.dashboard.transactions.depositTransactions,
       link: "/user/transactions/deposit-transactions",
     },
     {
-      label: "Investment Logs",
+      label: t.admin.dashboard.transactions.investmentLogs,
       link: "/user/transactions/investment-logs",
     },
     {
-      label: "Withdrawal Logs",
+      label: t.admin.dashboard.transactions.withdrawalLogs,
       link: "/user/transactions/withdrawal-logs",
     },
   ];
 
   const membershipCards = [
-    { name: "Gold Membership Card", color: "bg-yellow-400", cardType: "gold" },
     {
-      name: "Silver Membership Insurance Card",
+      name: t.admin.dashboard.membershipCards.gold,
+      color: "bg-yellow-400",
+      cardType: "gold",
+    },
+    {
+      name: t.admin.dashboard.membershipCards.silver,
       color: "bg-gray-400",
       cardType: "silver",
     },
     {
-      name: "Premium Membership Token Security Insurance Card",
+      name: t.admin.dashboard.membershipCards.premium,
       color: "bg-blue-400",
       cardType: "premium",
     },
   ];
+
   const navItems = [
-    { label: "Dashboard", icon: faDashboard, link: "/user" },
-    { label: "Deposit", icon: faWallet, link: "/user/deposit" },
-    { label: "Invest", icon: faDonate, link: "/user/invest" },
-    { label: "Withdraw", icon: faMoneyCheckDollar, link: "/user/withdraw" },
     {
-      label: "Membership",
+      label: t.admin.dashboard.menu.dashboard,
+      name: "user",
+      icon: faDashboard,
+      link: "/user",
+    },
+    {
+      label: t.admin.dashboard.menu.deposit,
+      icon: faWallet,
+      name: "deposit",
+      link: "/user/deposit",
+    },
+    {
+      label: t.admin.dashboard.menu.invest,
+      icon: faDonate,
+      name: "invest",
+      link: "/user/invest",
+    },
+    {
+      label: t.admin.dashboard.menu.withdraw,
+      icon: faMoneyCheckDollar,
+      name: "withdraw",
+      link: "/user/withdraw",
+    },
+    {
+      label: t.admin.dashboard.menu.membership,
       icon: faBank,
+      name: "Membership",
       showDropDown: true,
       eventHandler: () => {
         if (isMembershipAvailable) {
@@ -150,8 +180,9 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
       ),
     },
     {
-      label: "Transactions",
+      label: t.admin.dashboard.menu.transactions,
       icon: faMoneyBill1,
+      name: "Transactions",
       showDropDown: true,
       eventHandler: () => {
         setDropDownOpen(dropDownOpen === "Transactions" ? "" : "Transactions");
@@ -181,8 +212,9 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
       ),
     },
     {
-      label: "Tier2",
+      label: t.admin.dashboard.menu.tier2,
       icon: faMedal,
+      name: "Tier2",
       showDropDown: true,
       eventHandler: () => {
         setDropDownOpen(dropDownOpen === "Tier2" ? "" : "Tier2");
@@ -197,7 +229,7 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
               {/* Feature list with better styling */}
               <div className="space-y-2 ml-2">
                 <h4 className="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-2">
-                  Tier 2 Features
+                  {t.admin.dashboard.tier2.features}
                 </h4>
                 {tier2Features.map((feature, index) => (
                   <div
@@ -241,11 +273,11 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
                     />
                   </svg>
                   <h4 className="text-xs font-semibold text-blue-400">
-                    Unlock Tier 2
+                    {t.admin.dashboard.tier2.unlockTier2}
                   </h4>
                 </div>
                 <p className="text-xs text-gray-300 mb-3">
-                  Get access to advanced features and tools
+                  {t.admin.dashboard.tier2.unlockTier2Desc}
                 </p>
                 <Link href="/user/deposit">
                   <Button
@@ -253,7 +285,7 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
                     size="sm"
                     className="w-full min-w-0 bg-blue-500 hover:bg-blue-600 text-white border-blue-500/30 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/20"
                   >
-                    Upgrade to Tier 2
+                    {t.admin.dashboard.tier2.upgradeToTier2}
                   </Button>
                 </Link>
               </div>
@@ -263,8 +295,9 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
       ),
     },
     {
-      label: "Tier3",
+      label: t.admin.dashboard.menu.tier3,
       icon: faMedal,
+      name: "Tier3",
       showDropDown: true,
       eventHandler: () => {
         setDropDownOpen(dropDownOpen === "Tier3" ? "" : "Tier3");
@@ -279,12 +312,12 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
               {/* Feature list with better styling */}
               <div className="space-y-2 ml-2">
                 <h4 className="text-xs font-semibold text-purple-400 uppercase tracking-wider mb-2">
-                  Tier 3 Features
+                  {t.admin.dashboard.tier3.features}
                 </h4>
                 {tier3Features.map((feature, index) => (
                   <div
                     key={feature}
-                    className="flex items-center gap-2 px-3 py-2 rounded-md bg-sidebar-accent/20 hover:bg-sidebar-accent/30 transition-colors"
+                    className="flex items-start gap-2 px-3 py-2 rounded-md bg-sidebar-accent/20 hover:bg-sidebar-accent/30 transition-colors"
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
                     <div className="w-4 h-4 rounded-full bg-purple-500/20 flex items-center justify-center">
@@ -319,11 +352,11 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                   <h4 className="text-xs font-semibold text-purple-400">
-                    Unlock Premium Tier 3
+                    {t.admin.dashboard.tier3.unlockTier3}
                   </h4>
                 </div>
                 <p className="text-xs text-accent-text mb-3">
-                  Get exclusive access to all premium features
+                  {t.admin.dashboard.tier3.unlockTier3Desc}
                 </p>
                 <Link href="/user/deposit">
                   <Button
@@ -331,7 +364,7 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
                     size="sm"
                     className="w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-purple-500/30 transition-all duration-200 hover:shadow-lg hover:shadow-purple-500/20"
                   >
-                    Upgrade to Tier 3
+                    {t.admin.dashboard.tier3.upgradeToTier3}
                   </Button>
                 </Link>
               </div>
@@ -340,14 +373,30 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
         </div>
       ),
     },
-    { label: "Settings", icon: faGear, link: "/user/settings" },
     {
-      label: "Promotional Bonus",
+      label: t.admin.dashboard.menu.settings,
+      name: "settings",
+      icon: faGear,
+      link: "/user/settings",
+    },
+    {
+      label: t.admin.dashboard.menu.promotionalBonus,
       icon: faGift,
+      name: "promotionalBonus",
       eventHandler: () => setPromodalModalOpen(true),
     },
-    { label: "Help & Support", icon: faHeadphones, link: "/user/support" },
-    { label: "Logout", icon: faDoorOpen, eventHandler: handleLogout },
+    {
+      label: t.admin.dashboard.menu.helpSupport,
+      icon: faHeadphones,
+      name: "support",
+      link: "/user/support",
+    },
+    {
+      label: t.admin.dashboard.menu.logout,
+      icon: faDoorOpen,
+      name: "logout",
+      eventHandler: handleLogout,
+    },
   ];
 
   return (
@@ -372,8 +421,10 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
         <nav className="flex-1 p-1 text-white space-y-">
           {navItems.map((item) => {
             const isActive = item.link && pathname === item.link;
-            const isMembership = item.label === "Membership";
-            if(isMembership && !isMembershipAvailable){
+            const isMembership =
+              item.label === t.admin.dashboard.menu.membership;
+
+            if (isMembership && !isMembershipAvailable) {
               return null; // Skip rendering Membership if not available
             }
 
@@ -433,7 +484,7 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
                     {linkContent}
                   </button>
                 )}
-                {item.label === dropDownOpen && item.dropDown}
+                {item.name === dropDownOpen && item.dropDown}
               </div>
             );
           })}

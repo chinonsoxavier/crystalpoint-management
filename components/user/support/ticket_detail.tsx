@@ -4,14 +4,50 @@ import { useSupportStore } from "@/app/user/support/_support";
 import { getPriorityColor, getStatusColor } from "@/utility/ticket_helpers";
 import TicketReplies from "./ticket_reply";
 import TicketActions from "./ticket_action";
+import { useTranslate } from "@/hooks/use_translate";
 
 interface TicketDetailsProps {
   setShowTicketDetails: (show: boolean) => void;
 }
 
-export default function TicketDetails({ setShowTicketDetails }: TicketDetailsProps) {
+export default function TicketDetails({
+  setShowTicketDetails,
+}: TicketDetailsProps) {
   const { currentTicket } = useSupportStore();
   const [showReopenForm, setShowReopenForm] = useState(false);
+  const { t } = useTranslate();
+
+  // Helper function to translate priority
+  const translatePriority = (priority: string) => {
+    switch (priority.toLowerCase()) {
+      case "low":
+        return t.admin.support.ticketPriority.low;
+      case "medium":
+        return t.admin.support.ticketPriority.medium;
+      case "high":
+        return t.admin.support.ticketPriority.high;
+      case "urgent":
+        return t.admin.support.ticketPriority.urgent;
+      default:
+        return priority;
+    }
+  };
+
+  // Helper function to translate status
+  const translateStatus = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "open":
+        return t.admin.support.ticketStatus.open;
+      case "in_progress":
+        return t.admin.support.ticketStatus.inProgress;
+      case "resolved":
+        return t.admin.support.ticketStatus.resolved;
+      case "closed":
+        return t.admin.support.ticketStatus.closed;
+      default:
+        return status.replace("_", " ");
+    }
+  };
 
   return (
     <div>
@@ -21,7 +57,7 @@ export default function TicketDetails({ setShowTicketDetails }: TicketDetailsPro
             {currentTicket?.subject}
           </h2>
           <p className="text-sm text-muted-foreground">
-            Ticket ID: #{currentTicket?._id}
+            {t.admin.support.ticketId}: #{currentTicket?._id}
           </p>
         </div>
         <div className="flex gap-2">
@@ -30,25 +66,28 @@ export default function TicketDetails({ setShowTicketDetails }: TicketDetailsPro
               currentTicket?.priority || ""
             )}`}
           >
-            {currentTicket?.priority} Priority
+            {translatePriority(currentTicket?.priority || "")}{" "}
+            {t.admin.support.priority}
           </span>
           <span
             className={`px-3 py-1 rounded-full text-xs font-bold capitalize ${getStatusColor(
               currentTicket?.status || ""
             )}`}
           >
-            {currentTicket?.status?.replace("_", " ")}
+            {translateStatus(currentTicket?.status || "")}
           </span>
         </div>
       </div>
 
       <div className="mb-6">
-        <p className="text-muted-foreground mb-2">Description</p>
+        <p className="text-muted-foreground mb-2">
+          {t.admin.support.description}
+        </p>
         <p className="text-card-foreground">{currentTicket?.description}</p>
       </div>
 
       <div className="mb-6">
-        <p className="text-muted-foreground mb-2">Subject</p>
+        <p className="text-muted-foreground mb-2">{t.admin.support.subject}</p>
         <p className="text-card-foreground">{currentTicket?.subject}</p>
       </div>
 

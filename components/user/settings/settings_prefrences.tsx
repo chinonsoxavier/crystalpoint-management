@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useSettingsStore from "@/app/user/settings/_settings_store";
+import { useTranslate } from "@/hooks/use_translate";
 
 export function PreferencesSettings() {
   const { profile, updatePreferences, isPreferencesLoading } =
@@ -25,6 +26,8 @@ export function PreferencesSettings() {
     language: "",
     currency: "",
   });
+
+  const { t } = useTranslate();
 
   useEffect(() => {
     if (profile && profile.preferences) {
@@ -47,13 +50,17 @@ export function PreferencesSettings() {
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
-        <h3 className="text-lg font-medium mb-4">Notification Preferences</h3>
+        <h3 className="text-lg font-medium mb-4">
+          {t.admin.settings.preferences.notificationPreferences}
+        </h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="emailNotifications">Email Notifications</Label>
+              <Label htmlFor="emailNotifications">
+                {t.admin.settings.preferences.emailNotifications}
+              </Label>
               <p className="text-sm text-muted-foreground">
-                Receive email updates about your account activity
+                {t.admin.settings.preferences.emailNotificationsDesc}
               </p>
             </div>
             <Switch
@@ -67,15 +74,17 @@ export function PreferencesSettings() {
 
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="smsNotifications">SMS Notifications</Label>
+              <Label htmlFor="smsNotifications">
+                {t.admin.settings.preferences.smsNotifications}
+              </Label>
               <p className="text-sm text-muted-foreground">
-                Receive text messages about important account changes
+                {t.admin.settings.preferences.smsNotificationsDesc}
               </p>
             </div>
             <Switch
               id="smsNotifications"
               checked={preferences.smsNotifications}
-              onCheckedChange={(checked:boolean) =>
+              onCheckedChange={(checked: boolean) =>
                 handleToggle("smsNotifications", checked)
               }
             />
@@ -84,16 +93,22 @@ export function PreferencesSettings() {
       </div>
 
       <div>
-        <h3 className="text-lg font-medium mb-4">Display Preferences</h3>
+        <h3 className="text-lg font-medium mb-4">
+          {t.admin.settings.preferences.displayPreferences}
+        </h3>
         <div className="space-y-4">
-            <div className="space-y-2" >
-            <Label htmlFor="language">Language</Label>
+          <div className="space-y-2">
+            <Label htmlFor="language">
+              {t.admin.settings.preferences.language}
+            </Label>
             <Select
               value={preferences.language}
               onValueChange={(value) => handleSelect("language", value)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select language" />
+                <SelectValue
+                  placeholder={t.admin.settings.preferences.selectLanguage}
+                />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="en">English</SelectItem>
@@ -106,14 +121,18 @@ export function PreferencesSettings() {
             </Select>
           </div>
 
-            <div className="space-y-2" >
-            <Label htmlFor="currency">Currency</Label>
+          <div className="space-y-2">
+            <Label htmlFor="currency">
+              {t.admin.settings.preferences.currency}
+            </Label>
             <Select
               value={preferences.currency}
               onValueChange={(value) => handleSelect("currency", value)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select currency" />
+                <SelectValue
+                  placeholder={t.admin.settings.preferences.selectCurrency}
+                />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="USD">USD - US Dollar</SelectItem>
@@ -129,7 +148,9 @@ export function PreferencesSettings() {
 
       <div className="pt-4">
         <Button onClick={handleSave} disabled={isPreferencesLoading}>
-          {isPreferencesLoading ? "Saving..." : "Save Preferences"}
+          {isPreferencesLoading
+            ? t.admin.settings.preferences.saving
+            : t.admin.settings.preferences.savePreferences}
         </Button>
       </div>
     </div>

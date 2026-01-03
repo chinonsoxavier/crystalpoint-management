@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import useSettingsStore from "@/app/user/settings/_settings_store";
 import { countries } from "@/components/shared/data/countrie";
+import { useTranslate } from "@/hooks/use_translate";
 
 export function ProfileSettings() {
   const {
@@ -21,6 +22,7 @@ export function ProfileSettings() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showRetypePassword, setShowRetypePassword] = useState(false);
+  const { t } = useTranslate();
 
   // Password change state
   const [passwordData, setPasswordData] = useState({
@@ -83,11 +85,15 @@ export function ProfileSettings() {
       <div className="grid md:grid-cols-2 gap-6">
         {/* Account Information */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium">Account Information</h3>
+          <h3 className="text-lg font-medium">
+            {t.admin.settings.profile.accountInformation}
+          </h3>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName">
+                {t.admin.settings.profile.firstName}
+              </Label>
               <Input
                 id="firstName"
                 name="firstName"
@@ -96,7 +102,9 @@ export function ProfileSettings() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="lastName">
+                {t.admin.settings.profile.lastName}
+              </Label>
               <Input
                 id="lastName"
                 name="lastName"
@@ -107,7 +115,7 @@ export function ProfileSettings() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">Phone</Label>
+            <Label htmlFor="phone">{t.admin.settings.profile.phone}</Label>
             <Input
               id="phone"
               name="phone"
@@ -119,7 +127,9 @@ export function ProfileSettings() {
 
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="country">Country</Label>
+              <Label htmlFor="country">
+                {t.admin.settings.profile.country}
+              </Label>
               <select
                 id="country"
                 name="country"
@@ -127,7 +137,9 @@ export function ProfileSettings() {
                 onChange={handleAccountChange}
                 className="w-full px-3 py-2 border border-input rounded-md bg-background"
               >
-                <option value="">Select a country</option>
+                <option value="">
+                  {t.admin.settings.profile.selectCountry}
+                </option>
                 {countries.map((country) => (
                   <option key={country.code} value={country.code}>
                     {country.name}
@@ -136,7 +148,9 @@ export function ProfileSettings() {
               </select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="dateOfBirth">Date of Birth</Label>
+              <Label htmlFor="dateOfBirth">
+                {t.admin.settings.profile.dateOfBirth}
+              </Label>
               <Input
                 id="dateOfBirth"
                 name="dateOfBirth"
@@ -152,17 +166,23 @@ export function ProfileSettings() {
             disabled={isUpdateLoading}
             className="w-full md:w-auto"
           >
-            {isUpdateLoading ? "Updating..." : "Update Profile"}
+            {isUpdateLoading
+              ? t.admin.settings.profile.updating
+              : t.admin.settings.profile.updateProfile}
           </Button>
         </div>
 
         {/* Password Change */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium">Change Password</h3>
+          <h3 className="text-lg font-medium">
+            {t.admin.settings.profile.changePassword}
+          </h3>
 
           <form onSubmit={handlePasswordUpdate} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="currentPassword">Current Password</Label>
+              <Label htmlFor="currentPassword">
+                {t.admin.settings.profile.currentPassword}
+              </Label>
               <div className="relative">
                 <Input
                   id="currentPassword"
@@ -170,7 +190,7 @@ export function ProfileSettings() {
                   type={showCurrentPassword ? "text" : "password"}
                   value={passwordData.currentPassword}
                   onChange={handlePasswordChange}
-                  placeholder="Enter current password"
+                  placeholder={t.admin.settings.profile.enterCurrentPassword}
                   required
                 />
                 <button
@@ -188,7 +208,9 @@ export function ProfileSettings() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="newPassword">New Password</Label>
+              <Label htmlFor="newPassword">
+                {t.admin.settings.profile.newPassword}
+              </Label>
               <div className="relative">
                 <Input
                   id="newPassword"
@@ -196,7 +218,7 @@ export function ProfileSettings() {
                   type={showPassword ? "text" : "password"}
                   value={passwordData.newPassword}
                   onChange={handlePasswordChange}
-                  placeholder="Enter new password"
+                  placeholder={t.admin.settings.profile.enterNewPassword}
                   required
                 />
                 <button
@@ -210,7 +232,9 @@ export function ProfileSettings() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <Label htmlFor="confirmPassword">
+                {t.admin.settings.profile.confirmPassword}
+              </Label>
               <div className="relative">
                 <Input
                   id="confirmPassword"
@@ -218,7 +242,7 @@ export function ProfileSettings() {
                   type={showRetypePassword ? "text" : "password"}
                   value={passwordData.confirmPassword}
                   onChange={handlePasswordChange}
-                  placeholder="Confirm new password"
+                  placeholder={t.admin.settings.profile.confirmNewPassword}
                   required
                 />
                 <button
@@ -240,7 +264,9 @@ export function ProfileSettings() {
               disabled={isPasswordLoading}
               className="w-full"
             >
-              {isPasswordLoading ? "Updating..." : "Update Password"}
+              {isPasswordLoading
+                ? t.admin.settings.profile.updating
+                : t.admin.settings.profile.updatePassword}
             </Button>
           </form>
         </div>

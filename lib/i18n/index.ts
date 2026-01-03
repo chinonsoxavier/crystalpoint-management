@@ -696,42 +696,376 @@ export interface LandingTranslation {
 
 export interface AdminTranslation {
   header: {
-  greetings: string;
+    greetings: string;
   };
-overview:{
-  dashboard: string;
-  welcomeBack: string;
-  shareLink: string;
-  balanceCards:{
-    totalDeposit: string;
-    profitBalance: string;
-    totalWithdrawals: string;
-    activeDeposits: string;
-    pendingWithdrawals: string;
-    promotionalBalance: string;
-  },
-  transactions:{
-    label: string;
-    previousTransactions:  {
-      deposit: string;
-      withdrawal: string;
-      investments: string;
+  overview: {
+    dashboard: string;
+    welcomeBack: string;
+    shareLink: string;
+    balanceCards: {
+      totalDeposit: string;
+      profitBalance: string;
+      totalWithdrawals: string;
+      activeDeposits: string;
+      pendingWithdrawals: string;
+      promotionalBalance: string;
     };
-    depositTableHeader:{
-     id: string;
-     date: string;
-     method: string;
-     amount: string;
-     status: string;
-     pending: string;
-      confirmed: string;
-      failed: string;
-
+    transactions: {
+      label: string;
+      previousTransactions: {
+        deposit: string;
+        withdrawal: string;
+        investments: string;
+      };
+      depositTableHeader: {
+        id: string;
+        date: string;
+        method: string;
+        amount: string;
+        status: string;
+        pending: string;
+        confirmed: string;
+        failed: string;
+      };
+    };
+  };
+  deposit: {
+    infoMessage: string;
+    depositMethod: string;
+    chooseCrypto: string;
+    amount: string;
+    minimumDepositMessage: string;
+    continueToPayment: string;
+    completePayment: string;
+    sendExactAmount: string;
+    personalDepositAddress: string;
+    instructions: string;
+    warningMessage: string;
+    goBack: string;
+    paymentMade: string;
+    processing: string;
+    depositSuccess: string;
+    depositProcessedMessage: string;
+    processingTime: string;
+    processingTimeMessage: string;
+    transactionDetails: string;
+    method: string;
+    network: string;
+    status: string;
+    viewTransactionHistory: string;
+    makeAnotherDeposit: string;
+  };
+  invest: {
+    pageTitle: string;
+    loadingPlans: string;
+    minimum: string;
+    maximumAmount: string;
+    returnOfInvestment: string;
+    durationDays: string;
+    referralBonus: string;
+    welcomeBonus: string;
+    selectPackage: string;
+    trustBadge: string;
+    unlimited: string;
+  };
+  withdraw: {
+    pending: string;
+    withdraw: string;
+    ledgerBalance: string;
+    activeDeposit: string;
+    profitBalance: string;
+    promoBalance: string;
+    withdrawal: string;
+    methodOfWithdrawal: string;
+    selectWallet: string;
+    chooseAccount: string;
+    selectAccount: string;
+    walletAddress: string;
+    amount: string;
+    submit: string;
+    submitting: string;
+    walletType: string;
+    ledgerBalanceOption: string;
+    profitBalanceOption: string;
+    promoBalanceOption: string;
+  };
+  membership: {
+    title: string;
+    subtitle: string;
+    paymentMethod: string;
+    amount: string;
+    next: string;
+    completeUpgrade: string;
+    sendExactly: string;
+    depositAddress: string;
+    scanWithWallet: string;
+    back: string;
+    iHaveDeposited: string;
+    processing: string;
+    depositAlertSuccessful: string;
+    depositAlertDescription: string;
+    processingTime: string;
+    processingTimeDescription: string;
+    transactionDetails: string;
+    amountLabel: string;
+    methodLabel: string;
+    networkLabel: string;
+    statusLabel: string;
+    viewTransactionHistory: string;
+    chooseCryptocurrency: string;
+  };
+  // Add membership types
+  gold: {
+    title: string;
+    subtitle: string;
+  };
+  silver: {
+    title: string;
+    subtitle: string;
+  };
+  premium: {
+    title: string;
+    subtitle: string;
+  };
+  transactions: {
+    title: string;
+    depositTransactions: string;
+    investmentLogs: string;
+    withdrawalLogs: string;
+    confirmed: string;
+    pending: string;
+    approved: string;
+    totalInvestments: string;
+    totalProfit: string;
+    completedInvestments: string;
+    activeInvestments: string;
+    investmentName: string;
+    startDate: string;
+    endDate: string;
+    roi: string;
+    duration: string;
+    status: string;
+    active: string;
+    inactive: string;
+    filterByInvestmentName: string;
+    loadingData: string;
+    noResults: string;
+    page: string;
+    of: string;
+    previous: string;
+    next: string;
+    // Deposit specific
+    transactionId: string;
+    date: string;
+    method: string;
+    amount: string;
+    cancelDeposit: string;
+    cancelDepositDescription: string;
+    keepDeposit: string;
+    yesCancelDeposit: string;
+    filterByMethod: string;
+    // Withdrawal specific
+    withdrawalId: string;
+    walletAddress: string;
+    transactionHash: string;
+    cancelWithdrawal: string;
+    cancelWithdrawalDescription: string;
+    keepWithdrawal: string;
+    yesCancelWithdrawal: string;
+    filterByStatus: string;
+    user: string;
+    wallet: string;
+    completed: string;
+    failed: string;
+    filterByUser: string;
+  };
+  settings: {
+    title: string;
+    subtitle: string;
+    tabs: {
+      profile: string;
+      preferences: string;
+      security: string;
+      account: string;
+    };
+    profile: {
+      accountInformation: string;
+      firstName: string;
+      lastName: string;
+      phone: string;
+      country: string;
+      dateOfBirth: string;
+      selectCountry: string;
+      changePassword: string;
+      currentPassword: string;
+      newPassword: string;
+      confirmPassword: string;
+      enterCurrentPassword: string;
+      enterNewPassword: string;
+      confirmNewPassword: string;
+      updateProfile: string;
+      updatePassword: string;
+      updating: string;
+    };
+    preferences: {
+      notificationPreferences: string;
+      emailNotifications: string;
+      emailNotificationsDesc: string;
+      smsNotifications: string;
+      smsNotificationsDesc: string;
+      displayPreferences: string;
+      language: string;
+      selectLanguage: string;
+      currency: string;
+      selectCurrency: string;
+      savePreferences: string;
+      saving: string;
+    };
+    security: {
+      twoFactorAuthentication: string;
+      twoFactorAuthenticationDesc: string;
+      enabled: string;
+      disabled: string;
+      twoFactorEnabledDesc: string;
+      twoFactorDisabledDesc: string;
+    };
+    account: {
+      deleteAccount: string;
+      deleteAccountDesc: string;
+      warning: string;
+      warningDesc: string;
+      warningList: {
+        personalInfo: string;
+        transactionHistory: string;
+        accountSettings: string;
+        associatedFunds: string;
+      };
+      deleteAccountButton: string;
+      deleting: string;
+      areYouSure: string;
+      areYouSureDesc: string;
+      typeToDelete: string;
+      typeToDeletePlaceholder: string;
+      cancel: string;
+      deleteAccountConfirm: string;
+    };
+  };
+  support: {
+    title: string;
+    subtitle: string;
+    createTicket: string;
+    backToList: string;
+    createNewTicket: string;
+    subject: string;
+    subjectPlaceholder: string;
+    message: string;
+    messagePlaceholder: string;
+    send: string;
+    sending: string;
+    discard: string;
+    ticketId: string;
+    description: string;
+    priority: string;
+    status: string;
+    noTickets: {
+      inProgress: string;
+      open: string;
+      resolved: string;
+      closed: string;
+      default: string;
+    };
+    ticketPriority: {
+      low: string;
+      medium: string;
+      high: string;
+      urgent: string;
+    };
+    ticketStatus: {
+      open: string;
+      inProgress: string;
+      resolved: string;
+      closed: string;
+    };
+  };
+  promoModal: {
+    title: string;
+    subtitle: string;
+    selectPlan: string;
+    selectVIPPlan: string;
+    capitalProtection: string;
+    dailyProfit: string;
+    instantWithdrawals: string;
+    limitedTimeBonus: string;
+    actFast: string;
+    risk: {
+      low: string;
+      medium: string;
+      high: string;
     },
+    plans: {
+      accessories: {
+        name: string;
+        description: string;
+      },
+      oilAndGas: {
+        name: string;
+        description: string;
+      },
+      agriculture: {
+        name: string;
+        description: string;
+      },
+      realEstate: {
+        name: string;
+        description: string;
+      },
+      vip: {
+        name: string;
+        description: string;
+      }
+    }
+  },
+  dashboard: {
+    myWallet: string;
+    ledgerBalance: string;
+    accountHolder: string;
+    menu: {
+      dashboard: string;
+      deposit: string;
+      invest: string;
+      withdraw: string;
+      membership: string;
+      transactions: string;
+      tier2: string;
+      tier3: string;
+      settings: string;
+      promotionalBonus: string;
+      helpSupport: string;
+      logout: string;
+    },
+    membershipCards: {
+      gold: string;
+      silver: string;
+      premium: string;
+    },
+    transactions: {
+      depositTransactions: string;
+      investmentLogs: string;
+      withdrawalLogs: string;
+    },
+    tier2: {
+      features: string;
+      unlockTier2: string;
+      unlockTier2Desc: string;
+      upgradeToTier2: string;
+    },
+    tier3: {
+      features: string;
+      unlockTier3: string;
+      unlockTier3Desc: string;
+      upgradeToTier3: string;
+    }
   }
-},
-
-  
 }
 
 export interface AllTranslations {
