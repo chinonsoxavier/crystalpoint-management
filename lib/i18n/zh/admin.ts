@@ -333,8 +333,8 @@ export const admin = {
       vip: {
         name: "VIP",
         description: "独家精英投资渠道",
-      }
-    }
+      },
+    },
   },
   dashboard: {
     myWallet: "我的钱包",
@@ -375,6 +375,22 @@ export const admin = {
       unlockTier3: "解锁高级等级3",
       unlockTier3Desc: "获得所有高级功能的独家访问权限",
       upgradeToTier3: "升级到等级3",
-    }
-  }
+    },
+    adPrompts: {
+      membershipCardId: "需要会员卡ID号码。",
+      activateMembership: "激活会员卡。",
+      tier2Upgrade: "需要2级升级",
+      tier3Upgrade: "需要3级升级",
+      securityLevy: "安全费",
+      promotionalBonus: "促销奖金",
+      vipUpgrade: "需要VIP升级",
+      premiumUpgrade: "需要高级升级",
+    },
+    previousTransactions: {
+      title: "之前的交易",
+      deposit: "存款",
+      investments: "投资",
+      withdrawals: "提款",
+    },
+  },
 };

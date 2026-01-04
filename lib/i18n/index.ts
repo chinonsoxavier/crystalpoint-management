@@ -1001,30 +1001,30 @@ export interface AdminTranslation {
       low: string;
       medium: string;
       high: string;
-    },
+    };
     plans: {
       accessories: {
         name: string;
         description: string;
-      },
+      };
       oilAndGas: {
         name: string;
         description: string;
-      },
+      };
       agriculture: {
         name: string;
         description: string;
-      },
+      };
       realEstate: {
         name: string;
         description: string;
-      },
+      };
       vip: {
         name: string;
         description: string;
-      }
-    }
-  },
+      };
+    };
+  };
   dashboard: {
     myWallet: string;
     ledgerBalance: string;
@@ -1042,30 +1042,98 @@ export interface AdminTranslation {
       promotionalBonus: string;
       helpSupport: string;
       logout: string;
-    },
+    };
     membershipCards: {
       gold: string;
       silver: string;
       premium: string;
-    },
+    };
     transactions: {
       depositTransactions: string;
       investmentLogs: string;
       withdrawalLogs: string;
-    },
+    };
     tier2: {
       features: string;
       unlockTier2: string;
       unlockTier2Desc: string;
       upgradeToTier2: string;
-    },
+    };
     tier3: {
       features: string;
       unlockTier3: string;
       unlockTier3Desc: string;
       upgradeToTier3: string;
-    }
-  }
+    };
+    adPrompts: {
+      membershipCardId: string;
+      activateMembership: string;
+      tier2Upgrade: string;
+      tier3Upgrade: string;
+      securityLevy: string;
+      promotionalBonus: string;
+      vipUpgrade: string;
+      premiumUpgrade: string;
+    };
+    previousTransactions: {
+      title: string;
+      deposit: string;
+      investments: string;
+      withdrawals: string;
+    };
+  };
+   auth: {
+    signIn: {
+      welcomeBack: string;
+      signInToAccount: string;
+      username: string;
+      password: string;
+      forgotPassword: string;
+      signIn: string;
+      signingIn: string;
+      dontHaveAccount: string;
+      registerHere: string;
+      backToHome: string;
+      usernameRequired: string;
+      passwordRequired: string;
+      passwordMinLength: string;
+    },
+    signUp: {
+      createAccount: string;
+      enterDetailsToRegister: string;
+      firstName: string;
+      lastName: string;
+      username: string;
+      emailAddress: string;
+      country: string;
+      phoneNumber: string;
+      password: string;
+      confirmPassword: string;
+      agreeToTerms: string;
+      termsAndConditions: string;
+      and: string;
+      privacyPolicy: string;
+      createAccountButton: string;
+      creatingAccount: string;
+      alreadyHaveAccount: string;
+      signInHere: string;
+      backToHome: string;
+      firstNameRequired: string;
+      lastNameRequired: string;
+      usernameRequired: string;
+      selectCountry: string;
+      phoneNumberRequired: string;
+      emailRequired: string;
+      validEmail: string;
+      passwordRequired: string;
+      passwordMinLength: string;
+      passwordsDoNotMatch: string;
+      agreeToTermsRequired: string;
+      selectACountry: string;
+      searchCountry: string;
+      noCountryFound: string;
+    },
+  },
 }
 
 export interface AllTranslations {

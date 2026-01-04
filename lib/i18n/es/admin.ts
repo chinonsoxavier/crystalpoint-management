@@ -315,7 +315,8 @@ export const admin = {
     capitalProtection: "100% Protección del Capital",
     dailyProfit: "Beneficio Diario",
     instantWithdrawals: "Retiros Instantáneos",
-    limitedTimeBonus: "Estos planes promocionales ofrecen bonificaciones por tiempo limitado.",
+    limitedTimeBonus:
+      "Estos planes promocionales ofrecen bonificaciones por tiempo limitado.",
     actFast: "Actúa rápido — ¡la disponibilidad termina pronto!",
     risk: {
       low: "Bajo",
@@ -342,9 +343,9 @@ export const admin = {
       vip: {
         name: "VIP",
         description: "Acceso exclusivo de inversión de élite",
-      }
-    }
-},
+      },
+    },
+  },
   dashboard: {
     myWallet: "Mi Billetera",
     ledgerBalance: "Saldo del Libro Mayor",
@@ -384,6 +385,23 @@ export const admin = {
       unlockTier3: "Desbloquear Nivel Premium 3",
       unlockTier3Desc: "Obtén acceso exclusivo a todas las funciones premium",
       upgradeToTier3: "Actualizar al Nivel 3",
-    }
-  }
-}
+    },
+    adPrompts: {
+      membershipCardId:
+        "Se requiere el número de ID de la tarjeta de membresía.",
+      activateMembership: "Activar tarjeta de membresía.",
+      tier2Upgrade: "Se requiere actualización a Nivel 2",
+      tier3Upgrade: "Se requiere actualización a Nivel 3",
+      securityLevy: "Cargo de seguridad",
+      promotionalBonus: "Bono promocional",
+      vipUpgrade: "Se requiere actualización a VIP",
+      premiumUpgrade: "Se requiere actualización a Premium",
+    },
+    previousTransactions: {
+      title: "Transacciones Anteriores",
+      deposit: "Depósito",
+      investments: "Inversiones",
+      withdrawals: "Retiros",
+    },
+  },
+};

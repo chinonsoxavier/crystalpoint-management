@@ -316,7 +316,8 @@ export const admin = {
     capitalProtection: "100% Protection du Capital",
     dailyProfit: "Profit Quotidien",
     instantWithdrawals: "Retraits Instantanés",
-    limitedTimeBonus: "Ces plans promotionnels offrent des bonus à durée limitée.",
+    limitedTimeBonus:
+      "Ces plans promotionnels offrent des bonus à durée limitée.",
     actFast: "Agissez vite — la disponibilité se termine bientôt !",
     risk: {
       low: "Faible",
@@ -330,7 +331,8 @@ export const admin = {
       },
       oilAndGas: {
         name: "Pétrole et Gaz",
-        description: "Investissements à haut rendement dans le secteur de l'énergie",
+        description:
+          "Investissements à haut rendement dans le secteur de l'énergie",
       },
       agriculture: {
         name: "Agriculture",
@@ -343,8 +345,8 @@ export const admin = {
       vip: {
         name: "VIP",
         description: "Accès exclusif aux investissements d'élite",
-      }
-    }
+      },
+    },
   },
   dashboard: {
     myWallet: "Mon Portefeuille",
@@ -383,8 +385,25 @@ export const admin = {
     tier3: {
       features: "Fonctionnalités du Niveau 3",
       unlockTier3: "Débloquer le Niveau Premium 3",
-      unlockTier3Desc: "Accédez exclusivement à toutes les fonctionnalités premium",
+      unlockTier3Desc:
+        "Accédez exclusivement à toutes les fonctionnalités premium",
       upgradeToTier3: "Mettre à niveau vers le Niveau 3",
-    }
-  }
+    },
+    adPrompts: {
+      membershipCardId: "Numéro d'ID de carte d'adhésion requis.",
+      activateMembership: "Activer la carte d'adhésion.",
+      tier2Upgrade: "Mise à niveau Niveau 2 requise",
+      tier3Upgrade: "Mise à niveau Niveau 3 requise",
+      securityLevy: "Taxe de sécurité",
+      promotionalBonus: "Bonus promotionnel",
+      vipUpgrade: "Mise à niveau VIP requise",
+      premiumUpgrade: "Mise à niveau Premium requise",
+    },
+    previousTransactions: {
+      title: "Transactions Précédentes",
+      deposit: "Dépôt",
+      investments: "Investissements",
+      withdrawals: "Retraits",
+    },
+  },
 };

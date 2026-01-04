@@ -339,8 +339,8 @@ export const admin = {
       vip: {
         name: "VIP",
         description: "Exclusive elite investment access",
-      }
-    }
+      },
+    },
   },
   dashboard: {
     myWallet: "My Wallet",
@@ -381,7 +381,22 @@ export const admin = {
       unlockTier3: "Unlock Premium Tier 3",
       unlockTier3Desc: "Get exclusive access to all premium features",
       upgradeToTier3: "Upgrade to Tier 3",
-    }
-  }
-
+    },
+    adPrompts: {
+      membershipCardId: "Membership Card ID number required.",
+      activateMembership: "Activate membership card.",
+      tier2Upgrade: "Tier 2 upgrade required",
+      tier3Upgrade: "Tier 3 upgrade required",
+      securityLevy: "Security levy",
+      promotionalBonus: "Promotional bonus",
+      vipUpgrade: "VIP upgrade required",
+      premiumUpgrade: "Premium upgrade required",
+    },
+    previousTransactions: {
+      title: "Previous Transactions",
+      deposit: "Deposit",
+      investments: "Investments",
+      withdrawals: "Withdrawals",
+    },
+  },
 };

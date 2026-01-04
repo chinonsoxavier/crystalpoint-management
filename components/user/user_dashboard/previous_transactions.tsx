@@ -10,11 +10,14 @@ const PreviousTransactions = () => {
   const [activeTab, setActiveTab] = useState<
     "deposit" | "withdrawals" | "investments"
   >("deposit");
-const {t} = useTranslate()
+  const { t } = useTranslate();
+
   return (
     <div className="flex flex-col">
       <div className="my-7 md:p-6 p-4 flex-wrap gap-7 bg-[#1e2746] flex items-center justify-between rounded-xl py-8 px-5">
-        <p className="text-xl">Previous Transactions</p>
+        <p className="text-xl">
+          {t.admin.dashboard.previousTransactions.title}
+        </p>
 
         <div className="center">
           <button
@@ -25,7 +28,7 @@ const {t} = useTranslate()
             }  py-1 px-3 text-sm rounded-full`}
             onClick={() => setActiveTab("deposit")}
           >
-            Deposit
+            {t.admin.dashboard.previousTransactions.deposit}
           </button>
 
           <button
@@ -36,7 +39,7 @@ const {t} = useTranslate()
             }  py-1 px-3 text-sm rounded-full`}
             onClick={() => setActiveTab("investments")}
           >
-            Investments
+            {t.admin.dashboard.previousTransactions.investments}
           </button>
 
           <button
@@ -47,7 +50,7 @@ const {t} = useTranslate()
             }  py-1 px-3 text-sm rounded-full`}
             onClick={() => setActiveTab("withdrawals")}
           >
-            Withdrawals
+            {t.admin.dashboard.previousTransactions.withdrawals}
           </button>
         </div>
       </div>

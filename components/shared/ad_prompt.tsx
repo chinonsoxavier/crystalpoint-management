@@ -1,4 +1,3 @@
-// components/dashboard/DashboardAdPrompt.tsx
 "use client";
 
 import useUserStore from "@/app/user/user_store";
@@ -12,69 +11,76 @@ import {
   Crown,
   Gem,
 } from "lucide-react";
+import { useTranslate } from "@/hooks/use_translate";
 
 const DashboardAdPrompt = () => {
   const { user } = useUserStore();
+  const { t } = useTranslate();
 
   // Map the ad prompts to their corresponding display information
   const adPromptMap = [
     {
       key: "membership_card_id",
       color: "bg-red-500",
-      text: "Membership Card ID number required.",
+      textKey: "dashboard.adPrompts.membershipCardId",
       icon: AlertCircle,
       priority: 1, // Higher number = higher priority
     },
     {
       key: "activate_membership",
       color: "bg-yellow-500",
-      text: "Activate membership card.",
+      textKey: "dashboard.adPrompts.activateMembership",
       icon: CheckCircle,
       priority: 2,
     },
     {
       key: "tier2_upgrade",
       color: "bg-green-500",
-      text: "Tier 2 upgrade required",
+      textKey: "dashboard.adPrompts.tier2Upgrade",
       icon: Star,
       priority: 3,
     },
     {
       key: "tier3_upgrade",
       color: "bg-purple-500",
-      text: "Tier 3 upgrade required",
+      textKey: "dashboard.adPrompts.tier3Upgrade",
       icon: Gem,
       priority: 4,
     },
     {
       key: "security_levy",
       color: "bg-amber-600",
-      text: "Security levy",
+      textKey: "dashboard.adPrompts.securityLevy",
       icon: Shield,
       priority: 5,
     },
     {
       key: "promotional_bonus",
       color: "bg-orange-500",
-      text: "Promotional bonus",
+      textKey: "dashboard.adPrompts.promotionalBonus",
       icon: Gift,
       priority: 6,
     },
     {
       key: "vip_upgrade",
       color: "bg-gray-500",
-      text: "VIP upgrade required",
+      textKey: "dashboard.adPrompts.vipUpgrade",
       icon: Crown,
       priority: 7,
     },
     {
       key: "premium_upgrade",
       color: "bg-orange-600",
-      text: "Premium upgrade required",
+      textKey: "dashboard.adPrompts.premiumUpgrade",
       icon: Gem,
       priority: 8,
     },
   ];
+
+  // Function to get nested property from object using string path
+  const getNestedProperty = (obj: any, path: string) => {
+    return path.split(".").reduce((o, p) => o && o[p], obj);
+  };
 
   // Filter and sort the ad prompts based on user's adPrompts
   const activeAdPrompts = adPromptMap
@@ -84,13 +90,12 @@ const DashboardAdPrompt = () => {
     )
     .sort((a, b) => a.priority - b.priority);
 
-
-
   return (
     <div className="w-full rounded-lg h-full">
       <div className="grid grid-cols-1 gap-3 h-full overflow-x-auto">
         {activeAdPrompts.map((item, index) => {
           const Icon = item.icon;
+          const text = getNestedProperty(t, item.textKey);
           return (
             <div
               key={item.key}
@@ -98,7 +103,7 @@ const DashboardAdPrompt = () => {
             >
               {/* <Icon className="h-5 w-5 text-white shrink-0" /> */}
               <span className="md:text-lg text-base text-center font-bold text-white">
-                {item.text}
+                {text}
               </span>
             </div>
           );
