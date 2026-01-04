@@ -1082,7 +1082,7 @@ export interface AdminTranslation {
       withdrawals: string;
     };
   };
-   auth: {
+  auth: {
     signIn: {
       welcomeBack: string;
       signInToAccount: string;
@@ -1097,7 +1097,7 @@ export interface AdminTranslation {
       usernameRequired: string;
       passwordRequired: string;
       passwordMinLength: string;
-    },
+    };
     signUp: {
       createAccount: string;
       enterDetailsToRegister: string;
@@ -1132,8 +1132,31 @@ export interface AdminTranslation {
       selectACountry: string;
       searchCountry: string;
       noCountryFound: string;
-    },
-  },
+    };
+  };
+  resetPassword: {
+    resetPassword: string;
+    createNewPassword: string;
+    enterEmailToReset: string;
+    enterNewPassword: string;
+    emailAddress: string;
+    newPassword: string;
+    confirmNewPassword: string;
+    backToLogin: string;
+    backToHome: string;
+    emailRequired: string;
+    validEmail: string;
+    newPasswordRequired: string;
+    passwordMinLength: string;
+    confirmPasswordRequired: string;
+    passwordsDoNotMatch: string;
+    sendingResetLink: string;
+    sendResetLink: string;
+    resettingPassword: string;
+    resetPasswordButton: string;
+    passwordResetSuccess: string;
+    // redirectingToLogin: string;
+  };
 }
 
 export interface AllTranslations {

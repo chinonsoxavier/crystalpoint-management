@@ -51,7 +51,6 @@ import {
 import { useAdminUsersStore } from "./admin_users_store";
 import { formatDate } from "@/utility/format_date";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Switch } from "@/components/ui/switch";
 import {
   Tooltip,
   TooltipContent,
@@ -60,6 +59,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { Switch } from "@/components/ui/switch";
 
 type IDepositType =
   | "deposit"
@@ -93,6 +93,29 @@ const tierInfo = {
     borderColor: "border-purple-300",
   },
 };
+
+// Configuration for all balance types to be displayed
+const BALANCE_CONFIG: {
+  key: IDepositType;
+  label: string;
+  color?: string;
+}[] = [
+  { key: "deposit", label: "Deposit Balance", color: "text-green-600" },
+  { key: "profit", label: "Profit", color: "text-blue-600" },
+  { key: "bonus", label: "Bonus", color: "text-purple-600" },
+  {
+    key: "promotionalBonus",
+    label: "Promotional Bonus",
+    color: "text-pink-600",
+  },
+  { key: "activeDeposit", label: "Active Deposit", color: "text-orange-600" },
+  { key: "totalWithdrawn", label: "Total Withdrawn", color: "text-red-600" },
+  {
+    key: "pendingWithdrawals",
+    label: "Pending Withdrawals",
+    color: "text-yellow-600",
+  },
+];
 
 export default function UsersPage() {
   const {
@@ -130,10 +153,10 @@ export default function UsersPage() {
   const [showAdPromptsModal, setShowAdPromptsModal] = useState(false);
   const [page, setPage] = useState(1);
 
-  // State for balance update
-  const [balanceAmount, setBalanceAmount] = useState<number>(0);
+  // State for balance updates
+  // Replaced singular state with an object to hold all balance types
+  const [tempBalances, setTempBalances] = useState<Record<string, number>>({});
   const [balanceReason, setBalanceReason] = useState<string>("");
-  const [depositType, setDepositType] = useState<IDepositType>("deposit");
 
   // State for tier update
   const [newTier, setNewTier] = useState<ITierString>("1");
@@ -147,7 +170,7 @@ export default function UsersPage() {
   const [adPromptNotes, setAdPromptNotes] = useState<string>("");
 
   useEffect(() => {
-    getCurrentMembership(selectedUser?._id ?? '');
+    getCurrentMembership(selectedUser?._id ?? "");
   }, [selectedUser]);
 
   useEffect(() => {
@@ -165,45 +188,42 @@ export default function UsersPage() {
     }
   }, [showEditModal, selectedUser]);
 
+  // Sync balances from financial summary or user object into local state
   useEffect(() => {
-    switch (depositType) {
-      case "promotionalBonus":
-        setBalanceAmount(userFinancialSumary?.balances?.promotionalBonus ?? 0);
-        return;
-      case "totalWithdrawn":
-        setBalanceAmount(userFinancialSumary?.balances?.totalWithdrawn ?? 0);
-        return;
-      case "pendingWithdrawals":
-        setBalanceAmount(
-          userFinancialSumary?.balances?.pendingWithdrawals ?? 0
-        );
-        return;
-      case "activeDeposit":
-        setBalanceAmount(userFinancialSumary?.balances?.activeDeposit ?? 0);
-        return;
-      case "deposit":
-        setBalanceAmount(selectedUser?.balance?.deposit ?? 0);
-        return;
-      case "profit":
-        setBalanceAmount(userFinancialSumary?.balances?.profit ?? 0);
-        return;
-      case "bonus":
-        setBalanceAmount(userFinancialSumary?.balances?.bonus ?? 0);
-        return;
-      default:
+    if (userFinancialSumary?.balances) {
+      setTempBalances({
+        deposit: selectedUser?.balance?.deposit ?? 0, // Fallback to main user object
+        profit: userFinancialSumary.balances.profit ?? 0,
+        bonus: userFinancialSumary.balances.bonus ?? 0,
+        promotionalBonus: userFinancialSumary.balances.promotionalBonus ?? 0,
+        totalWithdrawn: userFinancialSumary.balances.totalWithdrawn ?? 0,
+        pendingWithdrawals:
+          userFinancialSumary.balances.pendingWithdrawals ?? 0,
+        activeDeposit: userFinancialSumary.balances.activeDeposit ?? 0,
+      });
+    } else if (selectedUser) {
+      // Initial state if summary hasn't loaded yet
+      setTempBalances({
+        deposit: selectedUser.balance?.deposit ?? 0,
+        profit: 0,
+        bonus: 0,
+        promotionalBonus: 0,
+        totalWithdrawn: 0,
+        pendingWithdrawals: 0,
+        activeDeposit: 0,
+      });
     }
-  }, [depositType]);
+  }, [userFinancialSumary, selectedUser]);
 
   // Reset form when a new user is selected
   useEffect(() => {
     if (selectedUser) {
-      setBalanceAmount(selectedUser.balance?.deposit ?? 0);
       setBalanceReason("");
-      setDepositType("deposit");
       setNewTier(selectedUser.tier?.toString() as ITierString);
       setSelectedMembershipCard("");
       setMembershipNotes("");
       setAdPromptNotes("");
+      // tempBalances will be reset by the effect above when userFinancialSumary loads
     }
   }, [selectedUser]);
 
@@ -227,19 +247,26 @@ export default function UsersPage() {
     }
   };
 
-  // Handler for updating balance
-  const handleBalanceUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Handler for updating a specific balance type
+  const handleUpdateSingleBalance = async (
+    type: IDepositType,
+    amount: number
+  ) => {
     if (!selectedUser) return;
 
-    const amount = Number(balanceAmount);
-
-    await updateUserBalance(
-      selectedUser._id,
-      depositType,
-      amount,
-      balanceReason || "Balance adjustment"
-    );
+    try {
+      await updateUserBalance(
+        selectedUser._id,
+        type,
+        Number(amount),
+        balanceReason || `Updated ${type}`
+      );
+      toast.success(`${type} updated successfully`);
+      // Optional: Refetch summary to ensure server values are synced
+      await fetchFinancialSummary(selectedUser._id);
+    } catch (error) {
+      toast.error(`Failed to update ${type}`);
+    }
   };
 
   // Handler for updating tier
@@ -621,7 +648,7 @@ export default function UsersPage() {
 
         {/* Edit User Modal with Separated Sections */}
         <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Edit User</DialogTitle>
               <DialogDescription>
@@ -645,100 +672,72 @@ export default function UsersPage() {
                           Balance Management
                         </CardTitle>
                         <CardDescription>
-                          Add or remove funds from the user`s account
+                          Adjust funds individually for each balance type
                         </CardDescription>
                       </CardHeader>
-                      <CardContent>
-                        <form
-                          onSubmit={handleBalanceUpdate}
-                          className="space-y-4"
-                        >
-                          <div className="flex gap-4 w-full">
-                            <div className="w-full space-y-2">
-                              <Label htmlFor="deposit-type">
-                                Transaction Type
-                              </Label>
-                              <Select
-                                value={depositType}
-                                onValueChange={(value: IDepositType) =>
-                                  setDepositType(value)
-                                }
-                              >
-                                <SelectTrigger
-                                  className="w-full"
-                                  id="deposit-type"
+                      <CardContent className="space-y-6">
+                        {/* Global Reason Input */}
+                        <div className="space-y-2">
+                          <Label htmlFor="global-reason">
+                            Reason (applies to all updates below)
+                          </Label>
+                          <Input
+                            id="global-reason"
+                            value={balanceReason}
+                            onChange={(e) => setBalanceReason(e.target.value)}
+                            placeholder="e.g. Manual adjustment, Bonus reward"
+                          />
+                        </div>
+
+                        {/* List of all balance types */}
+                        <div className="space-y-4">
+                          {BALANCE_CONFIG.map((config) => (
+                            <div
+                              key={config.key}
+                              className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 border rounded-lg hover:bg-muted/30 transition-colors"
+                            >
+                              <div className="flex-1 space-y-1">
+                                <Label
+                                  htmlFor={config.key}
+                                  className={`font-semibold ${
+                                    config.color || ""
+                                  }`}
                                 >
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem key="deposit" value="deposit">
-                                    Deposit
-                                  </SelectItem>
-                                  <SelectItem key="bonus" value="bonus">
-                                    Bonus
-                                  </SelectItem>
-                                  <SelectItem key="profit" value="profit">
-                                    Profit
-                                  </SelectItem>
-                                  <SelectItem
-                                    key="promotionalBonus"
-                                    value="promotionalBonus"
-                                  >
-                                    Promotional Bonus
-                                  </SelectItem>
-                                  <SelectItem
-                                    key="totalWithdrawn"
-                                    value="totalWithdrawn"
-                                  >
-                                    Total Withdrawn
-                                  </SelectItem>
-                                  <SelectItem
-                                    key="pendingWithdrawals"
-                                    value="pendingWithdrawals"
-                                  >
-                                    Pending Withdrawals
-                                  </SelectItem>
-                                  <SelectItem
-                                    key="activeDeposit"
-                                    value="activeDeposit"
-                                  >
-                                    Active Deposit
-                                  </SelectItem>
-                                </SelectContent>
-                              </Select>
+                                  {config.label}
+                                </Label>
+                                <p className="text-xs text-muted-foreground">
+                                  Current recorded value
+                                </p>
+                              </div>
+                              <div className="flex gap-2 w-full sm:w-auto">
+                                <Input
+                                  id={config.key}
+                                  type="number"
+                                  className="w-full sm:w-48"
+                                  value={tempBalances[config.key] ?? 0}
+                                  onChange={(e) =>
+                                    setTempBalances({
+                                      ...tempBalances,
+                                      [config.key]: Number(e.target.value),
+                                    })
+                                  }
+                                />
+                                <Button
+                                  onClick={() =>
+                                    handleUpdateSingleBalance(
+                                      config.key,
+                                      tempBalances[config.key]
+                                    )
+                                  }
+                                  disabled={isUpdatingBalance}
+                                  size="sm"
+                                >
+                                  Update
+                                </Button>
+                              </div>
                             </div>
-                            <div className="w-full space-y-2">
-                              <Label htmlFor="amount">Amount</Label>
-                              <Input
-                                id="amount"
-                                type="number"
-                                value={balanceAmount}
-                                onChange={(e) =>
-                                  setBalanceAmount(Number(e.target.value))
-                                }
-                                placeholder="Enter amount"
-                              />
-                            </div>
-                          </div>
-                          <div className="w-full space-y-2">
-                            <Label htmlFor="reason">Reason</Label>
-                            <Input
-                              id="reason"
-                              value={balanceReason}
-                              onChange={(e) => setBalanceReason(e.target.value)}
-                              placeholder="Reason for adjustment"
-                            />
-                          </div>
-                          <Button
-                            type="submit"
-                            className="w-full mt-4"
-                            disabled={isUpdatingBalance}
-                          >
-                            {isUpdatingBalance
-                              ? "Updating..."
-                              : "Update Balance"}
-                          </Button>
-                        </form>
+                          ))}
+                        </div>
                       </CardContent>
                     </Card>
                   </TabsContent>
@@ -847,7 +846,7 @@ export default function UsersPage() {
                           <Label htmlFor="membership-card">
                             Select Membership
                           </Label>
-                          <Label className="text-xs" >
+                          <Label className="text-xs">
                             Current Membership:{" "}
                             {currentMembership?.membership?.card?.name ??
                               "name"}
@@ -860,8 +859,8 @@ export default function UsersPage() {
                             <SelectTrigger id="membership-card">
                               <SelectValue
                                 defaultValue={
-                                  currentMembership?.membership?.card.name
-                                }
+                                  currentMembership?.membership?.card?.name ?? ''
+                                 }
                                 placeholder="Choose a membership plan"
                               />
                             </SelectTrigger>

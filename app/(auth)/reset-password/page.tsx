@@ -10,8 +10,10 @@ import { cn } from "@/lib/utils";
 import { AuthGuard } from "@/components/auth_guard";
 import useUserStore from "@/app/user/user_store";
 import { useRouter } from "next/navigation";
+import { useTranslate } from "@/hooks/use_translate";
 
 const Page = () => {
+  const { t } = useTranslate();
   const [step, setStep] = useState<"email" | "reset">("email");
   const [formData, setFormData] = useState({
     email: "",
@@ -24,7 +26,7 @@ const Page = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-   const {resetPassword,authStatus} = useUserStore()
+  const { resetPassword, authStatus } = useUserStore();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -42,9 +44,10 @@ const Page = () => {
   const validateEmailStep = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.email.trim()) newErrors.email = "Email is required";
+    if (!formData.email.trim())
+      newErrors.email = t.admin.auth.resetPassword.emailRequired;
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-      newErrors.email = "Please enter a valid email";
+      newErrors.email = t.admin.auth.resetPassword.validEmail;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -54,28 +57,30 @@ const Page = () => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.newPassword)
-      newErrors.newPassword = "New password is required";
+      newErrors.newPassword = t.admin.auth.resetPassword.newPasswordRequired;
     if (formData.newPassword.length < 6)
-      newErrors.newPassword = "Password must be at least 6 characters";
+      newErrors.newPassword = t.admin.auth.resetPassword.passwordMinLength;
     if (!formData.confirmPassword)
-      newErrors.confirmPassword = "Confirm password is required";
+      newErrors.confirmPassword =
+        t.admin.auth.resetPassword.confirmPasswordRequired;
     if (formData.newPassword !== formData.confirmPassword)
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword =
+        t.admin.auth.resetPassword.passwordsDoNotMatch;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-const handleEmailSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  if (!validateEmailStep()) return;
+    if (!validateEmailStep()) return;
 
-  const res = await resetPassword(formData.email);
-  if(res === 'success'){
-    router.push("/sign-in");
-  }
-};
+    const res = await resetPassword(formData.email);
+    if (res === "success") {
+      router.push("/sign-in");
+    }
+  };
 
   const handleResetSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,9 +88,6 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
     if (!validateResetStep()) return;
 
     setIsLoading(true);
-
-   
-
   };
 
   return (
@@ -98,12 +100,14 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
               <span className="text-2xl font-bold text-white">CP</span>
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">
-              {step === "email" ? "Reset Password" : "Create New Password"}
+              {step === "email"
+                ? t.admin.auth.resetPassword.resetPassword
+                : t.admin.auth.resetPassword.createNewPassword}
             </h1>
             <p className="text-muted-foreground">
               {step === "email"
-                ? "Enter your email to receive a reset link"
-                : "Enter your new password below"}
+                ? t.admin.auth.resetPassword.enterEmailToReset
+                : t.admin.auth.resetPassword.enterNewPassword}
             </p>
           </div>
 
@@ -112,7 +116,7 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
             <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-lg flex items-start gap-3">
               <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
               <p className="text-sm text-green-500">
-                Password reset successfully! Redirecting to login...
+                {t.admin.auth.resetPassword.passwordResetSuccess}
               </p>
             </div>
           )}
@@ -127,7 +131,7 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
                     htmlFor="email"
                     className="text-sm font-medium text-foreground"
                   >
-                    Email Address
+                    {t.admin.auth.resetPassword.emailAddress}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -162,10 +166,10 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
                   {authStatus === "loading" ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-                      Sending Reset Link...
+                      {t.admin.auth.resetPassword.sendingResetLink}
                     </>
                   ) : (
-                    "Send Reset Link"
+                    t.admin.auth.resetPassword.sendResetLink
                   )}
                 </Button>
 
@@ -175,7 +179,7 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
                     href="/sign-in"
                     className="text-sm text-primary hover:text-primary/80 transition-colors"
                   >
-                    Back to login
+                    {t.admin.auth.resetPassword.backToLogin}
                   </Link>
                 </div>
               </form>
@@ -187,7 +191,7 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
                     htmlFor="newPassword"
                     className="text-sm font-medium text-foreground"
                   >
-                    New Password
+                    {t.admin.auth.resetPassword.newPassword}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -233,7 +237,7 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
                     htmlFor="confirmPassword"
                     className="text-sm font-medium text-foreground"
                   >
-                    Confirm New Password
+                    {t.admin.auth.resetPassword.confirmNewPassword}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -284,10 +288,10 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
                   {authStatus === "loading" ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-                      Resetting Password...
+                      {t.admin.auth.resetPassword.resettingPassword}
                     </>
                   ) : (
-                    "Reset Password"
+                    t.admin.auth.resetPassword.resetPasswordButton
                   )}
                 </Button>
 
@@ -297,7 +301,7 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
                     href="/sign-in"
                     className="text-sm text-primary hover:text-primary/80 transition-colors"
                   >
-                    Back to login
+                    {t.admin.auth.resetPassword.backToLogin}
                   </Link>
                 </div>
               </form>
@@ -312,7 +316,7 @@ const handleEmailSubmit = async (e: React.FormEvent) => {
                 className="inline-flex items-center text-sm transition-colors"
               >
                 <Home className="h-4 w-4 mr-1" />
-                Back to Home
+                {t.admin.auth.resetPassword.backToHome}
               </Link>
             </Button>
           </div>

@@ -3,14 +3,16 @@
 import type React from "react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff,  Lock, Home, User, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, Lock, Home, User, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import useUserStore from "@/app/user/user_store";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { AuthGuard } from "@/components/auth_guard";
+import { useTranslate } from "@/hooks/use_translate";
 
 const Page = () => {
+  const { t } = useTranslate();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -42,10 +44,12 @@ const Page = () => {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.username.trim()) newErrors.username = "Username is required";
-    if (!formData.password) newErrors.password = "Password is required";
+    if (!formData.username.trim())
+      newErrors.username = t.admin.auth.signIn.usernameRequired;
+    if (!formData.password)
+      newErrors.password = t.admin.auth.signIn.passwordRequired;
     if (formData.password.length < 4)
-      newErrors.password = "Password must be at least 4 characters";
+      newErrors.password = t.admin.auth.signIn.passwordMinLength;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -73,13 +77,13 @@ const Page = () => {
           {/* Logo and Title Section */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-lg">
-              <span className="text-2xl font-bold text-white">
-                CP
-              </span>
+              <span className="text-2xl font-bold text-white">CP</span>
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
+            <h1 className="text-3xl font-bold text-white mb-2">
+              {t.admin.auth.signIn.welcomeBack}
+            </h1>
             <p className="text-muted-foreground">
-              Sign in to your account to continue
+              {t.admin.auth.signIn.signInToAccount}
             </p>
           </div>
 
@@ -100,7 +104,7 @@ const Page = () => {
                   htmlFor="username"
                   className="text-sm font-medium text-foreground"
                 >
-                  Username
+                  {t.admin.auth.signIn.username}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -132,7 +136,7 @@ const Page = () => {
                   htmlFor="password"
                   className="text-sm font-medium text-foreground"
                 >
-                  Password
+                  {t.admin.auth.signIn.password}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -176,7 +180,7 @@ const Page = () => {
                   href="/reset-password"
                   className="text-sm text-primary hover:text-primary/80 transition-colors"
                 >
-                  Forgot your password?
+                  {t.admin.auth.signIn.forgotPassword}
                 </Link>
               </div>
 
@@ -189,10 +193,10 @@ const Page = () => {
                 {authStatus === "loading" ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2 text-white"></div>
-                    Signing in...
+                    {t.admin.auth.signIn.signingIn}
                   </>
                 ) : (
-                  "Sign In"
+                  t.admin.auth.signIn.signIn
                 )}
               </Button>
             </form>
@@ -201,12 +205,12 @@ const Page = () => {
           {/* Register Link */}
           <div className="mt-6 text-center">
             <p className="text-muted-foreground">
-              Don`t have an account?{" "}
+              {t.admin.auth.signIn.dontHaveAccount}{" "}
               <Link
                 href="/sign-up"
                 className="text-white  font-medium transition-colors"
               >
-                Register here
+                {t.admin.auth.signIn.registerHere}
               </Link>
             </p>
           </div>
@@ -219,7 +223,7 @@ const Page = () => {
                 className="inline-flex items-center text-sm transition-colors"
               >
                 <Home className="h-4 w-4 mr-1" />
-                Back to Home
+                {t.admin.auth.signIn.backToHome}
               </Link>
             </Button>
           </div>

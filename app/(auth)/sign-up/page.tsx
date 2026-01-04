@@ -21,7 +21,8 @@ import useUserStore from "@/app/user/user_store";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { AuthGuard } from "@/components/auth_guard";
-import { countries } from "@/components/shared/data/countrie"; 
+import { countries } from "@/components/shared/data/countrie";
+import { useTranslate } from "@/hooks/use_translate";
 
 // --- SHADCN IMPORTS FOR COMBOBOX ---
 // If you don't have these installed yet, run: npx shadcn@latest add popover command
@@ -53,6 +54,7 @@ const CountryCombobox = ({
   error,
   disabled,
 }: CountryComboboxProps) => {
+  const { t } = useTranslate();
   const [open, setOpen] = useState(false);
 
   const selectedCountry = countries.find((country) => country.code === value);
@@ -73,8 +75,10 @@ const CountryCombobox = ({
                 "border-destructive text-destructive focus:ring-destructive/20"
             )}
           >
-            <div className="pl-7" >
-            {selectedCountry ? selectedCountry.name : "Select a country"}
+            <div className="pl-7">
+              {selectedCountry
+                ? selectedCountry.name
+                : t.admin.auth.signUp.selectACountry}
             </div>
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -87,12 +91,12 @@ const CountryCombobox = ({
             <div className="flex items-center border-b px-3">
               <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
               <CommandInput
-                placeholder="Search country..."
+                placeholder={t.admin.auth.signUp.searchCountry}
                 className="h-9 border-0 focus:ring-0 focus-visible:ring-0"
               />
             </div>
             <CommandList>
-              <CommandEmpty>No country found.</CommandEmpty>
+              <CommandEmpty>{t.admin.auth.signUp.noCountryFound}</CommandEmpty>
               <CommandGroup>
                 {countries.map((country) => (
                   <CommandItem
@@ -142,6 +146,7 @@ interface FormData {
 }
 
 const Page = () => {
+  const { t } = useTranslate();
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -182,20 +187,27 @@ const Page = () => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.firstName.trim())
-      newErrors.firstName = "First name is required";
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
-    if (!formData.username.trim()) newErrors.username = "Username is required";
-    if (!formData.country) newErrors.country = "Please select your country";
-    if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
-    if (!formData.email.trim()) newErrors.email = "Email is required";
+      newErrors.firstName = t.admin.auth.signUp.firstNameRequired;
+    if (!formData.lastName.trim())
+      newErrors.lastName = t.admin.auth.signUp.lastNameRequired;
+    if (!formData.username.trim())
+      newErrors.username = t.admin.auth.signUp.usernameRequired;
+    if (!formData.country)
+      newErrors.country = t.admin.auth.signUp.selectCountry;
+    if (!formData.phone.trim())
+      newErrors.phone = t.admin.auth.signUp.phoneNumberRequired;
+    if (!formData.email.trim())
+      newErrors.email = t.admin.auth.signUp.emailRequired;
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-      newErrors.email = "Please enter a valid email";
-    if (!formData.password) newErrors.password = "Password is required";
+      newErrors.email = t.admin.auth.signUp.validEmail;
+    if (!formData.password)
+      newErrors.password = t.admin.auth.signUp.passwordRequired;
     if (formData.password.length < 4)
-      newErrors.password = "Password must be at least 4 characters";
+      newErrors.password = t.admin.auth.signUp.passwordMinLength;
     if (formData.password !== formData.confirmPassword)
-      newErrors.confirmPassword = "Passwords do not match";
-    if (!formData.agreeTerms) newErrors.agreeTerms = "You must agree to terms";
+      newErrors.confirmPassword = t.admin.auth.signUp.passwordsDoNotMatch;
+    if (!formData.agreeTerms)
+      newErrors.agreeTerms = t.admin.auth.signUp.agreeToTermsRequired;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -253,10 +265,10 @@ const Page = () => {
               <span className="text-2xl font-bold text-white">CP</span>
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">
-              Create Account
+              {t.admin.auth.signUp.createAccount}
             </h1>
             <p className="text-muted-foreground">
-              Enter your details to register a new account
+              {t.admin.auth.signUp.enterDetailsToRegister}
             </p>
           </div>
 
@@ -270,7 +282,7 @@ const Page = () => {
                     htmlFor="firstName"
                     className="text-sm font-medium text-foreground"
                   >
-                    First Name
+                    {t.admin.auth.signUp.firstName}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -303,7 +315,7 @@ const Page = () => {
                     htmlFor="lastName"
                     className="text-sm font-medium text-foreground"
                   >
-                    Last Name
+                    {t.admin.auth.signUp.lastName}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -339,7 +351,7 @@ const Page = () => {
                     htmlFor="username"
                     className="text-sm font-medium text-foreground"
                   >
-                    Username
+                    {t.admin.auth.signUp.username}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -372,7 +384,7 @@ const Page = () => {
                     htmlFor="email"
                     className="text-sm font-medium text-foreground"
                   >
-                    Email Address
+                    {t.admin.auth.signUp.emailAddress}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -406,7 +418,7 @@ const Page = () => {
                     htmlFor="country"
                     className="text-sm font-medium text-foreground"
                   >
-                    Country
+                    {t.admin.auth.signUp.country}
                   </label>
 
                   {/* REPLACED SELECT WITH COMBOBOX */}
@@ -429,7 +441,7 @@ const Page = () => {
                     htmlFor="phone"
                     className="text-sm font-medium text-foreground"
                   >
-                    Phone Number
+                    {t.admin.auth.signUp.phoneNumber}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -463,7 +475,7 @@ const Page = () => {
                     htmlFor="password"
                     className="text-sm font-medium text-foreground"
                   >
-                    Password
+                    {t.admin.auth.signUp.password}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -508,7 +520,7 @@ const Page = () => {
                     htmlFor="confirmPassword"
                     className="text-sm font-medium text-foreground"
                   >
-                    Confirm Password
+                    {t.admin.auth.signUp.confirmPassword}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -563,19 +575,19 @@ const Page = () => {
                   disabled={authStatus === "loading"}
                 />
                 <label htmlFor="agreeTerms" className="text-sm text-foreground">
-                  I agree to
+                  {t.admin.auth.signUp.agreeToTerms}
                   <a
                     href="/terms-of-service"
                     className="text-primary hover:text-primary/80 "
                   >
-                    Terms & Conditions
+                    {t.admin.auth.signUp.termsAndConditions}
                   </a>
-                  and{" "}
+                  {t.admin.auth.signUp.and}
                   <a
                     href="/privacy-policy"
                     className="text-primary hover:text-primary/80 "
                   >
-                    Privacy Policy
+                    {t.admin.auth.signUp.privacyPolicy}
                   </a>
                 </label>
               </div>
@@ -592,22 +604,22 @@ const Page = () => {
                 {authStatus === "loading" ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-                    Creating Account...
+                    {t.admin.auth.signUp.creatingAccount}
                   </>
                 ) : (
-                  "Create Account"
+                  t.admin.auth.signUp.createAccountButton
                 )}
               </Button>
 
               {/* Sign In Link */}
               <div className="text-center">
                 <p className="text-muted-foreground">
-                  Already have an account?{" "}
+                  {t.admin.auth.signUp.alreadyHaveAccount}{" "}
                   <Link
                     href="/sign-in"
                     className="text-primary hover:text-primary/80 font-medium transition-colors"
                   >
-                    Sign in here
+                    {t.admin.auth.signUp.signInHere}
                   </Link>
                 </p>
               </div>
@@ -622,7 +634,7 @@ const Page = () => {
                 className="inline-flex items-center text-sm transition-colors "
               >
                 <Home className="h-4 w-4 mr-1" />
-                Back to Home
+                {t.admin.auth.signUp.backToHome}
               </Link>
             </Button>
           </div>
