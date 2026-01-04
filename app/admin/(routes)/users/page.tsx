@@ -93,7 +93,7 @@ const tierInfo = {
     borderColor: "border-purple-300",
   },
 };
-
+// name
 // Configuration for all balance types to be displayed
 const BALANCE_CONFIG: {
   key: IDepositType;
@@ -806,7 +806,7 @@ export default function UsersPage() {
                                 >
                                   <Icon className="h-6 w-6 mx-auto mb-3" />
                                   <p className="font-semibold text-base">
-                                    {info.name}
+                                    {info?.name ?? ''}
                                   </p>
                                 </div>
                               );
@@ -868,7 +868,7 @@ export default function UsersPage() {
                               {membershipCards.map((card) => (
                                 <SelectItem key={card._id} value={card._id}>
                                   <div className="flex flex-col">
-                                    <p className="font-medium">{card.name}</p>
+                                    <p className="font-medium">{card?.name ?? ''}</p>
                                   </div>
                                 </SelectItem>
                               ))}

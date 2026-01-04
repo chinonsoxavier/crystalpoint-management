@@ -45,9 +45,9 @@ const Page = () => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.email.trim())
-      newErrors.email = t.admin.auth.resetPassword.emailRequired;
+      newErrors.email = t.admin.resetPassword.emailRequired;
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-      newErrors.email = t.admin.auth.resetPassword.validEmail;
+      newErrors.email = t.admin.resetPassword.validEmail;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -57,15 +57,15 @@ const Page = () => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.newPassword)
-      newErrors.newPassword = t.admin.auth.resetPassword.newPasswordRequired;
+      newErrors.newPassword = t.admin.resetPassword.newPasswordRequired;
     if (formData.newPassword.length < 6)
-      newErrors.newPassword = t.admin.auth.resetPassword.passwordMinLength;
+      newErrors.newPassword = t.admin.resetPassword.passwordMinLength;
     if (!formData.confirmPassword)
       newErrors.confirmPassword =
-        t.admin.auth.resetPassword.confirmPasswordRequired;
+        t.admin.resetPassword.confirmPasswordRequired;
     if (formData.newPassword !== formData.confirmPassword)
       newErrors.confirmPassword =
-        t.admin.auth.resetPassword.passwordsDoNotMatch;
+        t.admin.resetPassword.passwordsDoNotMatch;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -101,13 +101,13 @@ const Page = () => {
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">
               {step === "email"
-                ? t.admin.auth.resetPassword.resetPassword
-                : t.admin.auth.resetPassword.createNewPassword}
+                ? t.admin.resetPassword.resetPassword
+                : t.admin.resetPassword.createNewPassword}
             </h1>
             <p className="text-muted-foreground">
               {step === "email"
-                ? t.admin.auth.resetPassword.enterEmailToReset
-                : t.admin.auth.resetPassword.enterNewPassword}
+                ? t.admin.resetPassword.enterEmailToReset
+                : t.admin.resetPassword.enterNewPassword}
             </p>
           </div>
 
@@ -116,7 +116,7 @@ const Page = () => {
             <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-lg flex items-start gap-3">
               <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
               <p className="text-sm text-green-500">
-                {t.admin.auth.resetPassword.passwordResetSuccess}
+                {t.admin.resetPassword.passwordResetSuccess}
               </p>
             </div>
           )}
@@ -131,7 +131,7 @@ const Page = () => {
                     htmlFor="email"
                     className="text-sm font-medium text-foreground"
                   >
-                    {t.admin.auth.resetPassword.emailAddress}
+                    {t.admin.resetPassword.emailAddress}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -166,10 +166,10 @@ const Page = () => {
                   {authStatus === "loading" ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-                      {t.admin.auth.resetPassword.sendingResetLink}
+                      {t.admin.resetPassword.sendingResetLink}
                     </>
                   ) : (
-                    t.admin.auth.resetPassword.sendResetLink
+                    t.admin.resetPassword.sendResetLink
                   )}
                 </Button>
 
@@ -179,7 +179,7 @@ const Page = () => {
                     href="/sign-in"
                     className="text-sm text-primary hover:text-primary/80 transition-colors"
                   >
-                    {t.admin.auth.resetPassword.backToLogin}
+                    {t.admin.resetPassword.backToLogin}
                   </Link>
                 </div>
               </form>
@@ -191,7 +191,7 @@ const Page = () => {
                     htmlFor="newPassword"
                     className="text-sm font-medium text-foreground"
                   >
-                    {t.admin.auth.resetPassword.newPassword}
+                    {t.admin.resetPassword.newPassword}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -237,7 +237,7 @@ const Page = () => {
                     htmlFor="confirmPassword"
                     className="text-sm font-medium text-foreground"
                   >
-                    {t.admin.auth.resetPassword.confirmNewPassword}
+                    {t.admin.resetPassword.confirmNewPassword}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -288,10 +288,10 @@ const Page = () => {
                   {authStatus === "loading" ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-                      {t.admin.auth.resetPassword.resettingPassword}
+                      {t.admin.resetPassword.resettingPassword}
                     </>
                   ) : (
-                    t.admin.auth.resetPassword.resetPasswordButton
+                    t.admin.resetPassword.resetPasswordButton
                   )}
                 </Button>
 
@@ -301,7 +301,7 @@ const Page = () => {
                     href="/sign-in"
                     className="text-sm text-primary hover:text-primary/80 transition-colors"
                   >
-                    {t.admin.auth.resetPassword.backToLogin}
+                    {t.admin.resetPassword.backToLogin}
                   </Link>
                 </div>
               </form>
@@ -316,7 +316,7 @@ const Page = () => {
                 className="inline-flex items-center text-sm transition-colors"
               >
                 <Home className="h-4 w-4 mr-1" />
-                {t.admin.auth.resetPassword.backToHome}
+                {t.admin.resetPassword.backToHome}
               </Link>
             </Button>
           </div>
