@@ -1,5 +1,15 @@
 // lib/i18n/zh/landing.ts
 export const landing = {
+   sidemenu: {
+    company: "Company",
+    aboutUs: "About Us",
+    faqs: "FAQs",
+    contactUs: "Contact Us",
+    markets: "Markets",
+    plans: "Plans",
+    ourServices: "Our Services",
+    login: "Log in",
+  },
   header: {
     company: "公司",
     aboutUs: "关于我们",

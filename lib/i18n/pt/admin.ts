@@ -1,4 +1,14 @@
 export const admin = {
+    sidemenu: {
+    company: "Entreprise",
+    aboutUs: "À Propos de Nous",
+    faqs: "FAQ",
+    contactUs: "Nous Contacter",
+    markets: "Marchés",
+    plans: "Plans",
+    ourServices: "Nos Services",
+    login: "Se Connecter",
+  },
   header: {
     greetings: "Olá",
   },
@@ -87,6 +97,9 @@ export const admin = {
     withdrawal: "Retirada",
     methodOfWithdrawal: "Método de retirada",
     selectWallet: "Selecionar uma carteira",
+     selectWalletLabel: "Selecionar carteira",
+  bonusBalance: "Saldo de Bônus",
+  depositBalance: "Saldo de Depósito",
     chooseAccount: "Escolher uma conta",
     selectAccount: "Selecionar uma conta",
     walletAddress: "Endereço da Carteira",

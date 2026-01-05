@@ -1,5 +1,15 @@
 // lib/i18n/pt/landing.ts
 export const landing = {
+   sidemenu: {
+    company: "Company",
+    aboutUs: "About Us",
+    faqs: "FAQs",
+    contactUs: "Contact Us",
+    markets: "Markets",
+    plans: "Plans",
+    ourServices: "Our Services",
+    login: "Log in",
+  },
   header: {
     company: "Empresa",
     aboutUs: "Sobre Nós",
