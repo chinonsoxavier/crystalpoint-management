@@ -93,29 +93,21 @@ const tierInfo = {
     borderColor: "border-purple-300",
   },
 };
-// name
+
 // Configuration for all balance types to be displayed
 const BALANCE_CONFIG: {
   key: IDepositType;
   label: string;
   color?: string;
 }[] = [
-  { key: "deposit", label: "Deposit Balance", color: "text-green-600" },
-  { key: "profit", label: "Profit", color: "text-blue-600" },
-  { key: "bonus", label: "Bonus", color: "text-purple-600" },
-  {
-    key: "promotionalBonus",
-    label: "Promotional Bonus",
-    color: "text-pink-600",
-  },
-  { key: "activeDeposit", label: "Active Deposit", color: "text-orange-600" },
-  { key: "totalWithdrawn", label: "Total Withdrawn", color: "text-red-600" },
-  {
-    key: "pendingWithdrawals",
-    label: "Pending Withdrawals",
-    color: "text-yellow-600",
-  },
-];
+    { key: "deposit", label: "Deposit Balance", color: "text-green-600" },
+    { key: "profit", label: "Profit", color: "text-blue-600" },
+    { key: "bonus", label: "Bonus", color: "text-purple-600" },
+    { key: "promotionalBonus", label: "Promotional Bonus", color: "text-pink-600" },
+    { key: "activeDeposit", label: "Active Deposit", color: "text-orange-600" },
+    { key: "totalWithdrawn", label: "Total Withdrawn", color: "text-red-600" },
+    { key: "pendingWithdrawals", label: "Pending Withdrawals", color: "text-yellow-600" },
+  ];
 
 export default function UsersPage() {
   const {
@@ -170,7 +162,7 @@ export default function UsersPage() {
   const [adPromptNotes, setAdPromptNotes] = useState<string>("");
 
   useEffect(() => {
-    getCurrentMembership(selectedUser?._id ?? "");
+    getCurrentMembership(selectedUser?._id ?? '');
   }, [selectedUser]);
 
   useEffect(() => {
@@ -190,9 +182,6 @@ export default function UsersPage() {
 
   // Sync balances from financial summary or user object into local state
   useEffect(() => {
-    console.log("selected user", selectedUser);
-    console.log("financial summary", userFinancialSumary);
-    // if()
     if (userFinancialSumary?.balances) {
       setTempBalances({
         deposit: selectedUser?.balance?.deposit ?? 0, // Fallback to main user object
@@ -200,8 +189,7 @@ export default function UsersPage() {
         bonus: userFinancialSumary.balances.bonus ?? 0,
         promotionalBonus: userFinancialSumary.balances.promotionalBonus ?? 0,
         totalWithdrawn: userFinancialSumary.balances.totalWithdrawn ?? 0,
-        pendingWithdrawals:
-          userFinancialSumary.balances.pendingWithdrawals ?? 0,
+        pendingWithdrawals: userFinancialSumary.balances.pendingWithdrawals ?? 0,
         activeDeposit: userFinancialSumary.balances.activeDeposit ?? 0,
       });
     } else if (selectedUser) {
@@ -216,7 +204,7 @@ export default function UsersPage() {
         activeDeposit: 0,
       });
     }
-  }, [selectedUser,userFinancialSumary]);
+  }, [userFinancialSumary, selectedUser]);
 
   // Reset form when a new user is selected
   useEffect(() => {
@@ -251,18 +239,22 @@ export default function UsersPage() {
   };
 
   // Handler for updating a specific balance type
-  const handleUpdateSingleBalance = async (
-    type: IDepositType,
-    amount: number
-  ) => {
+  const handleUpdateSingleBalance = async (type: IDepositType, amount: number) => {
     if (!selectedUser) return;
+
+    try {
       await updateUserBalance(
         selectedUser._id,
         type,
         Number(amount),
         balanceReason || `Updated ${type}`
       );
+      toast.success(`${type} updated successfully`);
+      // Optional: Refetch summary to ensure server values are synced
       await fetchFinancialSummary(selectedUser._id);
+    } catch (error) {
+      toast.error(`Failed to update ${type}`);
+    }
   };
 
   // Handler for updating tier
@@ -674,9 +666,7 @@ export default function UsersPage() {
                       <CardContent className="space-y-6">
                         {/* Global Reason Input */}
                         <div className="space-y-2">
-                          <Label htmlFor="global-reason">
-                            Reason (applies to all updates below)
-                          </Label>
+                          <Label htmlFor="global-reason">Reason (applies to all updates below)</Label>
                           <Input
                             id="global-reason"
                             value={balanceReason}
@@ -693,12 +683,7 @@ export default function UsersPage() {
                               className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 border rounded-lg hover:bg-muted/30 transition-colors"
                             >
                               <div className="flex-1 space-y-1">
-                                <Label
-                                  htmlFor={config.key}
-                                  className={`font-semibold ${
-                                    config.color || ""
-                                  }`}
-                                >
+                                <Label htmlFor={config.key} className={`font-semibold ${config.color || ''}`}>
                                   {config.label}
                                 </Label>
                                 <p className="text-xs text-muted-foreground">
@@ -714,17 +699,12 @@ export default function UsersPage() {
                                   onChange={(e) =>
                                     setTempBalances({
                                       ...tempBalances,
-                                      [config.key]: Number(e.target.value),
+                                      [config.key]: Number(e.target.value)
                                     })
                                   }
                                 />
                                 <Button
-                                  onClick={() =>
-                                    handleUpdateSingleBalance(
-                                      config.key,
-                                      tempBalances[config.key]
-                                    )
-                                  }
+                                  onClick={() => handleUpdateSingleBalance(config.key, tempBalances[config.key])}
                                   disabled={isUpdatingBalance}
                                   size="sm"
                                 >
@@ -752,10 +732,9 @@ export default function UsersPage() {
                       <CardContent className="space-y-4">
                         {/* Current Tier Display */}
                         <div
-                          className={`p-4 rounded-lg border ${
-                            tierInfo[selectedUser.tier ?? "1"]?.borderColor ||
+                          className={`p-4 rounded-lg border ${tierInfo[selectedUser.tier ?? "1"]?.borderColor ||
                             "border-gray-300"
-                          }`}
+                            }`}
                         >
                           <div className="flex items-center gap-3">
                             {/* Extract Icon safely */}
@@ -794,15 +773,14 @@ export default function UsersPage() {
                                     setNewTier(tierNum as ITierString)
                                   }
                                   className={`p-3 rounded-xl border-2 cursor-pointer transition-all text-center
-                      ${
-                        isSelected
-                          ? `${info.borderColor} ${info.color} bg-opacity-20 shadow-md`
-                          : "border-gray-200 hover:border-gray-400 hover:shadow-sm"
-                      }`}
+                      ${isSelected
+                                      ? `${info.borderColor} ${info.color} bg-opacity-20 shadow-md`
+                                      : "border-gray-200 hover:border-gray-400 hover:shadow-sm"
+                                    }`}
                                 >
                                   <Icon className="h-6 w-6 mx-auto mb-3" />
                                   <p className="font-semibold text-base">
-                                    {info?.name ?? ''}
+                                    {info.name}
                                   </p>
                                 </div>
                               );
@@ -816,7 +794,7 @@ export default function UsersPage() {
                           disabled={
                             isUpdatingTier ||
                             newTier ===
-                              (selectedUser.tier?.toString() as ITierString)
+                            (selectedUser.tier?.toString() as ITierString)
                           }
                         >
                           {isUpdatingTier ? "Updating Tier..." : "Update Tier"}
@@ -842,7 +820,7 @@ export default function UsersPage() {
                           <Label htmlFor="membership-card">
                             Select Membership
                           </Label>
-                          <Label className="text-xs">
+                          <Label className="text-xs" >
                             Current Membership:{" "}
                             {currentMembership?.membership?.card?.name ??
                               "name"}
@@ -856,7 +834,7 @@ export default function UsersPage() {
                               <SelectValue
                                 defaultValue={
                                   currentMembership?.membership?.card?.name ?? ''
-                                 }
+                                }
                                 placeholder="Choose a membership plan"
                               />
                             </SelectTrigger>
@@ -864,7 +842,7 @@ export default function UsersPage() {
                               {membershipCards.map((card) => (
                                 <SelectItem key={card._id} value={card._id}>
                                   <div className="flex flex-col">
-                                    <p className="font-medium">{card?.name ?? ''}</p>
+                                    <p className="font-medium">{card.name}</p>
                                   </div>
                                 </SelectItem>
                               ))}

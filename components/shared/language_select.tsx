@@ -29,7 +29,7 @@ const languages: LanguageOption[] = [
   { code: "es", name: "Español", flag: esFlag },
   { code: "fr", name: "Français", flag: frFlag },
   { code: "pt", name: "Português", flag: ptFlag },
-{ code: "zh", name: "中文", flag: chFlag },    
+  { code: "zh", name: "中文", flag: chFlag },
 ];
 
 export function LanguageSelect() {
@@ -39,8 +39,8 @@ export function LanguageSelect() {
     languages.find((l) => l.code === language) || languages[0];
 
   return (
-    <div className="w-full fixed bottom-2 left-10">
-      <div className="w-full">
+    <div className="w-full z-50 fixed bottom-2 left-10">
+      <div className="w-full relative z-50">
         <DropdownMenu>
           <DropdownMenuTrigger className="cursor-pointer" asChild>
             <div className="w-full py-2 flex justify-start gap-2 text-secondary-foreground hover:text-primary hover:bg-transparent p-0 h-auto text-[17px] md:text-[19px]">
@@ -67,11 +67,10 @@ export function LanguageSelect() {
                 <DropdownMenuItem
                   key={lang.code}
                   onClick={() => setLanguage(lang.code)}
-                  className={`flex items-center gap-3 cursor-pointer px-4 py-3 rounded-md ${
-                    language === lang.code
-                      ? "bg-blue-50 text-blue-600 font-medium"
-                      : "text-gray-700 hover:bg-gray-50"
-                  }`}
+                  className={`flex items-center gap-3 cursor-pointer px-4 py-3 rounded-md ${language === lang.code
+                    ? "bg-blue-50 text-blue-600 font-medium"
+                    : "text-gray-700 hover:bg-gray-50"
+                    }`}
                 >
                   {/* <span className="text-lg">{lang.flag}</span> */}
                   <Image

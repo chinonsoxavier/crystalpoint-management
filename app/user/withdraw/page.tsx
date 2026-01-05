@@ -17,13 +17,14 @@ import useDashboardStore from "../(user)/_dashboard_store";
 import useDepositStore from "../deposit/_deposit_store";
 import { useEffect, useState } from "react";
 import useUserStore from "../user_store";
+import { useTranslate } from "@/hooks/use_translate";
 
 const Page = () => {
-  const [walletAddress, setWalletAddres] = useState('');
+  const { t } = useTranslate();
+  const [walletAddress, setWalletAddres] = useState("");
   const [amount, setAmount] = useState(0);
   const [selectedAccount, setSelectedAccount] = useState("");
   const {
-    
     pendingWithdrawals,
     fetchWithdrawalsApproved,
     fetchWithdrawalsPending,
@@ -36,8 +37,8 @@ const Page = () => {
     selectedDepositMethod,
   } = useDepositStore();
 
-  const {profile} = useDashboardStore();
-  const {user} = useUserStore();
+  const { profile } = useDashboardStore();
+  const { user } = useUserStore();
   const withdrawalMethods = [
     {
       _id: "USDT-TRC20",
@@ -51,15 +52,17 @@ const Page = () => {
     fetchDepositMethods();
     fetchWithdrawalsApproved();
     fetchWithdrawalsPending();
-  }, [])
+  }, []);
 
-
- 
-
-  const handleWithdrawal = (e:React.FormEvent)=>{
+  const handleWithdrawal = (e: React.FormEvent) => {
     e.preventDefault();
-      requestWithdrawal(walletAddress,amount,selectedDepositMethod?._id,selectedAccount);
-  }
+    requestWithdrawal(
+      walletAddress,
+      amount,
+      selectedDepositMethod?._id,
+      selectedAccount
+    );
+  };
 
   return (
     <div className="p-4 h-full overflow-y-scroll bg-accent md:p-6">
@@ -77,11 +80,10 @@ const Page = () => {
 
         <div className="bg-[#2bc15533] px-8 py-3 flex-1 md:px-3 rounded-md">
           <p className="md:text-xl text-lg font-semibold text-black dark:text-white">
-            PENDING
+            {t.admin.withdraw.pending}
           </p>
           <p className="text-[#8b98d] dark:text-[#666e70] font-medium">
-            $
-            {pendingWithdrawals.reduce<number>(
+            $             {pendingWithdrawals.reduce<number>(
               (total, withdrawal) => total + withdrawal.amount,
               0
             ) || 0}
@@ -95,30 +97,30 @@ const Page = () => {
       >
         <div className="flex gap-2 flex-col mb-6">
           <button className="pb-1 font-semibold text-black dark:text-white text-left text-lg md:text-xl">
-            Withdraw
+            {t.admin.withdraw.withdraw}
           </button>
 
           <p className="text-[#8b98d] dark:text-gray-400  md:text-lg">
-            Ledger Balance: $
+            {t.admin.withdraw.ledgerBalance}
             {(profile?.profit_balance || 0) +
               (user?.balance.activeDeposit || 0) +
               (profile?.promotional_balance || 0)}
           </p>
           <p className="text-[#8b98d] dark:text-gray-400  md:text-lg">
-            Active Deposit : ${user?.balance.activeDeposit || 0}
+            {t.admin.withdraw.activeDeposit} active depo ${user?.balance.activeDeposit || 0}
           </p>
           <p className="text-[#8b98d] dark:text-gray-400  md:text-lg">
-            Profit Balance: ${profile?.profit_balance || 0}
+            {t.admin.withdraw.profitBalance} ${profile?.profit_balance || 0}
           </p>
 
           <p className="text-[#8b98d] dark:text-gray-400  md:text-lg">
-            Promo Balance : ${profile?.promotional_balance || 0}
+            {t.admin.withdraw.promoBalance} ${profile?.promotional_balance || 0}
           </p>
         </div>
 
         <div className="flex gap-2 flex-col mb-6">
           <button className="pb-1 font-semibold text-black dark:text-white text-left border-b-2 text-lg md:text-xl">
-            Withdrawal
+            {t.admin.withdraw.withdrawal}
           </button>
 
           {/* Payment Section */}
@@ -126,7 +128,7 @@ const Page = () => {
             {/* Cryptocurrency Dropdown */}
             <div className="">
               <Label className="font-semibold text-base text-accent-text mb-4">
-                Method of withdrawal
+                {t.admin.withdraw.methodOfWithdrawal}
               </Label>
               <Select
                 required
@@ -138,11 +140,11 @@ const Page = () => {
                 }}
               >
                 <SelectTrigger className="w-full text-accent-text">
-                  <SelectValue placeholder="Select a wallet" />
+                  <SelectValue placeholder={t.admin.withdraw.selectWallet} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Wallet Type</SelectLabel>
+                    <SelectLabel>{t.admin.withdraw.walletType}</SelectLabel>
                     {withdrawalMethods.map((method, index) => (
                       <SelectItem
                         key={index}
@@ -159,7 +161,7 @@ const Page = () => {
 
             <div className="">
               <Label className="font-semibold text-base text-accent-text mb-4">
-                Choose an account
+                {t.admin.withdraw.chooseAccount}
               </Label>
               <Select
                 required
@@ -168,19 +170,19 @@ const Page = () => {
               >
                 {" "}
                 <SelectTrigger className="w-full text-accent-text">
-                  <SelectValue placeholder="Select an account" />
+                  <SelectValue placeholder={t.admin.withdraw.selectAccount} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Sellect Wallet</SelectLabel>
+                    <SelectLabel>{t.admin.withdraw.selectWalletLabel}</SelectLabel>
                     <SelectItem className="" value="bonus">
-                      Bonus Balance
+                      {t.admin.withdraw.bonusBalance}
                     </SelectItem>
                     <SelectItem className="" value="profit">
-                      Profit Balance
+                      {t.admin.withdraw.profitBalanceOption}
                     </SelectItem>
                     <SelectItem className="" value="deposit">
-                      Deposit Balance
+                      {t.admin.withdraw.depositBalance}
                     </SelectItem>
                   </SelectGroup>
                 </SelectContent>
@@ -190,7 +192,7 @@ const Page = () => {
             {/* Wallet Address */}
             <div className="">
               <Label className="text-base font-semibold text-accent-text mb-2">
-                Wallet Address
+                {t.admin.withdraw.walletAddress}
               </Label>
               <Input
                 value={walletAddress}
@@ -207,7 +209,7 @@ const Page = () => {
             {/* Amount Input */}
             <div className="">
               <Label className="text-base font-semibold text-accent-text mb-2">
-                Amount
+                {t.admin.withdraw.amount}
               </Label>
               <Input
                 value={amount}
@@ -236,7 +238,7 @@ const Page = () => {
             disabled={loadingWithdrawal}
             className="w-full font-semibold py-3 rounded-lg transition-colors"
           >
-            {loadingWithdrawal ? "SUBMITING" : "SUBMIT"}
+            {loadingWithdrawal ? t.admin.withdraw.submitting : t.admin.withdraw.submit}
           </Button>
         </div>
       </form>

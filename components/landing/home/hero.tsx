@@ -64,7 +64,7 @@ const Hero = () => {
   };
 
   return (
-    <div className="relative w-scren">
+    <div className="relative z w-scren">
       <div className="flex animate-translateX overflow-x-clip w-full items-center ovrflow-x-scroll  md:justify-start h-full relative z-10 min-h-screen">
         {t.landing.hero.slides.map((slide, index) => (
           <Animate

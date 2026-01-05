@@ -13,6 +13,16 @@ import { admin as zhAdmin } from "./zh/admin";
 export type Language = "en" | "es" | "fr" | "pt" | "zh";
 
 export interface LandingTranslation {
+  sidemenu: {
+    company: string;
+    aboutUs: string;
+    faqs: string;
+    contactUs: string;
+    markets: string;
+    plans: string;
+    ourServices: string;
+    login: string;
+  },
   header: {
     company: string;
     aboutUs: string;
@@ -695,6 +705,16 @@ export interface LandingTranslation {
 };
 
 export interface AdminTranslation {
+  sidemenu: {
+    company: string;
+    aboutUs: string;
+    faqs: string;
+    contactUs: string;
+    markets: string;
+    plans: string;
+    ourServices: string;
+    login: string;
+  },
   header: {
     greetings: string;
   };
@@ -778,17 +798,18 @@ export interface AdminTranslation {
     withdrawal: string;
     methodOfWithdrawal: string;
     selectWallet: string;
+    walletType: string;
     chooseAccount: string;
     selectAccount: string;
+    selectWalletLabel: string;
+    bonusBalance: string;
+    profitBalanceOption: string;
+    depositBalance: string;
     walletAddress: string;
     amount: string;
-    submit: string;
     submitting: string;
-    walletType: string;
-    ledgerBalanceOption: string;
-    profitBalanceOption: string;
-    promoBalanceOption: string;
-  };
+    submit: string;
+  },
   membership: {
     title: string;
     subtitle: string;
@@ -1167,9 +1188,9 @@ export interface AllTranslations {
 export const translations: Record<Language, AllTranslations> = {
   en: { landing: enLanding, admin: enAdmin },
   es: { landing: esLanding, admin: esAdmin },
-  fr: { landing: frLanding,admin: frAdmin },
-  pt: { landing: ptLanding ,admin: ptAdmin },
-  zh: { landing: zhLanding,admin: zhAdmin },
+  fr: { landing: frLanding, admin: frAdmin },
+  pt: { landing: ptLanding, admin: ptAdmin },
+  zh: { landing: zhLanding, admin: zhAdmin },
 };
 
 export const languages: Record<Language, string> = {
