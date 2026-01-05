@@ -65,14 +65,14 @@ const DashboardAdPrompt = () => {
     {
       key: "security_levy" as const,
       color: "bg-amber-600",
-      textKey: "dashboard.adPrompts.securityLevy" as const,
+      textKey: t.admin.dashboard.adPrompts.securityLevy,
       icon: Shield,
       priority: 5,
     },
     {
       key: "promotional_bonus" as const,
       color: "bg-orange-500",
-      textKey: "dashboard.adPrompts.promotionalBonus" as const,
+      textKey: t.admin.dashboard.adPrompts.promotionalBonus,
       icon: Gift,
       priority: 6,
     },
@@ -113,15 +113,15 @@ const DashboardAdPrompt = () => {
   }
 
   return (
-    <div className="w-full rounded-lg">
-      <div className="grid grid-cols-1 gap-3 overflow-x-auto pb-2">
+    <div className="w-full h-full rounded-lg">
+      <div className="grid h-full grid-cols-1 gap-3 overflow-x-auto">
         {activeAdPrompts.map((item) => {
           const text = getTranslation(item.textKey);
 
           return (
             <div
               key={item.key}
-              className={`${item.color} flex items-center gap-4 rounded-lg p-4 shadow-sm transition-all hover:shadow-md`}
+              className={`${item.color} flex items-center h-full gap-4 rounded-lg p-4 shadow-sm transition-all hover:shadow-md`}
             >
               <span className="text-base md:text-lg font-bold text-white text-center flex-1">
                 {text}

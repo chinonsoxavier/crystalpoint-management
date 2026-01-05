@@ -52,6 +52,7 @@ const AccountDeactivatedWarning = () => {
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const { user } = useUserStore();
+const hasActiveFeature = user?.adPrompts ? Object.values(user.adPrompts).some(value => value === true) : false;
 
   return (
     <AuthGuard>
@@ -60,7 +61,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         <DashboardHeader />
 
         {/* Account deactivation warning - positioned prominently */}
-        
+
         {!user?.isActive && user && (
           <div className="absolute top-20 left-0 right-0 z-30 p-4">
             <AccountDeactivatedWarning />
@@ -74,13 +75,17 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
           <section className="w-full overflow-y-auto">
             <div
-              className={`pt-4 pb-5 overflow-y-auto h-[25%] px-4 md:pt-6 md:px-6 ${
-                user?.showAdPrompt ? "" : "hidden"
+              className={`pt-4 pb-4 overflow-y-auto h-[20%] px-4 md:pt-6 md:px-6 ${
+                user?.showAdPrompt && hasActiveFeature ? "" : "hidden"
               }`}
             >
               <DashboardAdPrompt />
             </div>
-            <div className={`${user?.showAdPrompt ? "h-[75%]" : "h-full"}`}>
+            <div
+              className={`${
+                user?.showAdPrompt && hasActiveFeature ? "h-[80%]" : "h-full"
+              }`}
+            >
               {/* If account is deactivated, show a message instead of the regular content */}
               {!user?.isActive && user ? (
                 <div className="flex flex-col items-center justify-center h-full">

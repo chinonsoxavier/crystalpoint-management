@@ -190,6 +190,9 @@ export default function UsersPage() {
 
   // Sync balances from financial summary or user object into local state
   useEffect(() => {
+    console.log("selected user", selectedUser);
+    console.log("financial summary", userFinancialSumary);
+    // if()
     if (userFinancialSumary?.balances) {
       setTempBalances({
         deposit: selectedUser?.balance?.deposit ?? 0, // Fallback to main user object
@@ -213,7 +216,7 @@ export default function UsersPage() {
         activeDeposit: 0,
       });
     }
-  }, [userFinancialSumary, selectedUser]);
+  }, [selectedUser,userFinancialSumary]);
 
   // Reset form when a new user is selected
   useEffect(() => {
@@ -253,20 +256,13 @@ export default function UsersPage() {
     amount: number
   ) => {
     if (!selectedUser) return;
-
-    try {
       await updateUserBalance(
         selectedUser._id,
         type,
         Number(amount),
         balanceReason || `Updated ${type}`
       );
-      toast.success(`${type} updated successfully`);
-      // Optional: Refetch summary to ensure server values are synced
       await fetchFinancialSummary(selectedUser._id);
-    } catch (error) {
-      toast.error(`Failed to update ${type}`);
-    }
   };
 
   // Handler for updating tier
