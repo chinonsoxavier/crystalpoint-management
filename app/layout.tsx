@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/providers/provider";
 import BackToTop from "@/components/shared/back-to-top";
 import WhatsAppFloat from "@/components/shared/whatsapp-float";
+import { LanguageSelect } from "@/components/shared/language_select";
 
 const archivoSans = Archivo({
   variable: "--font-archivo-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
         <WhatsAppFloat />
         <Providers>{children}</Providers>
         <BackToTop />
+        <LanguageSelect/>
       </body>
     </html>
   );

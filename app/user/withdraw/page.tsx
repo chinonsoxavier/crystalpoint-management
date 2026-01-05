@@ -21,6 +21,7 @@ import useUserStore from "../user_store";
 const Page = () => {
   const [walletAddress, setWalletAddres] = useState('');
   const [amount, setAmount] = useState(0);
+  const [selectedAccount, setSelectedAccount] = useState("");
   const {
     
     pendingWithdrawals,
@@ -57,7 +58,7 @@ const Page = () => {
 
   const handleWithdrawal = (e:React.FormEvent)=>{
     e.preventDefault();
-      requestWithdrawal(walletAddress,amount);
+      requestWithdrawal(walletAddress,amount,selectedDepositMethod?._id,selectedAccount);
   }
 
   return (
@@ -79,7 +80,11 @@ const Page = () => {
             PENDING
           </p>
           <p className="text-[#8b98d] dark:text-[#666e70] font-medium">
-            ${pendingWithdrawals.reduce<number>((total, withdrawal) => total + withdrawal.amount, 0) || 0}
+            $
+            {pendingWithdrawals.reduce<number>(
+              (total, withdrawal) => total + withdrawal.amount,
+              0
+            ) || 0}
           </p>
         </div>
       </div>
@@ -156,21 +161,26 @@ const Page = () => {
               <Label className="font-semibold text-base text-accent-text mb-4">
                 Choose an account
               </Label>
-              <Select required>
+              <Select
+                required
+                value={selectedAccount}
+                onValueChange={setSelectedAccount}
+              >
+                {" "}
                 <SelectTrigger className="w-full text-accent-text">
                   <SelectValue placeholder="Select an account" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Sellect Wallet</SelectLabel>
-                    <SelectItem className="" value="ledger balance">
-                      Ledger Balance
+                    <SelectItem className="" value="bonus">
+                      Bonus Balance
                     </SelectItem>
-                    <SelectItem className="" value="Profit balance">
+                    <SelectItem className="" value="profit">
                       Profit Balance
                     </SelectItem>
-                    <SelectItem className="" value="Promo balance">
-                      Promo Balance
+                    <SelectItem className="" value="deposit">
+                      Deposit Balance
                     </SelectItem>
                   </SelectGroup>
                 </SelectContent>

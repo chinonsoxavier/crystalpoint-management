@@ -1,10 +1,9 @@
 // footer.tsx
 "use client";
 
-import { ChevronDown, Gem, Globe } from "lucide-react";
+import {  Gem } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { LanguageSelect } from "../shared/language_select";
 import { useTranslate } from "@/hooks/use_translate";
 
 const Footer = () => {
@@ -193,8 +192,6 @@ const Footer = () => {
                       {t.landing.footer.account.forgotPassword}
                     </a>
                   </li>
-                  {/* Language Selector */}
-                  <LanguageSelect />
                 </ul>
               </div>
             </div>
