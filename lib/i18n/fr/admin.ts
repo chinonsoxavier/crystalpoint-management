@@ -23,7 +23,7 @@ export const admin = {
       activeDeposits: "Dépôts Actifs",
       pendingWithdrawals: "Retraits en Attente",
       promotionalBalance: "Solde Promotionnel",
-      bonus:"prime"
+      bonus: "prime",
     },
     transactions: {
       label: "Transactions Précédentes",
@@ -421,7 +421,8 @@ export const admin = {
   resetPassword: {
     resetPassword: "Réinitialiser le Mot de Passe",
     createNewPassword: "Créer un Nouveau Mot de Passe",
-    enterEmailToReset: "Entrez votre email pour recevoir un lien de réinitialisation",
+    enterEmailToReset:
+      "Entrez votre email pour recevoir un lien de réinitialisation",
     enterNewPassword: "Entrez votre nouveau mot de passe ci-dessous",
     emailAddress: "Adresse E-mail",
     newPassword: "Nouveau Mot de Passe",
@@ -438,7 +439,13 @@ export const admin = {
     sendResetLink: "Envoyer le Lien de Réinitialisation",
     resettingPassword: "Réinitialisation du Mot de Passe...",
     resetPasswordButton: "Réinitialiser le Mot de Passe",
-    passwordResetSuccess: "Mot de passe réinitialisé avec succès! Redirection vers la connexion...",
+    passwordResetSuccess:
+      "Mot de passe réinitialisé avec succès! Redirection vers la connexion...",
+    placeholders: {
+      email: "Entrez votre adresse e-mail",
+      newPassword: "Entrez votre nouveau mot de passe",
+      confirmPassword: "Confirmez votre nouveau mot de passe",
+    },
   },
   auth: {
     signIn: {
@@ -455,10 +462,15 @@ export const admin = {
       usernameRequired: "Le nom d'utilisateur est requis",
       passwordRequired: "Le mot de passe est requis",
       passwordMinLength: "Le mot de passe doit contenir au moins 4 caractères",
+      placeholders: {
+        username: "Entrez votre nom d'utilisateur",
+        password: "Entrez votre mot de passe",
+      },
     },
     signUp: {
       createAccount: "Créer un Compte",
-      enterDetailsToRegister: "Entrez vos détails pour enregistrer un nouveau compte",
+      enterDetailsToRegister:
+        "Entrez vos détails pour enregistrer un nouveau compte",
       firstName: "Prénom",
       lastName: "Nom",
       username: "Nom d'utilisateur",
@@ -490,6 +502,15 @@ export const admin = {
       selectACountry: "Sélectionner un pays",
       searchCountry: "Rechercher un pays...",
       noCountryFound: "Aucun pays trouvé.",
+      placeholders: {
+        firstName: "Entrez votre prénom",
+        lastName: "Entrez votre nom",
+        username: "Choisissez un nom d'utilisateur",
+        email: "votre@email.com",
+        phone: "+1234567890",
+        password: "•••••••",
+        confirmPassword: "•••••••",
+      },
     },
   },
 };

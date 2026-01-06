@@ -23,7 +23,7 @@ export const admin = {
       activeDeposits: "活跃存款",
       pendingWithdrawals: "待处理提款",
       promotionalBalance: "促销余额",
-      bonus:'奖金  / 奖励'
+      bonus: "奖金  / 奖励",
     },
     transactions: {
       label: "之前的交易",
@@ -309,7 +309,6 @@ export const admin = {
       resolved: "已解决",
       closed: "已关闭",
     },
-
   },
   promoModal: {
     title: "促销奖金计划",
@@ -427,6 +426,11 @@ export const admin = {
     resettingPassword: "重置密码中...",
     resetPasswordButton: "重置密码",
     passwordResetSuccess: "密码重置成功！正在重定向到登录页面...",
+    placeholders: {
+      email: "输入您的电子邮件",
+      newPassword: "输入您的新密码",
+      confirmPassword: "确认您的新密码",
+    },
   },
   auth: {
     signIn: {
@@ -443,6 +447,10 @@ export const admin = {
       usernameRequired: "用户名是必需的",
       passwordRequired: "密码是必需的",
       passwordMinLength: "密码必须至少4个字符",
+      placeholders: {
+        username: "输入您的用户名",
+        password: "输入您的密码",
+      },
     },
     signUp: {
       createAccount: "创建账户",
@@ -478,6 +486,15 @@ export const admin = {
       selectACountry: "选择国家",
       searchCountry: "搜索国家...",
       noCountryFound: "未找到国家。",
+      placeholders: {
+        firstName: "输入您的名字",
+        lastName: "输入您的姓氏",
+        username: "选择一个用户名",
+        email: "您的@email.com",
+        phone: "+1234567890",
+        password: "•••••••",
+        confirmPassword: "•••••••",
+      },
     },
   },
   // withdraw: {

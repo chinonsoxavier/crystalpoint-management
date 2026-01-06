@@ -709,7 +709,7 @@ export default function UsersPage() {
                                   disabled={isUpdatingBalance}
                                   size="sm"
                                 >
-                                  Updat
+                                  Update
                                 </Button>
                               </div>
                             </div>

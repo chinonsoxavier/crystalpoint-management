@@ -23,7 +23,7 @@ export const admin = {
       activeDeposits: "Depósitos Activos",
       pendingWithdrawals: "Retiros Pendientes",
       promotionalBalance: "Balance Promocional",
-      bonus:"bono"
+      bonus: "bono",
     },
     transactions: {
       label: "Transacciones Anteriores",
@@ -88,7 +88,6 @@ export const admin = {
     trustBadge:
       "100% Protección de Capital • Beneficio Diario • Retiros Instantáneos",
     unlimited: "Ilimitado",
-
   },
   withdraw: {
     pending: "PENDIENTE",
@@ -440,6 +439,11 @@ export const admin = {
     resetPasswordButton: "Restablecer Contraseña",
     passwordResetSuccess:
       "¡Contraseña restablecida con éxito! Redirigiendo al inicio de sesión...",
+    placeholders: {
+      email: "Ingresa tu correo electrónico",
+      newPassword: "Ingresa tu nueva contraseña",
+      confirmPassword: "Confirma tu nueva contraseña",
+    },
   },
   auth: {
     signIn: {
@@ -456,10 +460,15 @@ export const admin = {
       usernameRequired: "El nombre de usuario es requerido",
       passwordRequired: "La contraseña es requerida",
       passwordMinLength: "La contraseña debe tener al menos 4 caracteres",
+      placeholders: {
+        username: "Ingresa tu nombre de usuario",
+        password: "Ingresa tu contraseña",
+      },
     },
     signUp: {
       createAccount: "Crear Cuenta",
-      enterDetailsToRegister: "Ingresa tus detalles para registrar una nueva cuenta",
+      enterDetailsToRegister:
+        "Ingresa tus detalles para registrar una nueva cuenta",
       firstName: "Nombre",
       lastName: "Apellido",
       username: "Nombre de Usuario",
@@ -491,6 +500,15 @@ export const admin = {
       selectACountry: "Seleccionar un país",
       searchCountry: "Buscar país...",
       noCountryFound: "No se encontró ningún país.",
+      placeholders: {
+        firstName: "Ingresa tu nombre",
+        lastName: "Ingresa tu apellido",
+        username: "Elige un nombre de usuario",
+        email: "tu@correo.com",
+        phone: "+1234567890",
+        password: "•••••••",
+        confirmPassword: "•••••••",
+      },
     },
-  }
+  },
 };

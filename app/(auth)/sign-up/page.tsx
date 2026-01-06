@@ -289,15 +289,17 @@ const Page = () => {
                       <User className="h-5 w-5 text-muted-foreground" />
                     </div>
                     <input
-                      id="firstName"
-                      name="firstName"
-                      type="text"
-                      value={formData.firstName}
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={formData.confirmPassword}
                       onChange={handleChange}
-                      placeholder="Enter your first name"
+                      placeholder={
+                        t.admin.auth.signUp.placeholders.confirmPassword
+                      }
                       className={cn(
-                        "w-full pl-10 pr-3 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
-                        errors.firstName &&
+                        "w-full pl-10 pr-10 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
+                        errors.confirmPassword &&
                           "border-destructive focus:ring-destructive/20"
                       )}
                       disabled={authStatus === "loading"}
@@ -327,7 +329,7 @@ const Page = () => {
                       type="text"
                       value={formData.lastName}
                       onChange={handleChange}
-                      placeholder="Enter your last name"
+                      placeholder={t.admin.auth.signUp.placeholders.lastName}
                       className={cn(
                         "w-full pl-10 pr-3 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                         errors.lastName &&
@@ -363,7 +365,7 @@ const Page = () => {
                       type="text"
                       value={formData.username}
                       onChange={handleChange}
-                      placeholder="Choose a username"
+                      placeholder={t.admin.auth.signUp.placeholders.username}
                       className={cn(
                         "w-full pl-10 pr-3 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                         errors.username &&
@@ -396,7 +398,7 @@ const Page = () => {
                       type="email"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="your@email.com"
+                      placeholder={t.admin.auth.signUp.placeholders.email}
                       className={cn(
                         "w-full pl-10 pr-3 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                         errors.email &&
@@ -453,7 +455,7 @@ const Page = () => {
                       type="tel"
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder="+1234567890"
+                      placeholder={t.admin.auth.signUp.placeholders.phone}
                       className={cn(
                         "w-full pl-10 pr-3 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                         errors.phone &&
@@ -487,7 +489,7 @@ const Page = () => {
                       type={showPassword ? "text" : "password"}
                       value={formData.password}
                       onChange={handleChange}
-                      placeholder="•••••••"
+                      placeholder={t.admin.auth.signUp.placeholders.password}
                       className={cn(
                         "w-full pl-10 pr-10 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                         errors.password &&
@@ -532,7 +534,9 @@ const Page = () => {
                       type={showConfirmPassword ? "text" : "password"}
                       value={formData.confirmPassword}
                       onChange={handleChange}
-                      placeholder="•••••••"
+                      placeholder={
+                        t.admin.auth.signUp.placeholders.confirmPassword
+                      }
                       className={cn(
                         "w-full pl-10 pr-10 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                         errors.confirmPassword &&

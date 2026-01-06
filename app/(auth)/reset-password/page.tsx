@@ -143,7 +143,7 @@ const Page = () => {
                       type="email"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="Enter your email"
+                      placeholder={t.admin.resetPassword.placeholders.email}
                       className={cn(
                         "w-full pl-10 pr-3 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                         errors.email &&
@@ -203,7 +203,9 @@ const Page = () => {
                       type={showPassword ? "text" : "password"}
                       value={formData.newPassword}
                       onChange={handleChange}
-                      placeholder="Enter your new password"
+                      placeholder={
+                        t.admin.resetPassword.placeholders.newPassword
+                      }
                       className={cn(
                         "w-full pl-10 pr-10 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                         errors.newPassword &&
@@ -249,7 +251,9 @@ const Page = () => {
                       type={showConfirmPassword ? "text" : "password"}
                       value={formData.confirmPassword}
                       onChange={handleChange}
-                      placeholder="Confirm your new password"
+                      placeholder={
+                        t.admin.resetPassword.placeholders.confirmPassword
+                      }
                       className={cn(
                         "w-full pl-10 pr-10 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                         errors.confirmPassword &&

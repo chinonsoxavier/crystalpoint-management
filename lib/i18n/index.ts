@@ -714,7 +714,7 @@ export interface AdminTranslation {
     plans: string;
     ourServices: string;
     login: string;
-  },
+  };
   header: {
     greetings: string;
   };
@@ -729,7 +729,7 @@ export interface AdminTranslation {
       activeDeposits: string;
       pendingWithdrawals: string;
       promotionalBalance: string;
-      bonus:string;
+      bonus: string;
     };
     transactions: {
       label: string;
@@ -810,7 +810,7 @@ export interface AdminTranslation {
     amount: string;
     submitting: string;
     submit: string;
-  },
+  };
   membership: {
     title: string;
     subtitle: string;
@@ -1119,6 +1119,10 @@ export interface AdminTranslation {
       usernameRequired: string;
       passwordRequired: string;
       passwordMinLength: string;
+      placeholders: {
+        username: string;
+        password: string;
+      };
     };
     signUp: {
       createAccount: string;
@@ -1154,6 +1158,15 @@ export interface AdminTranslation {
       selectACountry: string;
       searchCountry: string;
       noCountryFound: string;
+      placeholders: {
+        firstName: string;
+        lastName: string;
+        username: string;
+        email: string;
+        phone: string;
+        password: string;
+        confirmPassword: string;
+      };
     };
   };
   resetPassword: {
@@ -1177,6 +1190,11 @@ export interface AdminTranslation {
     resettingPassword: string;
     resetPasswordButton: string;
     passwordResetSuccess: string;
+    placeholders: {
+      email: string;
+      newPassword: string;
+      confirmPassword: string;
+    };
     // redirectingToLogin: string;
   };
 }

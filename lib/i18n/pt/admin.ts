@@ -23,7 +23,7 @@ export const admin = {
       activeDeposits: "Depósitos Ativos",
       pendingWithdrawals: "Retiradas Pendentes",
       promotionalBalance: "Saldo Promocional",
-      bonus:"bônus"
+      bonus: "bônus",
     },
     transactions: {
       label: "Transações Anteriores",
@@ -437,6 +437,11 @@ export const admin = {
     resetPasswordButton: "Redefinir Senha",
     passwordResetSuccess:
       "Senha redefinida com sucesso! Redirecionando para o login...",
+    placeholders: {
+      email: "Digite seu e-mail",
+      newPassword: "Digite sua nova senha",
+      confirmPassword: "Confirme sua nova senha",
+    },
   },
   auth: {
     signIn: {
@@ -453,6 +458,10 @@ export const admin = {
       usernameRequired: "Nome de usuário é obrigatório",
       passwordRequired: "Senha é obrigatória",
       passwordMinLength: "A senha deve ter pelo menos 4 caracteres",
+      placeholders: {
+        username: "Digite seu nome de usuário",
+        password: "Digite sua senha",
+      },
     },
     signUp: {
       createAccount: "Criar Conta",
@@ -489,6 +498,15 @@ export const admin = {
       selectACountry: "Selecione um país",
       searchCountry: "Pesquisar país...",
       noCountryFound: "Nenhum país encontrado.",
+      placeholders: {
+        firstName: "Digite seu nome",
+        lastName: "Digite seu sobrenome",
+        username: "Escolha um nome de usuário",
+        email: "seu@email.com",
+        phone: "+1234567890",
+        password: "•••••••",
+        confirmPassword: "•••••••",
+      },
     },
   },
 };
