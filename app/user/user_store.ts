@@ -11,19 +11,12 @@ interface IUserProfile {
 }
 
 interface IUserBalance {
-
   activeDeposit: number;
-
   bonus: number;
-
   deposit: number;
-
   pendingWithdrawals: number;
-
   profit: number;
-
   promotionalBonus: number;
-
   totalWithdrawn: number;
 }
 
@@ -46,7 +39,7 @@ export interface IUser {
   _id: string;
   adPrompts: IAdPrompt;
   showAdPrompt: boolean;
-  isActive:boolean
+  isActive: boolean;
 }
 
 interface ILogin {

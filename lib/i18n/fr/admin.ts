@@ -23,6 +23,7 @@ export const admin = {
       activeDeposits: "Dépôts Actifs",
       pendingWithdrawals: "Retraits en Attente",
       promotionalBalance: "Solde Promotionnel",
+      bonus:"prime"
     },
     transactions: {
       label: "Transactions Précédentes",
@@ -91,10 +92,10 @@ export const admin = {
   withdraw: {
     pending: "EN ATTENTE",
     withdraw: "Retirer",
-    ledgerBalance: "Solde du Grand Livre: $",
-    activeDeposit: "Dépôt Actif: $",
-    profitBalance: "Solde des Bénéfices: $",
-    promoBalance: "Solde Promotionnel: $",
+    ledgerBalance: "Solde du Grand Livre: ",
+    activeDeposit: "Dépôt Actif: ",
+    profitBalance: "Solde des Bénéfices: ",
+    promoBalance: "Solde Promotionnel: ",
     withdrawal: "Retrait",
     methodOfWithdrawal: "Méthode de retrait",
     selectWallet: "Sélectionner un portefeuille",

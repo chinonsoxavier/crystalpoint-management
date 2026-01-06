@@ -45,8 +45,8 @@ const {t} = useTranslate();
       colorClass: "from-red-500 to-red-600",
     },
     {
-      label:t.admin.overview.balanceCards.promotionalBalance,
-      value: profile?.promotional_balance,
+      label:t.admin.overview.balanceCards.bonus,
+      value: user?.balance.bonus,
       colorClass: "from-orange-400 to-orange-500",
     },
   ];

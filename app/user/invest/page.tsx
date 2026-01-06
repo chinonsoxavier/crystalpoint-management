@@ -27,7 +27,7 @@ const Page = () => {
         {/* Header */}
         <div className="text-center my-15 md:my-7 px-3">
           <h1 className="text-4xl md:text-5xl text-accent-text font-semibold">
-            Our Investment Plans
+            {t.admin.invest.pageTitle}
           </h1>
         </div>
 

@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { Button } from "../../ui/button";
 import { useSupportStore } from "@/app/user/support/_support";
 import { Mail, Clock, CheckCircle, XCircle } from "lucide-react";
+import { useTranslate } from "@/hooks/use_translate";
 
 // Define the ticket status type
 type TicketStatus = "open" | "in_progress" | "resolved" | "closed";
@@ -10,58 +11,59 @@ type TicketTypeProps = {
   setActiveTabs: Dispatch<SetStateAction<"messages" | "compose">>;
 };
 
-// Define the status configuration with icons and labels
-const statusConfig: Record<
-  TicketStatus,
-  {
-    label: string;
-    icon: React.ReactNode;
-    bgColor: string;
-    textColor: string;
-    badgeBg: string;
-    badgeText: string;
-  }
-> = {
-  open: {
-    label: "Open",
-    icon: <Mail className="w-5 h-5" />,
-    bgColor: "bg-blue-500",
-    textColor: "text-white",
-    badgeBg: "bg-white",
-    badgeText: "text-blue-500",
-  },
-  in_progress: {
-    label: "In Progress",
-    icon: <Clock className="w-5 h-5" />,
-    bgColor: "bg-amber-500",
-    textColor: "text-white",
-    badgeBg: "bg-white",
-    badgeText: "text-amber-500",
-  },
-  resolved: {
-    label: "Resolved",
-    icon: <CheckCircle className="w-5 h-5" />,
-    bgColor: "bg-green-500",
-    textColor: "text-white",
-    badgeBg: "bg-white",
-    badgeText: "text-green-500",
-  },
-  closed: {
-    label: "Closed",
-    icon: <XCircle className="w-5 h-5" />,
-    bgColor: "bg-gray-500",
-    textColor: "text-white",
-    badgeBg: "bg-white",
-    badgeText: "text-gray-500",
-  },
-};
-
 const TicketType = ({ setActiveTabs }: TicketTypeProps) => {
-  const { activeTab, setActiveTab, tickets, fetchTickets,setShowTicketDetails } = useSupportStore();
+  const { t } = useTranslate();
+  const { activeTab, setActiveTab, tickets, fetchTickets, setShowTicketDetails } = useSupportStore();
 
   useEffect(() => {
     fetchTickets({ status: activeTab, page: 1, limit: 100 });
   }, [activeTab, fetchTickets]);
+
+  // Define the status configuration with icons and labels
+  const statusConfig: Record<
+    TicketStatus,
+    {
+      label: string;
+      icon: React.ReactNode;
+      bgColor: string;
+      textColor: string;
+      badgeBg: string;
+      badgeText: string;
+    }
+  > = {
+    open: {
+      label: t.admin.support.ticketStatus.open,
+      icon: <Mail className="w-5 h-5" />,
+      bgColor: "bg-blue-500",
+      textColor: "text-white",
+      badgeBg: "bg-white",
+      badgeText: "text-blue-500",
+    },
+    in_progress: {
+      label: t.admin.support.ticketStatus.inProgress,
+      icon: <Clock className="w-5 h-5" />,
+      bgColor: "bg-amber-500",
+      textColor: "text-white",
+      badgeBg: "bg-white",
+      badgeText: "text-amber-500",
+    },
+    resolved: {
+      label: t.admin.support.ticketStatus.resolved,
+      icon: <CheckCircle className="w-5 h-5" />,
+      bgColor: "bg-green-500",
+      textColor: "text-white",
+      badgeBg: "bg-white",
+      badgeText: "text-green-500",
+    },
+    closed: {
+      label: t.admin.support.ticketStatus.closed,
+      icon: <XCircle className="w-5 h-5" />,
+      bgColor: "bg-gray-500",
+      textColor: "text-white",
+      badgeBg: "bg-white",
+      badgeText: "text-gray-500",
+    },
+  };
 
   // Get ticket count for each status
   const getTicketCount = (status: TicketStatus) => {

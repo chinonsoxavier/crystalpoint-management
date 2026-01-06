@@ -44,10 +44,8 @@ const Page = () => {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.username.trim())
-      newErrors.username = t.admin.auth.signIn.usernameRequired;
-    if (!formData.password)
-      newErrors.password = t.admin.auth.signIn.passwordRequired;
+    if (!formData.username.trim()) newErrors.username = t.admin.auth.signIn.usernameRequired;
+    if (!formData.password) newErrors.password = t.admin.auth.signIn.passwordRequired;
     if (formData.password.length < 4)
       newErrors.password = t.admin.auth.signIn.passwordMinLength;
 
@@ -77,11 +75,11 @@ const Page = () => {
           {/* Logo and Title Section */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-lg">
-              <span className="text-2xl font-bold text-white">CP</span>
+              <span className="text-2xl font-bold text-white">
+                CP
+              </span>
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">
-              {t.admin.auth.signIn.welcomeBack}
-            </h1>
+            <h1 className="text-3xl font-bold text-white mb-2">{t.admin.auth.signIn.welcomeBack}</h1>
             <p className="text-muted-foreground">
               {t.admin.auth.signIn.signInToAccount}
             </p>
@@ -120,7 +118,7 @@ const Page = () => {
                     className={cn(
                       "w-full pl-10 pr-3 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                       errors.username &&
-                        "border-destructive focus:ring-destructive/20"
+                      "border-destructive focus:ring-destructive/20"
                     )}
                     disabled={authStatus === "loading"}
                   />
@@ -152,7 +150,7 @@ const Page = () => {
                     className={cn(
                       "w-full pl-10 pr-10 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                       errors.password &&
-                        "border-destructive focus:ring-destructive/20"
+                      "border-destructive focus:ring-destructive/20"
                     )}
                     disabled={authStatus === "loading"}
                   />

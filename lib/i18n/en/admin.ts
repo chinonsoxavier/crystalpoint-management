@@ -23,6 +23,7 @@ export const admin = {
       activeDeposits: "Active Deposits",
       pendingWithdrawals: "Pending Withdrawals",
       promotionalBalance: "Promotional Balance",
+      bonus:"bonus"
     },
     transactions: {
       label: "Previous Transactions",
@@ -89,10 +90,10 @@ export const admin = {
   withdraw: {
     pending: "PENDING",
     withdraw: "Withdraw",
-    ledgerBalance: "Ledger Balance: $",
-    activeDeposit: "Active Deposit: $",
-    profitBalance: "Profit Balance: $",
-    promoBalance: "Promo Balance: $",
+    ledgerBalance: "Ledger Balance: ",
+    activeDeposit: "Active Deposit: ",
+    profitBalance: "Profit Balance: ",
+    promoBalance: "Promo Balance: ",
     withdrawal: "Withdrawal",
     methodOfWithdrawal: "Method of withdrawal",
     selectWallet: "Select a wallet",

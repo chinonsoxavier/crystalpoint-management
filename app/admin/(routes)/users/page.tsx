@@ -694,6 +694,7 @@ export default function UsersPage() {
                                 <Input
                                   id={config.key}
                                   type="number"
+                                  disabled={config.label === 'Deposit Balance'}
                                   className="w-full sm:w-48"
                                   value={tempBalances[config.key] ?? 0}
                                   onChange={(e) =>
@@ -708,7 +709,7 @@ export default function UsersPage() {
                                   disabled={isUpdatingBalance}
                                   size="sm"
                                 >
-                                  Update
+                                  Updat
                                 </Button>
                               </div>
                             </div>

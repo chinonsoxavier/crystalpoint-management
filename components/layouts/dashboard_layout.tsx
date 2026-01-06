@@ -108,7 +108,7 @@ const hasActiveFeature = user?.adPrompts ? Object.values(user.adPrompts).some(va
                       Account Deactivated
                     </h2>
                     <p className="text-gray-600 mb-6">
-                      Your account has been deactivated by an administrator. If
+                      Your account has been deactivated. If
                       you believe this is an error, please contact our support
                       team.
                     </p>

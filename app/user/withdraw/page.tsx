@@ -102,12 +102,12 @@ const Page = () => {
 
           <p className="text-[#8b98d] dark:text-gray-400  md:text-lg">
             {t.admin.withdraw.ledgerBalance}
-            {(profile?.profit_balance || 0) +
+            ${(profile?.profit_balance || 0) +
               (user?.balance.activeDeposit || 0) +
               (profile?.promotional_balance || 0)}
           </p>
           <p className="text-[#8b98d] dark:text-gray-400  md:text-lg">
-            {t.admin.withdraw.activeDeposit} active depo ${user?.balance.activeDeposit || 0}
+            {t.admin.withdraw.activeDeposit} ${user?.balance.activeDeposit || 0}
           </p>
           <p className="text-[#8b98d] dark:text-gray-400  md:text-lg">
             {t.admin.withdraw.profitBalance} ${profile?.profit_balance || 0}

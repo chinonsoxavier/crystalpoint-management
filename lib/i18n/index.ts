@@ -729,6 +729,7 @@ export interface AdminTranslation {
       activeDeposits: string;
       pendingWithdrawals: string;
       promotionalBalance: string;
+      bonus:string;
     };
     transactions: {
       label: string;

@@ -23,6 +23,7 @@ export const admin = {
       activeDeposits: "Depósitos Activos",
       pendingWithdrawals: "Retiros Pendientes",
       promotionalBalance: "Balance Promocional",
+      bonus:"bono"
     },
     transactions: {
       label: "Transacciones Anteriores",
@@ -87,14 +88,15 @@ export const admin = {
     trustBadge:
       "100% Protección de Capital • Beneficio Diario • Retiros Instantáneos",
     unlimited: "Ilimitado",
+
   },
   withdraw: {
     pending: "PENDIENTE",
     withdraw: "Retirar",
-    ledgerBalance: "Balance del Libro Mayor: $",
-    activeDeposit: "Depósito Activo: $",
-    profitBalance: "Balance de Ganancias: $",
-    promoBalance: "Balance Promocional: $",
+    ledgerBalance: "Balance del Libro Mayor: ",
+    activeDeposit: "Depósito Activo: ",
+    profitBalance: "Balance de Ganancias: ",
+    promoBalance: "Balance Promocional: ",
     withdrawal: "Retiro",
     methodOfWithdrawal: "Método de retiro",
     selectWallet: "Seleccionar una billetera",
