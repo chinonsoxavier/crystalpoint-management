@@ -28,7 +28,7 @@ export default function SupportEmptyState({
 
   return (
     <div className="center-col text-center md:text-lg h-full py-10 space-y-3">
-      <p className="">You do not have any {getEmptyStateMessage()}.</p>
+      <p className="">{t.admin.support.noTickets.empty} {getEmptyStateMessage()}.</p>
       <ArchiveX className="bg-[r]" />
     </div>
   );

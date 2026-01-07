@@ -792,24 +792,31 @@ export interface AdminTranslation {
   withdraw: {
     pending: string;
     withdraw: string;
+    ledgerBalanceTitle: string;
+    ledgerBalanceDescription: string;
     ledgerBalance: string;
     activeDeposit: string;
     profitBalance: string;
     promoBalance: string;
+    depositBalance: string;
     withdrawal: string;
     methodOfWithdrawal: string;
     selectWallet: string;
+    selectFromLedger: string;
+    selectAccountFromLedger: string;
+    ledgerBalanceComponents: string;
+    walletAddress: string;
+    walletAddressPlaceholder: string;
+    amount: string;
+    amountPlaceholder: string;
+    withdrawingFromLedger: string;
+    submit: string;
+    submitting: string;
     walletType: string;
-    chooseAccount: string;
     selectAccount: string;
-    selectWalletLabel: string;
     bonusBalance: string;
     profitBalanceOption: string;
-    depositBalance: string;
-    walletAddress: string;
-    amount: string;
-    submitting: string;
-    submit: string;
+    depositBalanceOption: string;
   };
   membership: {
     title: string;
@@ -995,6 +1002,7 @@ export interface AdminTranslation {
       resolved: string;
       closed: string;
       default: string;
+      empty:string;
     };
     ticketPriority: {
       low: string;

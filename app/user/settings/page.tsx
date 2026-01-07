@@ -10,13 +10,14 @@ import { SecuritySettings } from "@/components/user/settings/security_settings";
 import { AccountManagement } from "@/components/user/settings/account_management";
 import { SettingsTabs } from "@/components/user/settings/settings_tabs";
 import { useTranslate } from "@/hooks/use_translate";
+import DeActivatedMessage from "@/components/shared/deactivated_message";
 
 export default function SettingsPage() {
   const { getUserDetails } = useSettingsStore();
   const { authStatus } = useUserStore();
   const [activeTab, setActiveTab] = useState("profile");
   const { t } = useTranslate();
-
+  const { user } = useUserStore();
   useEffect(() => {
     if (authStatus === "authenticated") {
       getUserDetails();
@@ -39,18 +40,27 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="py-6 px-4 md:px-6">
-      <div className="pt-6 bg-accent sticky top-0">
-        <div className="md:mb-8 mb-5">
-          <h1 className="text-3xl font-bold">{t.admin.settings.title}</h1>
-          <p className="text-muted-foreground">{t.admin.settings.subtitle}</p>
-        </div>
+    <div className="py-6 px-4 md:px-6 h-full">
+      {!user?.isActive ? (
+        <DeActivatedMessage />
+      ) : (
+        <>
+          {" "}
+          <div className="pt-6 bg-accent sticky top-0">
+            <div className="md:mb-8 mb-5">
+              <h1 className="text-3xl font-bold">{t.admin.settings.title}</h1>
+              <p className="text-muted-foreground">
+                {t.admin.settings.subtitle}
+              </p>
+            </div>
 
-        <SettingsTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-      </div>
-      <div className="py-6">
-        <div className="">{renderTabContent()}</div>
-      </div>
+            <SettingsTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+          </div>
+          <div className="py-6">
+            <div className="">{renderTabContent()}</div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

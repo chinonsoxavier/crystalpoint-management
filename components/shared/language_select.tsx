@@ -39,7 +39,7 @@ export function LanguageSelect() {
     languages.find((l) => l.code === language) || languages[0];
 
   return (
-    <div className="w-full z-50 fixed bottom-2 left-10">
+    <div className="z-50 fixed bottom-0 left-10">
       <div className="w-full relative z-50">
         <DropdownMenu>
           <DropdownMenuTrigger className="cursor-pointer" asChild>
@@ -69,7 +69,7 @@ export function LanguageSelect() {
                   onClick={() => setLanguage(lang.code)}
                   className={`flex items-center gap-3 cursor-pointer px-4 py-3 rounded-md ${language === lang.code
                     ? "bg-blue-50 text-blue-600 font-medium"
-                    : "text-gray-700 hover:bg-gray-50"
+                    : "text-gray-200 hover:bg-gray-50"
                     }`}
                 >
                   {/* <span className="text-lg">{lang.flag}</span> */}
