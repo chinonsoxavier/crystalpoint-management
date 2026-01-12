@@ -1,6 +1,12 @@
 // lib/i18n/fr/landing.ts
 export const landing = {
-   sidemenu: {
+  deactivated: {
+    contact: " Contacter le support",
+    message:
+      "Votre compte a été désactivé. Si vous pensez qu'il s'agit d'une erreur, veuillez contacter notre équipe de support.",
+    deactivated: "Compte Désactivé",
+  },
+  sidemenu: {
     company: "Company",
     aboutUs: "About Us",
     faqs: "FAQs",

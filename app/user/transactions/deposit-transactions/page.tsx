@@ -22,7 +22,7 @@ const Page = () => {
   const [pendingDepositsTotal, setPendingDepositsTotal] = useState(0);
   const [approvedDepositsTotal, setApprovedDepositsTotal] = useState(0);
   const { t } = useTranslate();
-  const {user} = useUserStore();
+  const { user } = useUserStore();
   useEffect(() => {
     setApprovedDepositsTotal(
       depositHistory.filter((d) => d.status === "confirmed").length
@@ -34,7 +34,7 @@ const Page = () => {
 
   return (
     <div className="bg-accent h-full space-y-4 md:space-y-6 md:p-6 p-4">
-      {!user?.isActive ? (
+      {user && !user?.isActive ? (
         <DeActivatedMessage />
       ) : (
         <>

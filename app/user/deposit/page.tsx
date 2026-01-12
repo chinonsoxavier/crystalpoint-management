@@ -397,7 +397,7 @@ const Page = () => {
                     </div>
                   </div>
 
-                  <div className="flex gap-3 pt-4">
+                  <div className="flex gap-3 flex-wrap pt-4">
                     <Button
                       variant="outline"
                       onClick={() =>

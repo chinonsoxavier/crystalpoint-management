@@ -33,6 +33,7 @@ const Page = () => {
     fetchWithdrawalsPending,
     requestWithdrawal,
     loadingWithdrawal,
+    requestTotalWithdrawal
   } = useWithdrawStore();
   const {
     fetchDepositMethods,
@@ -59,6 +60,10 @@ const Page = () => {
 
   const handleWithdrawal = (e: React.FormEvent) => {
     e.preventDefault();
+   if(selectedAccount === 'ledger'){
+requestTotalWithdrawal(walletAddress,selectedDepositMethod?._id);
+return;
+   }
     requestWithdrawal(
       walletAddress,
       amount,
@@ -75,9 +80,7 @@ const Page = () => {
 
   return (
     <div className="p-4 h-full overflow-y-scroll bg-accent md:p-6">
-      {!user?.isActive ? (
-        <DeActivatedMessage />
-      ) : (
+  
         <>
           <LedgerBalance />
 
@@ -96,7 +99,6 @@ const Page = () => {
             </div>
           </div>
           <form
-            onSubmit={handleWithdrawal}
             className="my-4 bg-accent-foreground p-4 md:p-6 rounded-lg"
           >
             <div className="flex gap-2 flex-col mb-6">
@@ -226,11 +228,11 @@ const Page = () => {
                           <Wallet className="h-4 w-4" />
                           {t.admin.withdraw.ledgerBalanceComponents}
                         </SelectLabel>
-                        <SelectItem className="" value="deposit">
+                        <SelectItem className="" value="ledger">
                           <div className="flex items-center justify-between w-full">
-                            <span>{t.admin.withdraw.depositBalance}</span>
+                            <span>{t.admin.withdraw.ledgerBalance}</span>
                             <span className="text-muted-foreground ml-2">
-                              ${user?.balance.activeDeposit || 0}
+                              ${((user?.balance?.activeDeposit ?? 0) + (user?.balance?.profit ?? 0) + (user?.balance?.bonus ?? 0)) || 0}
                             </span>
                           </div>
                         </SelectItem>
@@ -242,7 +244,7 @@ const Page = () => {
                             </span>
                           </div>
                         </SelectItem>
-                        <SelectItem className="" value="promo">
+                        <SelectItem className="" value="bonus">
                           <div className="flex items-center justify-between w-full">
                             <span>{t.admin.withdraw.promoBalance}</span>
                             <span className="text-muted-foreground ml-2">
@@ -300,7 +302,8 @@ const Page = () => {
               {/* Submit Button */}
               <Button
                 type="submit"
-                disabled={loadingWithdrawal}
+                onClick={handleWithdrawal}
+                disabled={loadingWithdrawal || !amount || !selectedAccount || !walletAddress}
                 className="w-full font-semibold py-3 rounded-lg transition-colors"
               >
                 {loadingWithdrawal
@@ -310,7 +313,7 @@ const Page = () => {
             </div>
           </form>
         </>
-      )}
+      {/* )} */}
     </div>
   );
 };

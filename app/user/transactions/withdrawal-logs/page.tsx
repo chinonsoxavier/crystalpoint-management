@@ -16,7 +16,7 @@ const Page = () => {
     pendingWithdrawals,
   } = useWithdrawStore();
   const { t } = useTranslate();
-  const {user} = useUserStore();
+  const { user } = useUserStore();
   const approvedWithdrawalTotal = approvedWithdrawals.reduce(
     (total, withdrawal) => total + withdrawal,
     0
@@ -32,7 +32,7 @@ const Page = () => {
 
   return (
     <div className="bg-accent h-full space-y-4 md:space-y-6 md:p-6 p-4">
-      {!user?.isActive ? (
+      {user && !user?.isActive ? (
         <DeActivatedMessage />
       ) : (
         <>

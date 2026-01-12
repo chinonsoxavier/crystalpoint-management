@@ -45,7 +45,16 @@ interface IWithdrawStore {
   fetchWithdrawalsHistory: () => Promise<void>;
   fetchWithdrawalsApproved: () => Promise<void>;
   fetchWithdrawalsPending: () => Promise<void>;
-  requestWithdrawal: (walletAddress: string | undefined, amount: number | undefined,method:string | undefined,balanceType:string | undefined) => Promise<void>;
+  requestWithdrawal: (
+    walletAddress: string | undefined,
+    amount: number | undefined,
+    method: string | undefined,
+    balanceType: string | undefined
+  ) => Promise<void>;
+  requestTotalWithdrawal: (
+    walletAddress: string | undefined,
+    method: string | undefined,
+  ) => Promise<void>;
 }
 
 const useWithdrawStore = create<IWithdrawStore>((set) => ({
@@ -74,7 +83,7 @@ const useWithdrawStore = create<IWithdrawStore>((set) => ({
       console.log("failed to fetch withdrawal history", error);
     }
   },
-  requestWithdrawal: async (walletAddress, amount,method,balanceType) => {
+  requestWithdrawal: async (walletAddress, amount, method, balanceType) => {
     set({ loadingWithdrawal: true });
     try {
       const res = await baseAxios.post(
@@ -82,8 +91,32 @@ const useWithdrawStore = create<IWithdrawStore>((set) => ({
         {
           amount: amount,
           walletAddress: walletAddress,
-          method:method,
-          balanceType:balanceType
+          method: method,
+          balanceType: balanceType,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      enqueueSnackbar(res.data.message, { variant: "success" });
+    } catch (error) {
+      console.log("failed to request withdrawal", error);
+      axiosError(error);
+    } finally {
+      set({ loadingWithdrawal: false });
+    }
+  },
+  requestTotalWithdrawal: async (
+    walletAddress,
+    method,
+  ) => {
+    set({ loadingWithdrawal: true });
+    try {
+      const res = await baseAxios.post(
+        "/withdraw/withdraw-all",
+        {
+          walletAddress: walletAddress,
+          method: method,
         },
         {
           withCredentials: true,

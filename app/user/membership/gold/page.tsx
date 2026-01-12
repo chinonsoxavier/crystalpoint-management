@@ -5,14 +5,14 @@ import useUserStore from "../../user_store";
 import DeActivatedMessage from "@/components/shared/deactivated_message";
 
 export default function GoldMembershipPage() {
-  const {user} = useUserStore();
+  const { user } = useUserStore();
   return (
     <>
-    {
-      !user?.isActive ? <DeActivatedMessage/> :
-      <MembershipPage type="gold" />
-    }
+      {user && !user?.isActive ? (
+        <DeActivatedMessage />
+      ) : (
+        <MembershipPage type="gold" />
+      )}
     </>
-  ) 
-    
+  );
 }

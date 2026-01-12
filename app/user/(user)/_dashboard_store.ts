@@ -10,6 +10,11 @@ interface IUserProfile {
   pending_withdrawals: number;
   promotional_balance: number;
   ledger_balance: number;
+  balance_breakdown:{ 
+  bonus: number;
+  deposit:number;
+  profit:number
+  }
 }
 
 interface DashboardStore {

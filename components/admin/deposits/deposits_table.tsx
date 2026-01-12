@@ -292,7 +292,7 @@ const DepositsTable = () => {
                         </Badge>
                       )}
                     </TableCell>
-                    <TableCell>{formatDate(deposit?.createdAt)} {deposit.createdAt}</TableCell>
+                    <TableCell>{formatDate(deposit?.createdAt)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

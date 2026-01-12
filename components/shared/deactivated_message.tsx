@@ -1,6 +1,11 @@
+"use client";
+
+import { useTranslate } from "@/hooks/use_translate";
+
 const DeActivatedMessage = () => {
-  return  (
-    <div className='t-[30%] h-full' >
+  const {t} = useTranslate();
+  return (
+    <div className="t-[30%] h-full">
       <div className="flex flex-col items-center justify-center h-full">
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
           <svg
@@ -18,14 +23,11 @@ const DeActivatedMessage = () => {
             ></path>
           </svg>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            Account Deactivated
+            {t.landing.deactivated.deactivated}
           </h2>
-          <p className="text-gray-600 mb-6">
-            Your account has been deactivated. If you believe this is an error,
-            please contact our support team.
-          </p>
+          <p className="text-gray-600 mb-6">{t.landing.deactivated.message}</p>
           <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-            Contact Support
+            {t.landing.deactivated.contact}
           </button>
         </div>
       </div>

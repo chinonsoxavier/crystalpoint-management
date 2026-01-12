@@ -1,5 +1,10 @@
 // lib/i18n/zh/landing.ts
 export const landing = {
+    deactivated:{
+   contact:"联系客服",
+   message:"您的账户已被停用。如果您认为这是一个错误，请联系我们的支持团队",
+   deactivated:" 账户已停用"
+  },
    sidemenu: {
     company: "Company",
     aboutUs: "About Us",

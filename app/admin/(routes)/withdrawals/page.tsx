@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/table";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -465,7 +466,10 @@ useEffect(() => {
               )}
 
               <div className="flex gap-2 pt-4">
+              <DialogClose>
+                
                 <Button variant="outline">Cancel</Button>
+              </DialogClose>
                 <Button
                   disabled={isApprovingWithdrawal || isRejectingWithdrawal}
                   onClick={() => {

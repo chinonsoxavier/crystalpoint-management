@@ -6,14 +6,13 @@ import { AccountDeactivatedWarning } from "@/components/layouts/dashboard_layout
 import DeActivatedMessage from "@/components/shared/deactivated_message";
 
 const Page = () => {
-  const {user} = useUserStore();
+  const { user } = useUserStore();
 
-  
   return (
     <div className="overflow-y-auto bg-accent md:p-6 p-4 max-h-[calc(100dvh-128px)] w-full h-full text-white">
-      {!user?.isActive ? (
+      {user && !user?.isActive ? (
         <>
-        <DeActivatedMessage/>
+          <DeActivatedMessage />
         </>
       ) : (
         <>

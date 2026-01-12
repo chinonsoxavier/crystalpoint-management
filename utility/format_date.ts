@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 
-export function formatDate(dateString:string) {
+export function formatDate(dateString: string) {
   const date = new Date(dateString);
-  return format(date, "MMM dd, yyyy");
-};
+  return format(date, "MMM dd, yyyy • hh:mm a");
+}

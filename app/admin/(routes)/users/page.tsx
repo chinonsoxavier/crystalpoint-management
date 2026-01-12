@@ -666,7 +666,9 @@ export default function UsersPage() {
                       <CardContent className="space-y-6">
                         {/* Global Reason Input */}
                         <div className="space-y-2">
-                          <Label htmlFor="global-reason">Reason (applies to all updates below)</Label>
+                          <Label htmlFor="global-reason">
+                            Reason (applies to all updates below)
+                          </Label>
                           <Input
                             id="global-reason"
                             value={balanceReason}
@@ -683,7 +685,12 @@ export default function UsersPage() {
                               className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 border rounded-lg hover:bg-muted/30 transition-colors"
                             >
                               <div className="flex-1 space-y-1">
-                                <Label htmlFor={config.key} className={`font-semibold ${config.color || ''}`}>
+                                <Label
+                                  htmlFor={config.key}
+                                  className={`font-semibold ${
+                                    config.color || ""
+                                  }`}
+                                >
                                   {config.label}
                                 </Label>
                                 <p className="text-xs text-muted-foreground">
@@ -694,19 +701,27 @@ export default function UsersPage() {
                                 <Input
                                   id={config.key}
                                   type="number"
-                                  disabled={config.label === 'Deposit Balance'}
+                                  disabled={config.label === "Deposit Balance"}
                                   className="w-full sm:w-48"
                                   value={tempBalances[config.key] ?? 0}
                                   onChange={(e) =>
                                     setTempBalances({
                                       ...tempBalances,
-                                      [config.key]: Number(e.target.value)
+                                      [config.key]: Number(e.target.value),
                                     })
                                   }
                                 />
                                 <Button
-                                  onClick={() => handleUpdateSingleBalance(config.key, tempBalances[config.key])}
-                                  disabled={isUpdatingBalance}
+                                  onClick={() =>
+                                    handleUpdateSingleBalance(
+                                      config.key,
+                                      tempBalances[config.key]
+                                    )
+                                  }
+                                  disabled={
+                                    isUpdatingBalance ||
+                                    config.label === "Deposit Balance"
+                                  }
                                   size="sm"
                                 >
                                   Update
@@ -733,9 +748,10 @@ export default function UsersPage() {
                       <CardContent className="space-y-4">
                         {/* Current Tier Display */}
                         <div
-                          className={`p-4 rounded-lg border ${tierInfo[selectedUser.tier ?? "1"]?.borderColor ||
+                          className={`p-4 rounded-lg border ${
+                            tierInfo[selectedUser.tier ?? "1"]?.borderColor ||
                             "border-gray-300"
-                            }`}
+                          }`}
                         >
                           <div className="flex items-center gap-3">
                             {/* Extract Icon safely */}
@@ -774,10 +790,11 @@ export default function UsersPage() {
                                     setNewTier(tierNum as ITierString)
                                   }
                                   className={`p-3 rounded-xl border-2 cursor-pointer transition-all text-center
-                      ${isSelected
-                                      ? `${info.borderColor} ${info.color} bg-opacity-20 shadow-md`
-                                      : "border-gray-200 hover:border-gray-400 hover:shadow-sm"
-                                    }`}
+                      ${
+                        isSelected
+                          ? `${info.borderColor} ${info.color} bg-opacity-20 shadow-md`
+                          : "border-gray-200 hover:border-gray-400 hover:shadow-sm"
+                      }`}
                                 >
                                   <Icon className="h-6 w-6 mx-auto mb-3" />
                                   <p className="font-semibold text-base">
@@ -795,7 +812,7 @@ export default function UsersPage() {
                           disabled={
                             isUpdatingTier ||
                             newTier ===
-                            (selectedUser.tier?.toString() as ITierString)
+                              (selectedUser.tier?.toString() as ITierString)
                           }
                         >
                           {isUpdatingTier ? "Updating Tier..." : "Update Tier"}
@@ -821,7 +838,7 @@ export default function UsersPage() {
                           <Label htmlFor="membership-card">
                             Select Membership
                           </Label>
-                          <Label className="text-xs" >
+                          <Label className="text-xs">
                             Current Membership:{" "}
                             {currentMembership?.membership?.card?.name ??
                               "name"}
@@ -834,7 +851,8 @@ export default function UsersPage() {
                             <SelectTrigger id="membership-card">
                               <SelectValue
                                 defaultValue={
-                                  currentMembership?.membership?.card?.name ?? ''
+                                  currentMembership?.membership?.card?.name ??
+                                  ""
                                 }
                                 placeholder="Choose a membership plan"
                               />

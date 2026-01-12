@@ -13,6 +13,11 @@ import { admin as zhAdmin } from "./zh/admin";
 export type Language = "en" | "es" | "fr" | "pt" | "zh";
 
 export interface LandingTranslation {
+  deactivated:{
+   contact:string;
+   message:string;
+   deactivated:string
+  },
   sidemenu: {
     company: string;
     aboutUs: string;

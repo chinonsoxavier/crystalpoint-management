@@ -41,7 +41,7 @@ export default function SettingsPage() {
 
   return (
     <div className="py-6 px-4 md:px-6 h-full">
-      {!user?.isActive ? (
+      {user && !user?.isActive ? (
         <DeActivatedMessage />
       ) : (
         <>

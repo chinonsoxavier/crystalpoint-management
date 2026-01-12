@@ -1,5 +1,11 @@
 // lib/i18n/en/landing.ts
 export const landing = {
+  deactivated: {
+    contact: "Contact Support",
+    message:
+      " Your account has been deactivated. If you believe this is an error,please contact our support team.",
+    deactivated: "Account Deactivated",
+  },
   sidemenu: {
     company: "Company",
     aboutUs: "About Us",
@@ -814,39 +820,44 @@ export const landing = {
     title: "Retirement Planning",
     workforceOptimization: {
       title: "Workforce Optimization",
-      description: "Saving for retirement can be a daunting task, but with a sound strategy, it's well within reach. Cristalpoint is here to bring clarity to retirement planning and set you on your path to success. Here you'll better understand your options and find the right investment. If you had the chance to double—or even quadruple—your retirement savings, you'd probably jump at that opportunity, right? Well, there's one simple change you can make today that's sure to boost your retirement savings."
+      description:
+        "Saving for retirement can be a daunting task, but with a sound strategy, it's well within reach. Cristalpoint is here to bring clarity to retirement planning and set you on your path to success. Here you'll better understand your options and find the right investment. If you had the chance to double—or even quadruple—your retirement savings, you'd probably jump at that opportunity, right? Well, there's one simple change you can make today that's sure to boost your retirement savings.",
     },
     quadrupleRetirement: {
       title: "Quadruple Your Retirement Savings? Really?",
-      description: "CristalPoint Management study of worldwide retirement saving habits discovered that people with some kind of retirement plan have more than three times as much in their nest egg than those with no plan at all. And savers who take it one step further by working with an investing advisor to put their plan to paper? Their average nest egg is a whopping 445% bigger than non-planners. That's a big deal! Now, did you catch that? By working with an advisor and by having a plan in place, you can supercharge your retirement savings."
+      description:
+        "CristalPoint Management study of worldwide retirement saving habits discovered that people with some kind of retirement plan have more than three times as much in their nest egg than those with no plan at all. And savers who take it one step further by working with an investing advisor to put their plan to paper? Their average nest egg is a whopping 445% bigger than non-planners. That's a big deal! Now, did you catch that? By working with an advisor and by having a plan in place, you can supercharge your retirement savings.",
     },
   },
   stockInvestment: {
     title: "Invest on Stocks",
     tradingStockOrShare: {
       title: "Trading Stock or Share on CristalPoint",
-      description: "A stock or share (also known as a company's equity) is a financial instrument that represents ownership in a company or corporation and represents a proportionate claim on its assets (what it owns) and earnings (what it generates in profits). Stock ownership implies that the shareholder owns a slice of the company equal to the number of shares held as a proportion of the company's total outstanding shares. For instance, an individual or entity that owns 100,000 shares of a company with one million outstanding shares would have a 10% ownership stake in it. Most companies have outstanding shares that run into the millions or billions."
+      description:
+        "A stock or share (also known as a company's equity) is a financial instrument that represents ownership in a company or corporation and represents a proportionate claim on its assets (what it owns) and earnings (what it generates in profits). Stock ownership implies that the shareholder owns a slice of the company equal to the number of shares held as a proportion of the company's total outstanding shares. For instance, an individual or entity that owns 100,000 shares of a company with one million outstanding shares would have a 10% ownership stake in it. Most companies have outstanding shares that run into the millions or billions.",
     },
     investInStocks: {
       title: "How do I invest in stocks with 0% commission",
-      description: "As you will surely notice, online trading platforms that offer the opportunity to speculate on oil price are numerous. It is therefore necessary that you take time to carefully compare them in order to choose the one that offers you the most advantages. You therefore need to verify certain important points such as:",
+      description:
+        "As you will surely notice, online trading platforms that offer the opportunity to speculate on oil price are numerous. It is therefore necessary that you take time to carefully compare them in order to choose the one that offers you the most advantages. You therefore need to verify certain important points such as:",
       features: {
         createAccount: "Create an account",
         choosePlan: "Choose a deposit plan",
         makeDeposit: "Make deposit",
-        getROI: "Get your ROI on plan completion"
-      }
+        getROI: "Get your ROI on plan completion",
+      },
     },
   },
   realEstate: {
     title: "Real Estate Investments",
     history: {
       title: "History",
-      description: "Real estate investment involves the purchase, ownership, management, rental and/or sale of real estate for profit. Improvement of realty property as part of a real estate investment strategy is generally considered to be a sub-specialty of real estate investing called real estate development. Real estate is an asset form with limited liquidity relative to other investments (such as stocks or bonds that openly trade on financial markets). It is also capital intensive (although capital may be gained through mortgage leverage) and is highly cash flow dependent. If these factors are not well understood and managed by the investor, real estate becomes a risky investment."
+      description:
+        "Real estate investment involves the purchase, ownership, management, rental and/or sale of real estate for profit. Improvement of realty property as part of a real estate investment strategy is generally considered to be a sub-specialty of real estate investing called real estate development. Real estate is an asset form with limited liquidity relative to other investments (such as stocks or bonds that openly trade on financial markets). It is also capital intensive (although capital may be gained through mortgage leverage) and is highly cash flow dependent. If these factors are not well understood and managed by the investor, real estate becomes a risky investment.",
     },
     hotDeals: {
-      title: "Hot Deals From Real Estate"
+      title: "Hot Deals From Real Estate",
     },
-    makeEnquiry: "Make Enquiry"
-  }
+    makeEnquiry: "Make Enquiry",
+  },
 };

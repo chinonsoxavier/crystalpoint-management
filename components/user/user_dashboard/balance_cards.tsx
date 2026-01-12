@@ -21,7 +21,7 @@ const {t} = useTranslate();
   const cardConfigs = [
     {
       label: t.admin.overview.balanceCards.totalDeposit,
-      value: profile?.total_deposit,
+      value: profile?.balance_breakdown.deposit,
       colorClass: "from-blue-500 to-blue-600",
     },
     {
