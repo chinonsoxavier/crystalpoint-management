@@ -8,11 +8,7 @@ export default function PremiumMembershipPage() {
   const { user } = useUserStore();
   return (
     <>
-      {user && !user?.isActive ? (
-        <DeActivatedMessage />
-      ) : (
         <MembershipPage type="premium" />
-      )}
     </>
   );
 }

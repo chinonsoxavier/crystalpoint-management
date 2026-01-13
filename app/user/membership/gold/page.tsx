@@ -8,11 +8,7 @@ export default function GoldMembershipPage() {
   const { user } = useUserStore();
   return (
     <>
-      {user && !user?.isActive ? (
-        <DeActivatedMessage />
-      ) : (
-        <MembershipPage type="gold" />
-      )}
+      <MembershipPage type="gold" />
     </>
   );
 }

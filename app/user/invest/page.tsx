@@ -22,7 +22,7 @@ const Page = () => {
 
   return (
     <div className="overflow-y-auto bg-accent md:p-6 p-4 max-h-[calc(100dvh-128px)] w-full h-full text-white">
-      {user && !user?.isActive ? (
+      {!user?.isActive ? (
         <DeActivatedMessage />
       ) : (
         <div className="">

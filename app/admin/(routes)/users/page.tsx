@@ -620,7 +620,7 @@ export default function UsersPage() {
                     Total Deposits
                   </p>
                   <p className="font-semibold">
-                    ${selectedUser.balance.deposit ?? 0}
+                    ${selectedUser.balance.activeDeposit ?? 0}
                   </p>
                 </div>
                 <div>

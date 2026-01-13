@@ -49,6 +49,7 @@ interface IUserBalance {
   deposit: number;
   profile: number;
   bonus: number;
+  activeDeposit:number
 }
 
 interface IAdminUser {

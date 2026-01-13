@@ -8,11 +8,7 @@ export default function SilverMembershipPage() {
   const { user } = useUserStore();
   return (
     <>
-      {user && !user?.isActive ? (
-        <DeActivatedMessage />
-      ) : (
-        <MembershipPage type="silver" />
-      )}
+      <MembershipPage type="silver" />
     </>
   );
 }

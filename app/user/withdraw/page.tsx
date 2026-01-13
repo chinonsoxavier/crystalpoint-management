@@ -60,10 +60,10 @@ const Page = () => {
 
   const handleWithdrawal = (e: React.FormEvent) => {
     e.preventDefault();
-   if(selectedAccount === 'ledger'){
-requestTotalWithdrawal(walletAddress,selectedDepositMethod?._id);
-return;
-   }
+    if (selectedAccount === 'ledger') {
+      requestTotalWithdrawal(walletAddress, selectedDepositMethod?._id);
+      return;
+    }
     requestWithdrawal(
       walletAddress,
       amount,
@@ -80,7 +80,14 @@ return;
 
   return (
     <div className="p-4 h-full overflow-y-scroll bg-accent md:p-6">
-  
+
+      {!user?.isActive ? (
+        <>
+          <DeActivatedMessage />
+        </>
+      ) : (
+
+
         <>
           <LedgerBalance />
 
@@ -280,13 +287,15 @@ return;
                     {t.admin.withdraw.amount}
                   </Label>
                   <Input
-                    value={amount}
+                    value={selectedAccount === 'ledger' ? (user?.balance?.activeDeposit ?? 0) + (user?.balance?.profit ?? 0) + (user?.balance?.bonus ?? 0) || 0 :
+                      amount || 0}
                     onChange={(e) => {
                       const val = parseInt(e.target.value);
                       setAmount(val);
                     }}
                     required
                     type="number"
+                    disabled={selectedAccount === 'ledger'}
                     placeholder={t.admin.withdraw.amountPlaceholder}
                     className="w-full text-accent-text"
                   />
@@ -313,7 +322,7 @@ return;
             </div>
           </form>
         </>
-      {/* )} */}
+      )}
     </div>
   );
 };

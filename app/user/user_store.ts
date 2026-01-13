@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { axiosError, baseAxios, baseAxiosDelete } from "@/network/axios";
 import { enqueueSnackbar } from "notistack";
+import { AxiosError } from "axios";
 
 interface IUserProfile {
   firstName: string;
@@ -51,11 +52,12 @@ interface ILogin {
 interface UserStore {
   // State
   user: IUser | null;
-  authStatus: "idle" | "loading" | "authenticated" | "error" | "email-sent";
+  authStatus: "idle" | "loading" | "authenticated" | "error" | "email-sent" | 'inactive';
   errorMessage?: string;
   sideMenuOpen: boolean;
   showBalance: boolean;
   isDeleteAccountLoading: boolean;
+  isUserActive: boolean;
 
   // Actions
   loadUser: () => Promise<void>;
@@ -89,6 +91,7 @@ const useUserStore = create<UserStore>((set) => ({
   sideMenuOpen: true,
   showBalance: true,
   isDeleteAccountLoading: false,
+  isUserActive: true,
 
   toggleSideMenuOpen: () =>
     set((state) => ({ sideMenuOpen: !state.sideMenuOpen })),
@@ -231,11 +234,17 @@ const useUserStore = create<UserStore>((set) => ({
         // Gracefully handle "user not found"
         set({
           user: null,
-          authStatus: "idle",
+          authStatus: "inactive",
         });
       }
-    } catch (error: unknown) {
-      console.log(error);
+    } catch (error: any) {
+      console.log(error, "load user");
+      const message = error.response.data.message
+      if (message === 'Account is deactivated.') {
+        set({
+          isUserActive: false,
+        });
+      }
     }
   },
 
