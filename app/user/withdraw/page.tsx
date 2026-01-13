@@ -312,7 +312,7 @@ const Page = () => {
               <Button
                 type="submit"
                 onClick={handleWithdrawal}
-                disabled={loadingWithdrawal || !amount || !selectedAccount || !walletAddress}
+                disabled={loadingWithdrawal || !selectedAccount || !walletAddress}
                 className="w-full font-semibold py-3 rounded-lg transition-colors"
               >
                 {loadingWithdrawal
