@@ -14,7 +14,7 @@ export type Language = "en" | "es" | "fr" | "pt" | "zh";
 
 // plans
 export interface LandingTranslation {
-  
+  name:string;
   deactivated:{
    contact:string;
    message:string;
