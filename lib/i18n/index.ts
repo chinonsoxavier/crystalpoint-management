@@ -13,6 +13,7 @@ import { admin as zhAdmin } from "./zh/admin";
 export type Language = "en" | "es" | "fr" | "pt" | "zh";
 
 export interface LandingTranslation {
+  
   deactivated:{
    contact:string;
    message:string;
@@ -708,6 +709,7 @@ export interface LandingTranslation {
     };
   };
 };
+
 
 export interface AdminTranslation {
   sidemenu: {

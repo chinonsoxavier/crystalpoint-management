@@ -100,7 +100,7 @@ const DepositsTable = () => {
   };
 
   useEffect(() => {
-    fetchDeposits({ page: page, limit: 100, status: statusFilter });
+    fetchDeposits({ page: page, status: statusFilter });
   }, [statusFilter, page]);
 
   const handleStatusFilterChange = (value: string) => {
@@ -111,7 +111,7 @@ const DepositsTable = () => {
     try {
       await confirmDeposit(depositId);
       // Refresh the deposits list after successful action
-      fetchDeposits({ page, limit: 100, status: statusFilter });
+      fetchDeposits({ page, status: statusFilter });
     } catch (error) {
       console.error("Error confirming deposit:", error);
     }
@@ -121,7 +121,7 @@ const DepositsTable = () => {
     try {
       await rejectDeposit(depositId);
       // Refresh the deposits list after successful action
-      fetchDeposits({ page, limit: 100, status: statusFilter });
+      fetchDeposits({ page, status: statusFilter });
     } catch (error) {
       console.error("Error rejecting deposit:", error);
     }
@@ -137,18 +137,7 @@ const DepositsTable = () => {
         <CardContent className="space-y-4">
           {/* Filters */}
           <div className="flex gap-4 flex-col sm:flex-row">
-            <div className="flex-1 relative">
-              <Search
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
-                size={18}
-              />
-              <Input
-                placeholder="Search by username or deposit ID..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+        
             <Select
               value={statusFilter}
               onValueChange={handleStatusFilterChange}

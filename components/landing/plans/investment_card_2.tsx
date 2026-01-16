@@ -128,18 +128,6 @@ export default function InvestmentCard2({
             <span className={`ml-2 font-semibold `}>{plan.referralBonus}</span>
           </div>
         </div>
-
-        <div
-          
-          className="flex items-start delay-[175] gap-3 pt-2"
-        >
-          <span className={`font-medium`}>
-            {t.landing.investmentCard.support}:
-          </span>
-          <span className="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-            24/7 Live Support
-          </span>
-        </div>
       </div>
 
       {/* Get Started Button */}

@@ -291,7 +291,7 @@ const Page = () => {
                     <input
                       id="confirmPassword"
                       name="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
+                      type={"text"}
                       value={formData.confirmPassword}
                       onChange={handleChange}
                       placeholder={
