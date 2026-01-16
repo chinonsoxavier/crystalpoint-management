@@ -12,6 +12,7 @@ import { admin as zhAdmin } from "./zh/admin";
 
 export type Language = "en" | "es" | "fr" | "pt" | "zh";
 
+// plans
 export interface LandingTranslation {
   
   deactivated:{

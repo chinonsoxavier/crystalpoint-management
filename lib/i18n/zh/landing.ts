@@ -5,16 +5,16 @@ export const landing = {
    message:"您的账户已被停用。如果您认为这是一个错误，请联系我们的支持团队",
    deactivated:" 账户已停用"
   },
-   sidemenu: {
-    company: "Company",
-    aboutUs: "About Us",
-    faqs: "FAQs",
-    contactUs: "Contact Us",
-    markets: "Markets",
-    plans: "Plans",
-    ourServices: "Our Services",
-    login: "Log in",
-  },
+ sidemenu: {
+  company: "公司",
+  aboutUs: "关于我们",
+  faqs: "常见问题",
+  contactUs: "联系我们",
+  markets: "市场",
+  plans: "套餐",
+  ourServices: "我们的服务",
+  login: "登录",
+},
   header: {
     company: "公司",
     aboutUs: "关于我们",

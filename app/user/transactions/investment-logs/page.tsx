@@ -20,7 +20,7 @@ const Page = () => {
   }, []);
   return (
     <div className="bg-accent h-full space-y-4 md:space-y-6 md:p-6 p-4">
-      {user?.isActive ? (
+      {!user?.isActive ? (
         <DeActivatedMessage />
       ) : (
         <>

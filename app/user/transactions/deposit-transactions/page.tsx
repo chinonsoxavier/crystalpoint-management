@@ -24,12 +24,22 @@ const Page = () => {
   const { t } = useTranslate();
   const { user } = useUserStore();
   useEffect(() => {
+
     setApprovedDepositsTotal(
-      depositHistory.filter((d) => d.status === "confirmed").length
+      depositHistory
+        .filter((w) => w.status === "confirmed")
+        .reduce((total, w) => total + w.amount, 0)
     );
-    setPendingDepositsTotal(
-      depositHistory.filter((d) => d.status === "pending").length
-    );
+
+      setPendingDepositsTotal(
+        depositHistory
+          .filter((w) => w.status === "pending")
+          .reduce((total, w) => total + w.amount, 0)
+      );
+
+;
+
+
   }, []);
 
   return (
