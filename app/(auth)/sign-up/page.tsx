@@ -289,17 +289,17 @@ const Page = () => {
                       <User className="h-5 w-5 text-muted-foreground" />
                     </div>
                     <input
-                      id="confirmPassword"
-                      name="confirmPassword"
+                      id="firstName"
+                      name="firstName"
                       type={"text"}
-                      value={formData.confirmPassword}
+                      value={formData.firstName}
                       onChange={handleChange}
                       placeholder={
-                        t.admin.auth.signUp.placeholders.confirmPassword
+                        t.admin.auth.signUp.placeholders.firstName
                       }
                       className={cn(
                         "w-full pl-10 pr-10 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
-                        errors.confirmPassword &&
+                        errors.firstName &&
                           "border-destructive focus:ring-destructive/20"
                       )}
                       disabled={authStatus === "loading"}
