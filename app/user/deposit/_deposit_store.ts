@@ -8,9 +8,14 @@ export interface IDepositMethod {
   method: string;
   amount: number;
   transactionHarsh: string;
-  status: "awaiting_payment" | "pending" | "confirmed" | "failed" | "cancelled";
+  status:
+    | "awaiting_payment"
+    | "pending_approval"
+    | "confirmed"
+    | "failed"
+    | "cancelled";
   walletAddress: string;
-  createdAt:string
+  createdAt: string;
 }
 
 interface IDepositMethods {
@@ -41,7 +46,7 @@ interface DepositStore {
   depositInstructions: IDepositInstructions | null;
   setSelectedDepositMethod: (method: IDepositMethods) => void;
   fetchDepositMethods: () => Promise<void>;
-  fetchDepositHistory: (page: number) => Promise<void>;
+  fetchDepositHistory: (page: number,limit:number) => Promise<void>;
   cancelPendingDeposit: (id: string) => Promise<void>;
   getDepositIntructions: (method: string) => Promise<void>;
   createDepositRequest: (params: {
@@ -121,10 +126,10 @@ const useDepositStore = create<DepositStore>((set) => ({
     set({ selectedDepositMethod: method });
   },
 
-  fetchDepositHistory: async (page: number) => {
+  fetchDepositHistory: async (page: number,limit:number) => {
     try {
       const res = await baseAxios.get(
-        `/deposit/logs?page=${page}&limit=${20}`,
+        `/deposit/logs?page=${page}`,
         {
           withCredentials: true,
         }

@@ -2,6 +2,7 @@
 
 import useDashboardStore from "@/app/user/(user)/_dashboard_store";
 import useUserStore from "@/app/user/user_store";
+import useWithdrawStore from "@/app/user/withdraw/_withdraw_store";
 import { useTranslate } from "@/hooks/use_translate";
 import { formatCurrency } from "@/utility/format_currency";
 import { useEffect } from "react";
@@ -13,9 +14,14 @@ export interface BalanceCardsProps {
 export function BalanceCards({ showValues }: BalanceCardsProps) {
   const { profile } = useDashboardStore();
   const { user, loadUser } = useUserStore();
+    const {
+      pendingWithdrawals,
+      fetchWithdrawalsPending,
+    } = useWithdrawStore();
 const {t} = useTranslate();
   useEffect(() => {
     loadUser();
+    fetchWithdrawalsPending();
   }, []);
   // console.log()
   const cardConfigs = [
@@ -40,12 +46,16 @@ const {t} = useTranslate();
       colorClass: "from-green-500 to-green-600",
     },
     {
-      label:t.admin.overview.balanceCards.pendingWithdrawals,
-      value: user?.balance.pendingWithdrawals,
+      label: t.admin.overview.balanceCards.pendingWithdrawals,
+      value:
+        pendingWithdrawals.reduce<number>(
+          (total, withdrawal) => total + withdrawal.amount,
+          0
+        ) || 0,
       colorClass: "from-red-500 to-red-600",
     },
     {
-      label:t.admin.overview.balanceCards.bonus,
+      label: t.admin.overview.balanceCards.bonus,
       value: user?.balance.bonus,
       colorClass: "from-orange-400 to-orange-500",
     },
@@ -66,7 +76,7 @@ const {t} = useTranslate();
             </p>
           </div>
           <p className="text-3xl font-bold relative z-10">
-            $ {showValues ? formatCurrency(card.value ?? 0) : maskValue}
+            $ {showValues ?  formatCurrency(card.value ?? 0) : maskValue}
           </p>
         </div>
       ))}

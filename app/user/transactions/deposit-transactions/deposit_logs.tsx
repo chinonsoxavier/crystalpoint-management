@@ -180,7 +180,7 @@ export default function DepositLogs() {
   ];
 
   useEffect(() => {
-    fetchDepositHistory(1);
+    fetchDepositHistory(1,20);
   }, []);
 
   return (

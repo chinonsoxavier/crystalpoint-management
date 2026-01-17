@@ -11,14 +11,20 @@ import DeActivatedMessage from "@/components/shared/deactivated_message";
 const Page = () => {
   const {
     fetchWithdrawalsHistory,
-    withdrawalHistory,
+    fetchWithdrawalsApproved,
+    fetchWithdrawalsPending,
     approvedWithdrawals,
     pendingWithdrawals,
   } = useWithdrawStore();
   const { t } = useTranslate();
   const { user } = useUserStore();
+  useEffect(() => {
+    fetchWithdrawalsApproved();
+    fetchWithdrawalsPending();
+    fetchWithdrawalsHistory();
+  }, []);
   const approvedWithdrawalTotal = approvedWithdrawals.reduce(
-    (total, withdrawal) => total + withdrawal,
+    (total, withdrawal) => total + withdrawal.amount,
     0
   );
 
@@ -26,9 +32,6 @@ const Page = () => {
     (total, withdrawal) => total + withdrawal.amount,
     0
   );
-  useEffect(() => {
-    fetchWithdrawalsHistory();
-  }, []);
 
   return (
     <div className="bg-accent h-full space-y-4 md:space-y-6 md:p-6 p-4">

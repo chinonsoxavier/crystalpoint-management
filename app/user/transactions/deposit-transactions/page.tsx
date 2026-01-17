@@ -13,7 +13,12 @@ export type Transactions = {
   method: string;
   amount: number;
   transactionHarsh: string;
-  status: "awaiting_payment" | "pending" | "confirmed" | "failed" | "cancelled";
+  status:
+    | "awaiting_payment"
+    | "pending_approval"
+    | "confirmed"
+    | "failed"
+    | "cancelled";
   walletAddress: string;
 };
 
@@ -24,23 +29,18 @@ const Page = () => {
   const { t } = useTranslate();
   const { user } = useUserStore();
   useEffect(() => {
-
     setApprovedDepositsTotal(
       depositHistory
         .filter((w) => w.status === "confirmed")
         .reduce((total, w) => total + w.amount, 0)
     );
 
-      setPendingDepositsTotal(
-        depositHistory
-          .filter((w) => w.status === "pending")
-          .reduce((total, w) => total + w.amount, 0)
-      );
-
-;
-
-
-  }, []);
+    setPendingDepositsTotal(
+      depositHistory
+        .filter((w) => w.status === "pending_approval")
+        .reduce((total, w) => total + w.amount, 0)
+    );
+  }, [depositHistory]);
 
   return (
     <div className="bg-accent h-full space-y-4 md:space-y-6 md:p-6 p-4">

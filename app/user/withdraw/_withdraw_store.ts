@@ -27,16 +27,16 @@ interface IWithdrawalBalance {
 }
 
 interface IPendingWithdrawal {
-      _id: string;
-      user: string;
-      amount: number;
-      walletAddress: string;
-      status: string;
-      createdAt: string;
-      updatedAt: string;
+  _id: string;
+  user: string;
+  amount: number;
+  walletAddress: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
 }
 interface IWithdrawStore {
-  approvedWithdrawals: [];
+  approvedWithdrawals: IPendingWithdrawal[];
   pendingWithdrawals: IPendingWithdrawal[];
   withdrawalBalance?: IWithdrawalBalance;
   loadingWithdrawal: boolean;
@@ -53,7 +53,7 @@ interface IWithdrawStore {
   ) => Promise<void>;
   requestTotalWithdrawal: (
     walletAddress: string | undefined,
-    method: string | undefined,
+    method: string | undefined
   ) => Promise<void>;
 }
 
@@ -78,7 +78,11 @@ const useWithdrawStore = create<IWithdrawStore>((set) => ({
   },
   fetchWithdrawalsHistory: async () => {
     try {
-      const res = baseAxios.get("/withdraw/logs", { withCredentials: true });
+      const res = await baseAxios.get("/withdraw/logs", {
+        withCredentials: true,
+      });
+      set({ withdrawalHistory: res.data.data });
+      console.log("withdrawal history",res.data.data);
     } catch (error) {
       console.log("failed to fetch withdrawal history", error);
     }
@@ -106,10 +110,7 @@ const useWithdrawStore = create<IWithdrawStore>((set) => ({
       set({ loadingWithdrawal: false });
     }
   },
-  requestTotalWithdrawal: async (
-    walletAddress,
-    method,
-  ) => {
+  requestTotalWithdrawal: async (walletAddress, method) => {
     set({ loadingWithdrawal: true });
     try {
       const res = await baseAxios.post(

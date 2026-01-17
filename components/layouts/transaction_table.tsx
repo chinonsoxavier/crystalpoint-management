@@ -68,9 +68,6 @@ export function TransactionTable<T extends object>({
 
   // Fix: Add data as a dependency to useEffect
   useEffect(() => {
-    console.log("Data in TransactionTable:", data);
-    console.log("Data length:", data.length);
-    console.log("Table rows length:", table.getRowModel().rows.length);
 
     // Mark data as loaded
     if (data && data.length > 0) {
