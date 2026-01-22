@@ -75,7 +75,7 @@ const Page = () => {
   // Calculate total ledger balance
   const totalLedgerBalance =
     (profile?.profit_balance || 0) +
-    (user?.balance.activeDeposit || 0) +
+    (user?.balance.deposit || 0) +
     (profile?.promotional_balance || 0);
 
   return (
@@ -135,7 +135,7 @@ const Page = () => {
                       <div className="flex items-center gap-2 mb-1">
                         <DollarSign className="h-4 w-4" />
                         <span className="text-sm font-medium">
-                          {t.admin.withdraw.depositBalance} 
+                          {t.admin.withdraw.depositBalance}
                         </span>
                       </div>
                       <div className="text-lg font-semibold">
