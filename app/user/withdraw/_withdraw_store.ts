@@ -81,8 +81,8 @@ const useWithdrawStore = create<IWithdrawStore>((set) => ({
       const res = await baseAxios.get("/withdraw/logs", {
         withCredentials: true,
       });
-      set({ withdrawalHistory: res.data.data });
-      console.log("withdrawal history",res.data.data);
+      set({ withdrawalHistory: res.data.data.withdrawals });
+      console.log("withdrawal history", res.data.data.withdrawals);
     } catch (error) {
       console.log("failed to fetch withdrawal history", error);
     }

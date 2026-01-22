@@ -135,11 +135,11 @@ const Page = () => {
                       <div className="flex items-center gap-2 mb-1">
                         <DollarSign className="h-4 w-4" />
                         <span className="text-sm font-medium">
-                          {t.admin.withdraw.depositBalance}
+                          {t.admin.withdraw.depositBalance} 
                         </span>
                       </div>
                       <div className="text-lg font-semibold">
-                        ${user?.balance.activeDeposit || 0}
+                        ${user?.balance.deposit || 0}
                       </div>
                     </div>
 
@@ -287,7 +287,7 @@ const Page = () => {
                     {t.admin.withdraw.amount}
                   </Label>
                   <Input
-                    value={selectedAccount === 'ledger' ? (user?.balance?.activeDeposit ?? 0) + (user?.balance?.profit ?? 0) + (user?.balance?.bonus ?? 0) || 0 :
+                    value={selectedAccount === 'ledger' ? (user?.balance?.deposit ?? 0) + (user?.balance?.profit ?? 0) + (user?.balance?.bonus ?? 0) || 0 :
                       amount || 0}
                     onChange={(e) => {
                       const val = parseInt(e.target.value);

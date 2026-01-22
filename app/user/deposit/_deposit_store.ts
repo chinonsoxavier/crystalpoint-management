@@ -46,9 +46,10 @@ interface DepositStore {
   depositInstructions: IDepositInstructions | null;
   setSelectedDepositMethod: (method: IDepositMethods) => void;
   fetchDepositMethods: () => Promise<void>;
-  fetchDepositHistory: (page: number,limit:number) => Promise<void>;
+  fetchDepositHistory: (page?: number, limit?: number) => Promise<void>;
   cancelPendingDeposit: (id: string) => Promise<void>;
   getDepositIntructions: (method: string) => Promise<void>;
+  resetDepositState:()=>void;
   createDepositRequest: (params: {
     method?: string;
     amount?: number;
@@ -112,6 +113,9 @@ const useDepositStore = create<DepositStore>((set) => ({
 
    }
   },
+  resetDepositState:()=>{
+    set({depositInstructions:null,isDepositLoading:false,depositRequestSuccessful:false})
+  },
   getDepositIntructions: async (method) => {
     console.log("deposit instructions", method);
     try {
@@ -126,7 +130,7 @@ const useDepositStore = create<DepositStore>((set) => ({
     set({ selectedDepositMethod: method });
   },
 
-  fetchDepositHistory: async (page: number,limit:number) => {
+  fetchDepositHistory: async (page?: number,limit?:number) => {
     try {
       const res = await baseAxios.get(
         `/deposit/logs?page=${page}`,

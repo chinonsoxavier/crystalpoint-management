@@ -44,7 +44,7 @@ export function TransactionTable<T extends object>({
 }: TransactionTableProps<T>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
 
   // Add a state to track when data is loaded
@@ -68,7 +68,7 @@ export function TransactionTable<T extends object>({
 
   // Fix: Add data as a dependency to useEffect
   useEffect(() => {
-
+    console.log("data", data);  
     // Mark data as loaded
     if (data && data.length > 0) {
       setIsDataLoaded(true);
@@ -112,7 +112,7 @@ export function TransactionTable<T extends object>({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -131,7 +131,7 @@ export function TransactionTable<T extends object>({
                     <TableCell key={cell.id} className="md:text-base text-sm">
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

@@ -732,6 +732,7 @@ export interface AdminTranslation {
     shareLink: string;
     balanceCards: {
       totalDeposit: string;
+      // Deposit: string;
       profitBalance: string;
       totalWithdrawals: string;
       activeDeposits: string;
