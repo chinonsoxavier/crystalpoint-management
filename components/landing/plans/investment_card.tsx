@@ -23,10 +23,10 @@ interface InvestmentPlan {
 
 interface InvestmentCardProps {
   plan: InvestmentPlan;
-  theme?:string;
+  theme?: string;
 }
 
-export default function InvestmentCard({ plan,theme }: InvestmentCardProps) {
+export default function InvestmentCard({ plan, theme }: InvestmentCardProps) {
   const router = useRouter();
   const { t } = useTranslate();
 
