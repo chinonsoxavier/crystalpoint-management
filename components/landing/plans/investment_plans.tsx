@@ -8,6 +8,7 @@ import beginnerBg from "@/assets/images/beginner_plan.jpeg";
 import accessoriesBg from "@/assets/images/accessories_plan.jpeg";
 import oilAndGasBg from "@/assets/images/oil_and_gas.jpeg";
 import agricBg from "@/assets/images/agric_plan.jpeg";
+import realEstateBg from "@/assets/images/real_estate.jpeg";
 
 export default function InvestmentPlans() {
   const { t } = useTranslate();
@@ -28,14 +29,14 @@ export default function InvestmentPlans() {
         {/* Investment Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="flex flex-col h-full">
-            <Animate className="relative overflow-hidden rounded-lg">
+            <Animate className="relative overflow-hidden rounded-lg -mb-2">
               <Image
                 src={beginnerBg}
                 alt="beginner plan"
                 className="w-full h-60 md:h-108 object-cover"
               />
             </Animate>
-            <div className="flex-1 mt-5">
+            <div className="flex-1 ">
               <InvestmentCard
                 key="beginners"
                 plan={{
@@ -58,14 +59,14 @@ export default function InvestmentPlans() {
           </div>
 
           <div className="flex flex-col h-full">
-            <Animate className="relative overflow-hidden rounded-lg">
+            <Animate className="relative overflow-hidden rounded-lg -mb-2">
               <Image
                 src={accessoriesBg}
                 alt="beginner plan"
                 className="w-full h-60 md:h-108 object-cover"
               />
             </Animate>
-            <div className="flex-1 mt-5">
+            <div className="flex-1 ">
               <InvestmentCard
                 key="accessories"
                 plan={{
@@ -89,14 +90,14 @@ export default function InvestmentPlans() {
           </div>
 
           <div className="flex flex-col h-full">
-            <Animate className="relative overflow-hidden rounded-lg">
+            <Animate className="relative overflow-hidden rounded-lg -mb-2">
               <Image
                 src={oilAndGasBg}
                 alt="beginner plan"
                 className="w-full h-60 md:h-108 object-cover"
               />
             </Animate>
-            <div className="flex-1 mt-5">
+            <div className="flex-1 ">
               <InvestmentCard
                 key="oil-gas"
                 plan={{
@@ -118,14 +119,14 @@ export default function InvestmentPlans() {
           </div>
 
           <div className="flex flex-col h-full">
-            <Animate className="relative overflow-hidden rounded-lg">
+            <Animate className="relative overflow-hidden rounded-lg -mb-2">
               <Image
                 src={agricBg}
                 alt="beginner plan"
                 className="w-full h-60 md:h-108 object-cover"
               />
             </Animate>
-            <div className="flex-1 mt-5">
+            <div className="flex-1 ">
               <InvestmentCard
                 key="agriculture"
                 plan={{
@@ -149,14 +150,14 @@ export default function InvestmentPlans() {
           </div>
 
           <div className="flex flex-col h-full">
-            <Animate className="relative overflow-hidden rounded-lg">
+            <Animate className="relative overflow-hidden rounded-lg -mb-2">
               <Image
-                src={beginnerBg}
+                src={realEstateBg}
                 alt="beginner plan"
                 className="w-full h-60 md:h-108 object-cover"
               />
             </Animate>
-            <div className="flex-1 mt-5">
+            <div className="flex-1 ">
               <InvestmentCard
                 key="real-estate"
                 plan={{

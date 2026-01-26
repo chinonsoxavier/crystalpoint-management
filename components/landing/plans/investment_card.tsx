@@ -35,7 +35,7 @@ export default function InvestmentCard({ plan, theme }: InvestmentCardProps) {
   };
 
   return (
-    <Animate className="bg-gray-900 overflow-x-clip rounded-2xl p-8 text-white flex flex-col h-full hover:shadow-2xl transition-shadow">
+    <Animate className="bg-gray-900 overflow-x-clip rounded-b-2xl p-8 text-white flex flex-col h-full hover:shadow-2xl transition-shadow">
       {/* Header with Icon */}
       <Animate type="fadeInLeft" className="flex items-center gap-3 mb-6">
         <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-lg">
