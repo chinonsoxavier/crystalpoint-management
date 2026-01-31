@@ -80,14 +80,11 @@ const Page = () => {
 
   return (
     <div className="p-4 h-full overflow-y-scroll bg-accent md:p-6">
-
       {!user?.isActive ? (
         <>
           <DeActivatedMessage />
         </>
       ) : (
-
-
         <>
           <LedgerBalance />
 
@@ -100,14 +97,12 @@ const Page = () => {
                 $
                 {pendingWithdrawals.reduce<number>(
                   (total, withdrawal) => total + withdrawal.amount,
-                  0
+                  0,
                 ) || 0}
               </p>
             </div>
           </div>
-          <form
-            className="my-4 bg-accent-foreground p-4 md:p-6 rounded-lg"
-          >
+          <form className="my-4 bg-accent-foreground p-4 md:p-6 rounded-lg">
             <div className="flex gap-2 flex-col mb-6">
               <button className="pb-1 font-semibold text-black dark:text-white text-left text-lg md:text-xl">
                 {t.admin.withdraw.withdraw}
@@ -187,7 +182,7 @@ const Page = () => {
                     required
                     onValueChange={(value) => {
                       const selected = withdrawalMethods.find(
-                        (m) => m.network === value
+                        (m) => m.network === value,
                       );
                       setSelectedDepositMethod(selected!);
                     }}
@@ -239,7 +234,7 @@ const Page = () => {
                           <div className="flex items-center justify-between w-full">
                             <span>{t.admin.withdraw.ledgerBalance}</span>
                             <span className="text-muted-foreground ml-2">
-                              ${((user?.balance?.activeDeposit ?? 0) + (user?.balance?.profit ?? 0) + (user?.balance?.bonus ?? 0)) || 0}
+                              $ {totalLedgerBalance}
                             </span>
                           </div>
                         </SelectItem>
@@ -287,15 +282,20 @@ const Page = () => {
                     {t.admin.withdraw.amount}
                   </Label>
                   <Input
-                    value={selectedAccount === 'ledger' ? (user?.balance?.deposit ?? 0) + (user?.balance?.profit ?? 0) + (user?.balance?.bonus ?? 0) || 0 :
-                      amount || 0}
+                    value={
+                      selectedAccount === "ledger"
+                        ? (user?.balance?.deposit ?? 0) +
+                            (user?.balance?.profit ?? 0) +
+                            (user?.balance?.bonus ?? 0) || 0
+                        : amount || 0
+                    }
                     onChange={(e) => {
                       const val = parseInt(e.target.value);
                       setAmount(val);
                     }}
                     required
                     type="number"
-                    disabled={selectedAccount === 'ledger'}
+                    disabled={selectedAccount === "ledger"}
                     placeholder={t.admin.withdraw.amountPlaceholder}
                     className="w-full text-accent-text"
                   />
@@ -312,7 +312,9 @@ const Page = () => {
               <Button
                 type="submit"
                 onClick={handleWithdrawal}
-                disabled={loadingWithdrawal || !selectedAccount || !walletAddress}
+                disabled={
+                  loadingWithdrawal || !selectedAccount || !walletAddress
+                }
                 className="w-full font-semibold py-3 rounded-lg transition-colors"
               >
                 {loadingWithdrawal
