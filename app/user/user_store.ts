@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { axiosError, baseAxios, baseAxiosDelete } from "@/network/axios";
 import { enqueueSnackbar } from "notistack";
 import { AxiosError } from "axios";
+import Error from "next/error";
 
 interface IUserProfile {
   firstName: string;
@@ -214,37 +215,44 @@ const useUserStore = create<UserStore>((set) => ({
   },
   loadUser: async () => {
     const { authStatus } = useUserStore.getState();
-
-    // Prevent parallel fetching
     if (authStatus === "loading") return;
-    // set({ authStatus: "loading" });
-
     try {
       const res = await baseAxios.get("/auth/me", { withCredentials: true });
-
       const user = res.data?.data?.user;
+        if (user) {
+          set({
+            user,
+            authStatus: "authenticated",
+            isUserActive: user.isActive, // Explicitly set isUserActive based on user data
+          });
+        } else {
+          set({
+            user: null,
+            authStatus: "idle",
+            isUserActive: true, // Reset to default
+          });
+        }
 
-      if (user) {
-        set({
-          user,
-          authStatus: "authenticated",
-        });
-        console.log(user);
-      } else {
-        // Gracefully handle "user not found"
-        set({
-          user: null,
-          authStatus: "inactive",
-        });
-      }
-    } catch (error: any) {
+    } catch (error:unknown) {
       console.log(error, "load user");
-      const message = error.response.data.message
-      if (message === 'Account is deactivated.') {
-        set({
-          isUserActive: false,
-        });
-      }
+      
+      if(error instanceof AxiosError){
+        const message = error?.response?.data.message
+
+       if (message === "Account is deactivated.") {
+         set({
+           user: null,
+           authStatus: "inactive",
+           isUserActive: false,
+         });
+       } else {
+         set({
+           user: null,
+           authStatus: "idle",
+           isUserActive: true, // Reset to default for other errors
+         });
+       }
+       }
     }
   },
 

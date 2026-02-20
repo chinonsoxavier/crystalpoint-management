@@ -17,8 +17,9 @@ const Page = () => {
     pendingWithdrawals,
   } = useWithdrawStore();
   const { t } = useTranslate();
-  const { user } = useUserStore();
-  useEffect(() => {
+ const { user, isUserActive } = useUserStore();
+ const userIsActive = user?.isActive && isUserActive;
+   useEffect(() => {
     fetchWithdrawalsApproved();
     fetchWithdrawalsPending();
     fetchWithdrawalsHistory();
@@ -35,7 +36,7 @@ const Page = () => {
 
   return (
     <div className="bg-accent h-full space-y-4 md:space-y-6 md:p-6 p-4">
-      {!user?.isActive ? (
+      {!userIsActive ? (
         <DeActivatedMessage />
       ) : (
         <>

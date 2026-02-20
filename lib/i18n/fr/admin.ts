@@ -93,7 +93,8 @@ export const admin = {
     pending: "EN ATTENTE",
     withdraw: "Retirer",
     ledgerBalanceTitle: "Solde du Grand Livre",
-    ledgerBalanceDescription: "Votre solde total de portefeuille composé de tous vos fonds",
+    ledgerBalanceDescription:
+      "Votre solde total de portefeuille composé de tous vos fonds",
     ledgerBalance: "Solde du Grand Livre",
     activeDeposit: "Dépôt Actif",
     profitBalance: "Solde des Bénéfices",
@@ -109,7 +110,8 @@ export const admin = {
     walletAddressPlaceholder: "Entrez votre adresse de portefeuille",
     amount: "Montant",
     amountPlaceholder: "Entrez le montant à retirer",
-    withdrawingFromLedger: "Tous les retraits sont traités depuis votre solde du grand livre",
+    withdrawingFromLedger:
+      "Tous les retraits sont traités depuis votre solde du grand livre",
     submit: "SOUMETTRE",
     submitting: "SOUMISSION",
     walletType: "Type de Portefeuille",
@@ -313,7 +315,7 @@ export const admin = {
       resolved: "Vous n’avez aucun ticket de support résolu.",
       closed: "Vous n’avez aucun ticket de support fermé.",
       default: "Vous n’avez aucun ticket de support.",
-      empty:"Vous n'avez aucun"
+      empty: "Vous n'avez aucun",
     },
     ticketPriority: {
       low: "Faible",
@@ -476,6 +478,9 @@ export const admin = {
       },
     },
     signUp: {
+      referalCodeO: "Code de parrainage (Facultatif)",
+      referalCodeE: "Saisissez le code de parrainage",
+      applied: "Appliqué",
       createAccount: "Créer un Compte",
       enterDetailsToRegister:
         "Entrez vos détails pour enregistrer un nouveau compte",

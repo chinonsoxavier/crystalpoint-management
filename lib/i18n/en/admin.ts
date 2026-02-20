@@ -441,6 +441,9 @@ export const admin = {
       },
     },
     signUp: {
+      referalCodeO:"Referral Code (Optional)",
+      referalCodeE:"Enter referral code",
+      applied:"Applied",
       createAccount: "Create Account",
       enterDetailsToRegister: "Enter your details to register a new account",
       firstName: "First Name",

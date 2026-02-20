@@ -78,7 +78,7 @@ const AuthGuard = ({ children, requireAuth = true }: AuthWrapperProps) => {
   // }
 
   // If not authenticated and not on a public route, don't render children
-  if (authStatus !== "authenticated" && requireAuth && !isPublicRoute) {
+  if (authStatus !== "authenticated" && authStatus === 'loading' && requireAuth && !isPublicRoute) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>

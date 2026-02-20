@@ -1011,7 +1011,7 @@ export interface AdminTranslation {
       resolved: string;
       closed: string;
       default: string;
-      empty:string;
+      empty: string;
     };
     ticketPriority: {
       low: string;
@@ -1142,6 +1142,9 @@ export interface AdminTranslation {
       };
     };
     signUp: {
+      referalCodeO: string;
+      referalCodeE: string;
+      applied:string,
       createAccount: string;
       enterDetailsToRegister: string;
       firstName: string;

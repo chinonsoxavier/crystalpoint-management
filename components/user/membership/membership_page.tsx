@@ -64,8 +64,9 @@ const MembershipPage = ({ type }: MembershipPageProps) => {
   const [depositAmount, setDepositAmount] = useState<number>(0);
   const [copied, setCopied] = useState(false);
   const [step, setStep] = useState(1);
-  const { user } = useUserStore();
-  const {
+ const { user, isUserActive } = useUserStore();
+ const userIsActive = user?.isActive && isUserActive;
+   const {
     depositMethods,
     fetchDepositMethods,
     setSelectedDepositMethod,
@@ -139,7 +140,7 @@ const MembershipPage = ({ type }: MembershipPageProps) => {
 
   return (
     <div className="overflow-y-auto bg-accent md:p-6 p-4 max-h-[calc(100dvh-128px)] w-full h-full text-white">
-      {!user?.isActive ? (
+      {!userIsActive ? (
         <DeActivatedMessage />
       ) : (
         <div className="space-y-8">

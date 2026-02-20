@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Eye,
@@ -14,12 +14,13 @@ import {
   Check,
   ChevronsUpDown,
   Search,
+  Ticket,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import useUserStore from "@/app/user/user_store";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AuthGuard } from "@/components/auth_guard";
 import { countries } from "@/components/shared/data/countrie";
 import { useTranslate } from "@/hooks/use_translate";
@@ -143,6 +144,7 @@ interface FormData {
   password: string;
   confirmPassword: string;
   agreeTerms: boolean;
+  referralCode?:string
 }
 
 const Page = () => {
@@ -157,16 +159,19 @@ const Page = () => {
     password: "",
     confirmPassword: "",
     agreeTerms: false,
+    referralCode:""
   });
 
   const router = useRouter();
+  const searchParams = useSearchParams(); // Hook to read URL query params
   const { register, authStatus } = useUserStore();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-
+  const [referralCode, setReferralCode] = useState<string | null>(null);
+  const [showReferralBanner, setShowReferralBanner] = useState(false);
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value, type } = e.target;
     const checked =
@@ -213,47 +218,79 @@ const Page = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (!validateForm()) {
-      toast.error("Please fix errors in form");
-      return;
-    }
+  if (!validateForm()) {
+    toast.error("Please fix errors in form");
+    return;
+  }
 
-    // setIsLoading(true);
+  // Use the referral code from URL if it exists, otherwise use the form input
+  const finalReferralCode = referralCode || formData.referralCode;
 
-    const payload = {
-      firstName: formData.firstName.trim(),
-      lastName: formData.lastName.trim(),
-      username: formData.username.trim(),
-      email: formData.email.trim().toLowerCase(),
-      password: formData.password,
-      confirmPassword: formData.confirmPassword,
-      country: formData.country,
-      phone: formData.phone.trim(),
-    };
-
-    const res = await register(payload);
-
-    if (res === "success") {
-      router.push("/sign-in");
-    }
-
-    // Reset form
-    setFormData({
-      firstName: "",
-      lastName: "",
-      username: "",
-      country: "",
-      phone: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      agreeTerms: false,
-    });
-    setErrors({});
+  const payload = {
+    firstName: formData.firstName.trim(),
+    lastName: formData.lastName.trim(),
+    username: formData.username.trim(),
+    email: formData.email.trim().toLowerCase(),
+    password: formData.password,
+    confirmPassword: formData.confirmPassword,
+    country: formData.country,
+    phone: formData.phone.trim(),
+    referralCode: finalReferralCode,
   };
+
+  const res = await register(payload);
+
+  if (res === "success") {
+    router.push("/sign-in");
+  }
+
+  // Reset form
+  setFormData({
+    firstName: "",
+    lastName: "",
+    username: "",
+    country: "",
+    phone: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    agreeTerms: false,
+    referralCode: "", // Reset this field too
+  });
+  setErrors({});
+};
+  useEffect(() => {
+    // 1. Try to get from URL query param (e.g., /sign-up?ref=CODE123)
+    const urlRef = searchParams.get("ref");
+
+    // 2. Fallback: Check for a cookie set by middleware
+    const getCookie = (name: string) => {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop()?.split(";").shift();
+      return null;
+    };
+    const cookieRef = getCookie("referralCode");
+
+    const code = urlRef || cookieRef;
+
+    if (code) {
+      setReferralCode(code);
+      setShowReferralBanner(true);
+      // Store in localStorage for extra persistence
+      localStorage.setItem("referralCode", code);
+    } else {
+      // 3. Final fallback: Check localStorage
+      const localRef = localStorage.getItem("referralCode");
+      if (localRef) {
+        setReferralCode(localRef);
+        setShowReferralBanner(true);
+      }
+    }
+  }, [searchParams]);
 
   return (
     <AuthGuard>
@@ -294,13 +331,11 @@ const Page = () => {
                       type={"text"}
                       value={formData.firstName}
                       onChange={handleChange}
-                      placeholder={
-                        t.admin.auth.signUp.placeholders.firstName
-                      }
+                      placeholder={t.admin.auth.signUp.placeholders.firstName}
                       className={cn(
                         "w-full pl-10 pr-10 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                         errors.firstName &&
-                          "border-destructive focus:ring-destructive/20"
+                          "border-destructive focus:ring-destructive/20",
                       )}
                       disabled={authStatus === "loading"}
                     />
@@ -333,7 +368,7 @@ const Page = () => {
                       className={cn(
                         "w-full pl-10 pr-3 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                         errors.lastName &&
-                          "border-destructive focus:ring-destructive/20"
+                          "border-destructive focus:ring-destructive/20",
                       )}
                       disabled={authStatus === "loading"}
                     />
@@ -345,7 +380,6 @@ const Page = () => {
                   )}
                 </div>
               </div>
-
               {/* Username + Email */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -369,7 +403,7 @@ const Page = () => {
                       className={cn(
                         "w-full pl-10 pr-3 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                         errors.username &&
-                          "border-destructive focus:ring-destructive/20"
+                          "border-destructive focus:ring-destructive/20",
                       )}
                       disabled={authStatus === "loading"}
                     />
@@ -402,7 +436,7 @@ const Page = () => {
                       className={cn(
                         "w-full pl-10 pr-3 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                         errors.email &&
-                          "border-destructive focus:ring-destructive/20"
+                          "border-destructive focus:ring-destructive/20",
                       )}
                       disabled={authStatus === "loading"}
                     />
@@ -412,7 +446,6 @@ const Page = () => {
                   )}
                 </div>
               </div>
-
               {/* Country + Phone */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -459,7 +492,7 @@ const Page = () => {
                       className={cn(
                         "w-full pl-10 pr-3 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                         errors.phone &&
-                          "border-destructive focus:ring-destructive/20"
+                          "border-destructive focus:ring-destructive/20",
                       )}
                       disabled={authStatus === "loading"}
                     />
@@ -470,6 +503,61 @@ const Page = () => {
                 </div>
               </div>
 
+              {/* Referral Code */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="referralCode"
+                    className="text-sm font-medium text-foreground"
+                  >
+                    {t.admin.auth.signUp.referalCodeO ||
+                      "Referral Code (Optional)"}
+                  </label>
+                  {referralCode && (
+                    <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">
+                      {t.admin.auth.signUp.applied}: {referralCode}
+                    </span>
+                  )}
+                </div>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-noe">
+                    <Ticket className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <input
+                    id="referralCode"
+                    name="referralCode"
+                    type="text"
+                    defaultValue={referralCode || formData.referralCode}
+                    onChange={(e) => {
+                      if (!referralCode) {
+                        setFormData((prev) => ({
+                          ...prev,
+                          referralCode: e.target.value,
+                        }));
+                      }
+                    }}
+                    placeholder={
+                      t.admin.auth.signUp.referalCodeE ||
+                      "Enter referral code"
+                    }
+                    className={cn(
+                      "w-full pl-10 pr-3 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
+                      referralCode &&
+                        "bg-muted/50 text-muted-foreground cursor-not-allowed",
+                    )}
+                  />
+                  {referralCode && (
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                      <Check className="h-5 w-5 text-primary" />
+                    </div>
+                  )}
+                </div>
+                {referralCode && (
+                  <p className="text-xs text-muted-foreground">
+                    You`re signing up with a referral code from {referralCode}
+                  </p>
+                )}
+              </div>
               {/* Passwords */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -493,7 +581,7 @@ const Page = () => {
                       className={cn(
                         "w-full pl-10 pr-10 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                         errors.password &&
-                          "border-destructive focus:ring-destructive/20"
+                          "border-destructive focus:ring-destructive/20",
                       )}
                       disabled={authStatus === "loading"}
                     />
@@ -540,7 +628,7 @@ const Page = () => {
                       className={cn(
                         "w-full pl-10 pr-10 py-3 bg-background/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                         errors.confirmPassword &&
-                          "border-destructive focus:ring-destructive/20"
+                          "border-destructive focus:ring-destructive/20",
                       )}
                       disabled={authStatus === "loading"}
                     />
@@ -566,13 +654,14 @@ const Page = () => {
                   )}
                 </div>
               </div>
-
+              {/*  */}
               {/* Terms */}
               <div className="flex items-start space-x-3">
                 <input
                   type="checkbox"
                   id="agreeTerms"
                   name="agreeTerms"
+                  required
                   checked={formData.agreeTerms}
                   onChange={handleChange}
                   className="w-5 h-5 mt-0.5 border-border rounded focus:ring-2 focus:ring-primary/20"
@@ -586,7 +675,7 @@ const Page = () => {
                   >
                     {t.admin.auth.signUp.termsAndConditions}
                   </a>
-                  {t.admin.auth.signUp.and}
+                  <span className="px-1">{t.admin.auth.signUp.and}</span>
                   <a
                     href="/privacy-policy"
                     className="text-primary hover:text-primary/80 "
@@ -598,7 +687,6 @@ const Page = () => {
               {errors.agreeTerms && (
                 <p className="text-sm text-destructive">{errors.agreeTerms}</p>
               )}
-
               {/* Submit Button */}
               <Button
                 type="submit"
@@ -614,7 +702,6 @@ const Page = () => {
                   t.admin.auth.signUp.createAccountButton
                 )}
               </Button>
-
               {/* Sign In Link */}
               <div className="text-center">
                 <p className="text-muted-foreground">

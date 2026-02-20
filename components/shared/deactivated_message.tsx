@@ -22,7 +22,7 @@ const DeActivatedMessage = () => {
 
   return (
     <div className="t-[30%] center my-auto h-full">
-      {loading ? (
+      {loading || authStatus === 'loading' ? (
         // Loading component
         <div className="flex items-center justify-center min-h-screen">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>

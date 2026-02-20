@@ -9,9 +9,6 @@ import CreateTicketForm from "@/components/user/support/create_ticket_form";
 import TicketDetails from "@/components/user/support/ticket_detail";
 import SupportEmptyState from "@/components/user/support/support_empty_state";
 import TicketList from "@/components/user/support/ticket_list";
-import { useTranslate } from "@/hooks/use_translate";
-import useUserStore from "../user_store";
-import DeActivatedMessage from "@/components/shared/deactivated_message";
 
 export default function Page() {
   const {
@@ -19,7 +16,6 @@ export default function Page() {
     activeTab,
     fetchTickets,
     fetchStats,
-    setActiveTab,
     showTicketDetails,
     setShowTicketDetails,
   } = useSupportStore();
@@ -27,8 +23,6 @@ export default function Page() {
   const [activeSection, setActiveSection] = useState<"messages" | "compose">(
     "messages"
   );
-  const { t } = useTranslate();
-   const {user} = useUserStore();
   useEffect(() => {
     fetchTickets({ status: activeTab, page: 1, limit: 100 });
   }, [activeTab, fetchTickets]);

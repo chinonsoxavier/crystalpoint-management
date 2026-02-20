@@ -29,17 +29,18 @@ export default function InvestmentPlans() {
         {/* Investment Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="flex flex-col h-full">
-            <Animate className="relative overflow-hidden rounded-lg -mb-2">
+            {/* <Animate className="relative overflow-hidden rounded-lg -mb-2">
               <Image
                 src={beginnerBg}
                 alt="beginner plan"
                 className="w-full h-60 md:h-108 object-cover"
               />
-            </Animate>
+            </Animate> */}
             <div className="flex-1 ">
               <InvestmentCard
                 key="beginners"
                 plan={{
+                  image:beginnerBg,
                   id: "beginners",
                   name: t.landing.investmentPlans.plans.beginners.name,
                   icon: "🛍",
@@ -59,17 +60,18 @@ export default function InvestmentPlans() {
           </div>
 
           <div className="flex flex-col h-full">
-            <Animate className="relative overflow-hidden rounded-lg -mb-2">
+            {/* <Animate className="relative overflow-hidden rounded-lg -mb-2">
               <Image
                 src={accessoriesBg}
                 alt="beginner plan"
                 className="w-full h-60 md:h-108 object-cover"
               />
-            </Animate>
+            </Animate> */}
             <div className="flex-1 ">
               <InvestmentCard
                 key="accessories"
                 plan={{
+                  image:accessoriesBg,
                   id: "accessories",
                   name: t.landing.investmentPlans.plans.accessories.name,
                   icon: "⚙",
@@ -90,17 +92,18 @@ export default function InvestmentPlans() {
           </div>
 
           <div className="flex flex-col h-full">
-            <Animate className="relative overflow-hidden rounded-lg -mb-2">
+            {/* <Animate className="relative overflow-hidden rounded-lg -mb-2">
               <Image
                 src={oilAndGasBg}
                 alt="beginner plan"
                 className="w-full h-60 md:h-108 object-cover"
               />
-            </Animate>
+            </Animate> */}
             <div className="flex-1 ">
               <InvestmentCard
                 key="oil-gas"
                 plan={{
+                  image:oilAndGasBg,
                   id: "oil-gas",
                   name: t.landing.investmentPlans.plans.oilGas.name,
                   icon: "🛢",
@@ -119,17 +122,18 @@ export default function InvestmentPlans() {
           </div>
 
           <div className="flex flex-col h-full">
-            <Animate className="relative overflow-hidden rounded-lg -mb-2">
+            {/* <Animate className="relative overflow-hidden rounded-lg -mb-2">
               <Image
                 src={agricBg}
                 alt="beginner plan"
                 className="w-full h-60 md:h-108 object-cover"
               />
-            </Animate>
+            </Animate> */}
             <div className="flex-1 ">
               <InvestmentCard
                 key="agriculture"
                 plan={{
+                  image:agricBg,
                   id: "agriculture",
                   name: t.landing.investmentPlans.plans.agriculture.name,
                   icon: "🌾",
@@ -150,17 +154,18 @@ export default function InvestmentPlans() {
           </div>
 
           <div className="flex flex-col h-full">
-            <Animate className="relative overflow-hidden rounded-lg -mb-2">
+            {/* <Animate className="relative overflow-hidden rounded-lg -mb-2">
               <Image
                 src={realEstateBg}
                 alt="beginner plan"
                 className="w-full h-60 md:h-108 object-cover"
               />
-            </Animate>
+            </Animate> */}
             <div className="flex-1 ">
               <InvestmentCard
                 key="real-estate"
                 plan={{
+                  image:realEstateBg,
                   id: "real-estate",
                   name: t.landing.investmentPlans.plans.realEstate.name,
                   icon: "🏢",

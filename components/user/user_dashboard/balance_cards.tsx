@@ -10,7 +10,7 @@ import { useEffect } from "react";
 
 export interface BalanceCardsProps {
   showValues: boolean;
-}
+};
 
 export function BalanceCards({ showValues }: BalanceCardsProps) {
   const { profile } = useDashboardStore();

@@ -42,8 +42,9 @@ const Page = () => {
   } = useDepositStore();
 
   const { profile } = useDashboardStore();
-  const { user } = useUserStore();
-  const withdrawalMethods = [
+ const { user, isUserActive } = useUserStore();
+ const userIsActive = user?.isActive && isUserActive;
+   const withdrawalMethods = [
     {
       _id: "USDT-TRC20",
       name: "USDT (TRC20)",
@@ -80,7 +81,7 @@ const Page = () => {
 
   return (
     <div className="p-4 h-full overflow-y-scroll bg-accent md:p-6">
-      {!user?.isActive ? (
+      {!userIsActive ? (
         <>
           <DeActivatedMessage />
         </>

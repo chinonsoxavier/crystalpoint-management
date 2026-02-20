@@ -473,6 +473,9 @@ export const admin = {
       },
     },
     signUp: {
+      referalCodeO: "Código de indicação (Opcional)",
+      referalCodeE: "Digite o código de indicação",
+      applied: "Aplicado",
       createAccount: "Criar Conta",
       enterDetailsToRegister:
         "Insira seus detalhes para registrar uma nova conta",

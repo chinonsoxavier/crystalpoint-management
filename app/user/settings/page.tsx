@@ -17,8 +17,9 @@ export default function SettingsPage() {
   const { authStatus } = useUserStore();
   const [activeTab, setActiveTab] = useState("profile");
   const { t } = useTranslate();
-  const { user } = useUserStore();
-  useEffect(() => {
+ const { user, isUserActive } = useUserStore();
+ const userIsActive = user?.isActive && isUserActive;
+   useEffect(() => {
     if (authStatus === "authenticated") {
       getUserDetails();
     }
@@ -41,7 +42,7 @@ export default function SettingsPage() {
 
   return (
     <div className="py-6 px-4 md:px-6 h-full">
-      {!user?.isActive ? (
+      {!userIsActive ? (
         <DeActivatedMessage />
       ) : (
         <>

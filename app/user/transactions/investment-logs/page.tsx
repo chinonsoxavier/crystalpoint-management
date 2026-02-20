@@ -12,15 +12,15 @@ const Page = () => {
   const { fetchInvestHistory, investmentStats, fetchInvestStats } =
     useInvestStore();
   const { t } = useTranslate();
-  const { user } = useUserStore();
-
+ const { user, isUserActive } = useUserStore();
+ const userIsActive = user?.isActive && isUserActive;
   useEffect(() => {
     fetchInvestHistory(1);
     fetchInvestStats();
   }, []);
   return (
     <div className="bg-accent h-full space-y-4 md:space-y-6 md:p-6 p-4">
-      {!user?.isActive ? (
+      {!userIsActive ? (
         <DeActivatedMessage />
       ) : (
         <>

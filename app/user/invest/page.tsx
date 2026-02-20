@@ -13,8 +13,9 @@ import DeActivatedMessage from "@/components/shared/deactivated_message";
 
 const Page = () => {
   const { fetchInvestPlans, isFetchingInvestPlans } = useInvestStore();
+  const { user ,isUserActive} = useUserStore();
+    const userIsActive = user?.isActive && isUserActive;
   const { t } = useTranslate();
-  const { user } = useUserStore();
 
   useEffect(() => {
     fetchInvestPlans();
@@ -22,7 +23,7 @@ const Page = () => {
 
   return (
     <div className="overflow-y-auto bg-accent md:p-6 p-4 max-h-[calc(100dvh-128px)] w-full h-full text-white">
-      {!user?.isActive ? (
+      {!userIsActive ? (
         <DeActivatedMessage />
       ) : (
         <div className="">
