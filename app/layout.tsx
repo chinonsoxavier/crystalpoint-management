@@ -30,6 +30,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${archivoSans.variable} ${archivoMono.variable} antialiased`}
       >
         <WhatsAppFloat />
