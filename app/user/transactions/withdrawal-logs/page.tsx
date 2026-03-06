@@ -17,9 +17,9 @@ const Page = () => {
     pendingWithdrawals,
   } = useWithdrawStore();
   const { t } = useTranslate();
- const { user, isUserActive } = useUserStore();
- const userIsActive = user?.isActive && isUserActive;
-   useEffect(() => {
+ const { user, authStatus } = useUserStore();
+
+ useEffect(() => {
     fetchWithdrawalsApproved();
     fetchWithdrawalsPending();
     fetchWithdrawalsHistory();
@@ -34,11 +34,31 @@ const Page = () => {
     0
   );
 
+
+  // Handle loading states
+  if (authStatus === "checking" || authStatus === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100dvh-128px)] w-full">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <p className="text-muted-foreground text-sm">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle inactive account
+  if (authStatus === "inactive" || user?.isActive === false) {
+    return (
+      <div className="overflow-y-auto bg-accent md:p-6 p-4 max-h-[calc(100dvh-128px)] w-full h-full text-white">
+        <DeActivatedMessage />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-accent h-full space-y-4 md:space-y-6 md:p-6 p-4">
-      {!userIsActive ? (
-        <DeActivatedMessage />
-      ) : (
+
         <>
           <LedgerBalance />
           <div className="grid gap-4 md:grid-cols-2 md:gap-6">
@@ -63,7 +83,6 @@ const Page = () => {
           </div>
           <WithdrawalsTable />
         </>
-      )}
     </div>
   );
 };

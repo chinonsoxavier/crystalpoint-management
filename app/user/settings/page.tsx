@@ -14,11 +14,9 @@ import DeActivatedMessage from "@/components/shared/deactivated_message";
 
 export default function SettingsPage() {
   const { getUserDetails } = useSettingsStore();
-  const { authStatus } = useUserStore();
+  const { authStatus,user } = useUserStore();
   const [activeTab, setActiveTab] = useState("profile");
   const { t } = useTranslate();
- const { user, isUserActive } = useUserStore();
- const userIsActive = user?.isActive && isUserActive;
    useEffect(() => {
     if (authStatus === "authenticated") {
       getUserDetails();
@@ -40,11 +38,30 @@ export default function SettingsPage() {
     }
   };
 
+
+  // Handle loading states
+  if (authStatus === "checking" || authStatus === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100dvh-128px)] w-full">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <p className="text-muted-foreground text-sm">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle inactive account
+  if (authStatus === "inactive" || user?.isActive === false) {
+    return (
+      <div className="overflow-y-auto bg-accent md:p-6 p-4 max-h-[calc(100dvh-128px)] w-full h-full text-white">
+        <DeActivatedMessage />
+      </div>
+    );
+  }
+
   return (
     <div className="py-6 px-4 md:px-6 h-full">
-      {!userIsActive ? (
-        <DeActivatedMessage />
-      ) : (
         <>
           {" "}
           <div className="pt-6 bg-accent sticky top-0">
@@ -61,7 +78,6 @@ export default function SettingsPage() {
             <div className="">{renderTabContent()}</div>
           </div>
         </>
-      )}
     </div>
   );
 }
