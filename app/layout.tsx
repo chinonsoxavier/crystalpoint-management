@@ -5,6 +5,7 @@ import { Providers } from "@/providers/provider";
 import BackToTop from "@/components/shared/back-to-top";
 import WhatsAppFloat from "@/components/shared/whatsapp-float";
 import { LanguageSelect } from "@/components/shared/language_select";
+import { AuthProvider } from "@/providers/auth_provider";
 
 const archivoSans = Archivo({
   variable: "--font-archivo-sans",
@@ -30,12 +31,15 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${archivoSans.variable} ${archivoMono.variable} antialiased`}
       >
+        <AuthProvider>
         <WhatsAppFloat />
         <Providers>{children}</Providers>
         <BackToTop />
         <LanguageSelect/>
+        </AuthProvider>
       </body>
     </html>
   );

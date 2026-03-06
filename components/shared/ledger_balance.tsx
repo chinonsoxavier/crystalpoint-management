@@ -46,7 +46,7 @@ const LedgerBalance = () => {
                   {showBalance ? (
                     <span>
                       {formatCurrency(
-                        (user?.balance.activeDeposit ?? 0) +
+                        (user?.balance.deposit ?? 0) +
                           (profile?.promotional_balance ?? 0) +
                           (profile?.profit_balance ?? 0)
                       )}

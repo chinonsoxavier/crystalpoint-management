@@ -12,8 +12,9 @@ import { admin as zhAdmin } from "./zh/admin";
 
 export type Language = "en" | "es" | "fr" | "pt" | "zh";
 
+// plans
 export interface LandingTranslation {
-  
+  name:string;
   deactivated:{
    contact:string;
    message:string;
@@ -731,6 +732,7 @@ export interface AdminTranslation {
     shareLink: string;
     balanceCards: {
       totalDeposit: string;
+      // Deposit: string;
       profitBalance: string;
       totalWithdrawals: string;
       activeDeposits: string;
@@ -1009,7 +1011,7 @@ export interface AdminTranslation {
       resolved: string;
       closed: string;
       default: string;
-      empty:string;
+      empty: string;
     };
     ticketPriority: {
       low: string;
@@ -1140,6 +1142,9 @@ export interface AdminTranslation {
       };
     };
     signUp: {
+      referalCodeO: string;
+      referalCodeE: string;
+      applied:string,
       createAccount: string;
       enterDetailsToRegister: string;
       firstName: string;

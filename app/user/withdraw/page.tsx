@@ -42,8 +42,8 @@ const Page = () => {
   } = useDepositStore();
 
   const { profile } = useDashboardStore();
-  const { user } = useUserStore();
-  const withdrawalMethods = [
+ const { user, authStatus } = useUserStore();
+   const withdrawalMethods = [
     {
       _id: "USDT-TRC20",
       name: "USDT (TRC20)",
@@ -75,18 +75,33 @@ const Page = () => {
   // Calculate total ledger balance
   const totalLedgerBalance =
     (profile?.profit_balance || 0) +
-    (user?.balance.activeDeposit || 0) +
+    (user?.balance.deposit || 0) +
     (profile?.promotional_balance || 0);
+
+
+// Handle loading states
+if (authStatus === "checking" || authStatus === "loading") {
+  return (
+    <div className="flex items-center justify-center min-h-[calc(100dvh-128px)] w-full">
+      <div className="flex flex-col items-center gap-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <p className="text-muted-foreground text-sm">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
+// Handle inactive account
+if (authStatus === "inactive" || user?.isActive === false) {
+  return (
+    <div className="overflow-y-auto bg-accent md:p-6 p-4 max-h-[calc(100dvh-128px)] w-full h-full text-white">
+      <DeActivatedMessage />
+    </div>
+  );
+}
 
   return (
     <div className="p-4 h-full overflow-y-scroll bg-accent md:p-6">
-
-      {!user?.isActive ? (
-        <>
-          <DeActivatedMessage />
-        </>
-      ) : (
-
 
         <>
           <LedgerBalance />
@@ -100,14 +115,12 @@ const Page = () => {
                 $
                 {pendingWithdrawals.reduce<number>(
                   (total, withdrawal) => total + withdrawal.amount,
-                  0
+                  0,
                 ) || 0}
               </p>
             </div>
           </div>
-          <form
-            className="my-4 bg-accent-foreground p-4 md:p-6 rounded-lg"
-          >
+          <form className="my-4 bg-accent-foreground p-4 md:p-6 rounded-lg">
             <div className="flex gap-2 flex-col mb-6">
               <button className="pb-1 font-semibold text-black dark:text-white text-left text-lg md:text-xl">
                 {t.admin.withdraw.withdraw}
@@ -139,7 +152,7 @@ const Page = () => {
                         </span>
                       </div>
                       <div className="text-lg font-semibold">
-                        ${user?.balance.activeDeposit || 0}
+                        ${user?.balance.deposit || 0}
                       </div>
                     </div>
 
@@ -187,7 +200,7 @@ const Page = () => {
                     required
                     onValueChange={(value) => {
                       const selected = withdrawalMethods.find(
-                        (m) => m.network === value
+                        (m) => m.network === value,
                       );
                       setSelectedDepositMethod(selected!);
                     }}
@@ -239,7 +252,7 @@ const Page = () => {
                           <div className="flex items-center justify-between w-full">
                             <span>{t.admin.withdraw.ledgerBalance}</span>
                             <span className="text-muted-foreground ml-2">
-                              ${((user?.balance?.activeDeposit ?? 0) + (user?.balance?.profit ?? 0) + (user?.balance?.bonus ?? 0)) || 0}
+                              $ {totalLedgerBalance}
                             </span>
                           </div>
                         </SelectItem>
@@ -287,15 +300,20 @@ const Page = () => {
                     {t.admin.withdraw.amount}
                   </Label>
                   <Input
-                    value={selectedAccount === 'ledger' ? (user?.balance?.activeDeposit ?? 0) + (user?.balance?.profit ?? 0) + (user?.balance?.bonus ?? 0) || 0 :
-                      amount || 0}
+                    value={
+                      selectedAccount === "ledger"
+                        ? (user?.balance?.deposit ?? 0) +
+                            (user?.balance?.profit ?? 0) +
+                            (user?.balance?.bonus ?? 0) || 0
+                        : amount || 0
+                    }
                     onChange={(e) => {
                       const val = parseInt(e.target.value);
                       setAmount(val);
                     }}
                     required
                     type="number"
-                    disabled={selectedAccount === 'ledger'}
+                    disabled={selectedAccount === "ledger"}
                     placeholder={t.admin.withdraw.amountPlaceholder}
                     className="w-full text-accent-text"
                   />
@@ -312,7 +330,9 @@ const Page = () => {
               <Button
                 type="submit"
                 onClick={handleWithdrawal}
-                disabled={loadingWithdrawal || !selectedAccount || !walletAddress}
+                disabled={
+                  loadingWithdrawal || !selectedAccount || !walletAddress
+                }
                 className="w-full font-semibold py-3 rounded-lg transition-colors"
               >
                 {loadingWithdrawal
@@ -322,7 +342,6 @@ const Page = () => {
             </div>
           </form>
         </>
-      )}
     </div>
   );
 };

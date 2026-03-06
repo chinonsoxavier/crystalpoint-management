@@ -14,17 +14,36 @@ import DeActivatedMessage from "@/components/shared/deactivated_message";
 const Page = () => {
   const { fetchInvestPlans, isFetchingInvestPlans } = useInvestStore();
   const { t } = useTranslate();
-  const { user } = useUserStore();
-
+  const { authStatus, user } = useUserStore();
   useEffect(() => {
     fetchInvestPlans();
   }, []);
 
+  // Handle loading states
+  if (authStatus === "checking" || authStatus === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100dvh-128px)] w-full">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <p className="text-muted-foreground text-sm">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle inactive account
+  if (authStatus === "inactive" || user?.isActive === false) {
+    return (
+      <div className="overflow-y-auto bg-accent md:p-6 p-4 max-h-[calc(100dvh-128px)] w-full h-full text-white">
+        <DeActivatedMessage />
+      </div>
+    );
+  }
+
+
+
   return (
     <div className="overflow-y-auto bg-accent md:p-6 p-4 max-h-[calc(100dvh-128px)] w-full h-full text-white">
-      {!user?.isActive ? (
-        <DeActivatedMessage />
-      ) : (
         <div className="">
           <LedgerBalance />
           {/* Header */}
@@ -149,8 +168,6 @@ const Page = () => {
             )}
           </div>
         </div>
-      )}
-      {/* Main Content */}
     </div>
   );
 };

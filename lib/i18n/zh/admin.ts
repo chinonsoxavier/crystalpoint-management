@@ -461,6 +461,9 @@ export const admin = {
       },
     },
     signUp: {
+      referalCodeO: "推荐码（可选)",
+      referalCodeE: "输入推荐码",
+      applied: "已应用",
       createAccount: "创建账户",
       enterDetailsToRegister: "输入您的详细信息以注册新账户",
       firstName: "名字",

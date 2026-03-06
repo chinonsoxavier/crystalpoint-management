@@ -38,7 +38,7 @@ const DashboardSidemenu = ({ totalDeposit }: IDashboardSidemenu) => {
     // logout returns void (no result to check)
     const res = await logout();
     if (res === "success") {
-      router.push("/");
+      router.push("/sign-in");
     }
   };
 

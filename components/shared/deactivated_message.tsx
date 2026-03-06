@@ -6,29 +6,41 @@ import { useEffect, useState } from "react";
 
 const DeActivatedMessage = () => {
   const { t } = useTranslate();
-  const [loading, setLoading] = useState(true);
+  const [ismounted, setIsMounted] = useState(false);
   const { user, authStatus } = useUserStore();
+  // const userIsActive = authStatus === "loading" && isUserActive ? true : false;
+  const phoneNumber = "17042190083";
+  const message = `Hello! I need assistance with my account.`;
 
+  // Format the WhatsApp URL
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+    message,
+  )}`;
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 5000);
+    if(!ismounted){
+      if (authStatus === "loading") {
+        setIsMounted(true);
+      }
+    }
+    // const timer = setTimeout(() => {
+    // }, 5000);
 
-    // Clean up the timer when component unmounts
-    return () => clearTimeout(timer);
-  }, []);
+    // // Clean up the timer when component unmounts
+    // return () => clearTimeout(timer);
+  }, [user, authStatus]);
 
-  console.log("Loading state:", loading);
+  // console.log("Loading state:", loading);
 
   return (
     <div className="t-[30%] center my-auto h-full">
-      {loading ? (
+      {/* {authStatus === "fetching-user" ? (
         // Loading component
         <div className="flex items-center justify-center min-h-screen">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         </div>
-      ) : (
-        // Deactivated message component
+      ) : ( */}
+        {/* // Deactivated message component */}
+      
         <div className="flex flex-col items-center justify-center h-full">
           <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
             <svg
@@ -48,13 +60,22 @@ const DeActivatedMessage = () => {
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
               {t.landing.deactivated.deactivated}
             </h2>
-            <p className="text-gray-600 mb-6">{t.landing.deactivated.message}</p>
+            <p className="text-gray-600 mb-6">
+              {t.landing.deactivated.message}
+            </p>
             <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-              {t.landing.deactivated.contact}
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Contact customer support."
+              >
+                {t.landing.deactivated.contact}
+              </a>
             </button>
           </div>
         </div>
-      )}
+      {/* )} */}
     </div>
   );
 };

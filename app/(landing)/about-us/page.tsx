@@ -10,7 +10,7 @@ import InvestorsChoice from "@/components/shared/investors_choice";
 
 const Page = () => {
   return (
-    <div className="overflow-x-clip" >
+    <div className="overflow-x-clip">
       {/* header */}
       <Header />
 
@@ -27,17 +27,16 @@ const Page = () => {
       <AboutUsGrid />
 
       {/* why choose us */}
-      <WhyChooseUs/>
+      <WhyChooseUs />
 
       {/* popular market */}
-      <PopularMarkets/>
+      <PopularMarkets />
 
       {/* investors choice */}
-      <InvestorsChoice/>
+      <InvestorsChoice />
 
       {/* footer */}
-      <Footer/>
-
+      <Footer />
     </div>
   );
 };

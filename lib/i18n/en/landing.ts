@@ -1,5 +1,6 @@
 // lib/i18n/en/landing.ts
 export const landing = {
+  name:" CristalPoint Investment",
   deactivated: {
     contact: "Contact Support",
     message:

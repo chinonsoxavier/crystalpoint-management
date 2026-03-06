@@ -1,5 +1,6 @@
 // lib/i18n/pt/landing.ts
 export const landing = {
+  name:"CristalPoint Investimentos",
   deactivated: {
     contact: " Contatar Suporte",
     message:
@@ -7,14 +8,14 @@ export const landing = {
     deactivated: "Conta Desativada",
   },
   sidemenu: {
-    company: "Company",
-    aboutUs: "About Us",
-    faqs: "FAQs",
-    contactUs: "Contact Us",
-    markets: "Markets",
-    plans: "Plans",
-    ourServices: "Our Services",
-    login: "Log in",
+    company: "Empresa",
+    aboutUs: "Sobre nós",
+    faqs: "Perguntas frequentes",
+    contactUs: "Fale conosco",
+    markets: "Mercados",
+    plans: "Planos",
+    ourServices: "Nossos serviços",
+    login: "Entrar",
   },
   header: {
     company: "Empresa",

@@ -164,7 +164,7 @@ interface AdminUsersStore {
       | "promotionalBonus"
       | "totalWithdrawn"
       | "pendingWithdrawals"
-      | "activeDeposit",
+      | "totalDeposit",
     amount: number,
     reason: string
   ) => Promise<void>;

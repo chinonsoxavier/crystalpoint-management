@@ -59,7 +59,7 @@ interface AdminDashboardStore {
 
   // Actions
   fetchDashboardOverview: () => Promise<void>;
-  fetchAnalytics: (period: "7d" | "30d" | "90d" | "1y") => Promise<void>;
+  fetchAnalytics: (period?: "7d" | "30d" | "90d" | "1y") => Promise<void>;
   fetchFinancialSummary: (startDate: string, endDate: string) => Promise<void>;
 }
 

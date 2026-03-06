@@ -60,6 +60,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
+import { useAdminDepositsStore } from "../deposits/admin_deposit_store";
 
 type IDepositType =
   | "deposit"
@@ -68,7 +69,7 @@ type IDepositType =
   | "promotionalBonus"
   | "totalWithdrawn"
   | "pendingWithdrawals"
-  | "activeDeposit";
+  | "totalDeposit";
 type ITierFilter = "all" | "1" | "2" | "3";
 type ITierString = "1" | "2" | "3" | undefined;
 
@@ -100,14 +101,22 @@ const BALANCE_CONFIG: {
   label: string;
   color?: string;
 }[] = [
-    { key: "deposit", label: "Deposit Balance", color: "text-green-600" },
-    { key: "profit", label: "Profit", color: "text-blue-600" },
-    { key: "bonus", label: "Bonus", color: "text-purple-600" },
-    { key: "promotionalBonus", label: "Promotional Bonus", color: "text-pink-600" },
-    { key: "activeDeposit", label: "Active Deposit", color: "text-orange-600" },
-    { key: "totalWithdrawn", label: "Total Withdrawn", color: "text-red-600" },
-    { key: "pendingWithdrawals", label: "Pending Withdrawals", color: "text-yellow-600" },
-  ];
+  { key: "totalDeposit", label: "Total Deposit", color: "text-orange-600" },
+  { key: "deposit", label: "Deposit Balance", color: "text-green-600" },
+  { key: "profit", label: "Profit", color: "text-blue-600" },
+  { key: "bonus", label: "Bonus", color: "text-purple-600" },
+  {
+    key: "promotionalBonus",
+    label: "Promotional Bonus",
+    color: "text-pink-600",
+  },
+  { key: "totalWithdrawn", label: "Total Withdrawn", color: "text-red-600" },
+  {
+    key: "pendingWithdrawals",
+    label: "Pending Withdrawals",
+    color: "text-yellow-600",
+  },
+];
 
 export default function UsersPage() {
   const {
@@ -135,9 +144,11 @@ export default function UsersPage() {
     getCurrentMembership,
   } = useAdminUsersStore();
 
+  const { deposits, fetchDeposits } = useAdminDepositsStore();
+
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState<(typeof users)[0] | null>(
-    null
+    null,
   );
   const [tierFilter, setTierFilter] = useState<ITierFilter>("all");
   const [showUserModal, setShowUserModal] = useState(false);
@@ -162,7 +173,8 @@ export default function UsersPage() {
   const [adPromptNotes, setAdPromptNotes] = useState<string>("");
 
   useEffect(() => {
-    getCurrentMembership(selectedUser?._id ?? '');
+    getCurrentMembership(selectedUser?._id ?? "");
+    fetchDeposits();
   }, [selectedUser]);
 
   useEffect(() => {
@@ -189,8 +201,19 @@ export default function UsersPage() {
         bonus: userFinancialSumary.balances.bonus ?? 0,
         promotionalBonus: userFinancialSumary.balances.promotionalBonus ?? 0,
         totalWithdrawn: userFinancialSumary.balances.totalWithdrawn ?? 0,
-        pendingWithdrawals: userFinancialSumary.balances.pendingWithdrawals ?? 0,
-        activeDeposit: userFinancialSumary.balances.activeDeposit ?? 0,
+        pendingWithdrawals:
+          userFinancialSumary.balances.pendingWithdrawals ?? 0,
+        totalDeposit:
+          deposits.reduce<number>(
+            (total, deposit) =>
+              total +
+              (deposit.status === "confirmed" &&
+              selectedUser &&
+              deposit.user?._id === selectedUser._id
+                ? deposit.amount
+                : 0),
+            0,
+          ) || 0,
       });
     } else if (selectedUser) {
       // Initial state if summary hasn't loaded yet
@@ -201,7 +224,7 @@ export default function UsersPage() {
         promotionalBonus: 0,
         totalWithdrawn: 0,
         pendingWithdrawals: 0,
-        activeDeposit: 0,
+        totalDeposit: 0,
       });
     }
   }, [userFinancialSumary, selectedUser]);
@@ -239,7 +262,10 @@ export default function UsersPage() {
   };
 
   // Handler for updating a specific balance type
-  const handleUpdateSingleBalance = async (type: IDepositType, amount: number) => {
+  const handleUpdateSingleBalance = async (
+    type: IDepositType,
+    amount: number,
+  ) => {
     if (!selectedUser) return;
 
     try {
@@ -247,7 +273,7 @@ export default function UsersPage() {
         selectedUser._id,
         type,
         Number(amount),
-        balanceReason || `Updated ${type}`
+        balanceReason || `Updated ${type}`,
       );
       toast.success(`${type} updated successfully`);
       // Optional: Refetch summary to ensure server values are synced
@@ -274,7 +300,7 @@ export default function UsersPage() {
     try {
       await updateUserStatus(userId, isActive ? true : false);
       toast.success(
-        `User ${isActive ? "activated" : "deactivated"} successfully`
+        `User ${isActive ? "activated" : "deactivated"} successfully`,
       );
     } catch (error) {
       toast.error(`Failed to ${isActive ? "activate" : "deactivate"} user`);
@@ -288,7 +314,7 @@ export default function UsersPage() {
     try {
       await toggleAdPrompt(selectedUser._id, promptKey, enabled, adPromptNotes);
       toast.success(
-        `Ad prompt ${enabled ? "enabled" : "disabled"} successfully`
+        `Ad prompt ${enabled ? "enabled" : "disabled"} successfully`,
       );
     } catch (error) {
       toast.error(`Failed to ${enabled ? "enable" : "disable"} ad prompt`);
@@ -417,7 +443,7 @@ export default function UsersPage() {
                     <TableHead>Email</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Tier</TableHead>
-                    <TableHead>Deposited</TableHead>
+                    <TableHead>Deposit</TableHead>
                     <TableHead>Join Date</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
@@ -450,6 +476,7 @@ export default function UsersPage() {
                           {user.tier ? `Tier ${user.tier}` : "No Tier"}
                         </Badge>
                       </TableCell>
+
                       <TableCell>${user.balance.deposit ?? 0}</TableCell>
                       <TableCell>{formatDate(user.createdAt)}</TableCell>
                       <TableCell>
@@ -515,7 +542,7 @@ export default function UsersPage() {
                                 onClick={() =>
                                   handleToggleUserStatus(
                                     user._id,
-                                    user.isActive !== true
+                                    user.isActive !== true,
                                   )
                                 }
                                 disabled={isUpdatingStatus}
@@ -610,17 +637,25 @@ export default function UsersPage() {
                   </Badge>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Deposited</p>
+                  <p className="text-sm text-muted-foreground">Total Deposit</p>
                   <p className="font-semibold">
-                    ${selectedUser.balance.deposit}
+                    ${" "}
+                    {deposits.reduce<number>(
+                      (total, deposit) =>
+                        total +
+                        (deposit.status === "confirmed" &&
+                        selectedUser &&
+                        deposit.user?._id === selectedUser._id
+                          ? deposit.amount
+                          : 0),
+                      0,
+                    ) || 0}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">
-                    Total Deposits
-                  </p>
+                  <p className="text-sm text-muted-foreground">Deposit</p>
                   <p className="font-semibold">
-                    ${selectedUser.balance.activeDeposit ?? 0}
+                    $ {selectedUser.balance.deposit ?? 0}
                   </p>
                 </div>
                 <div>
@@ -636,7 +671,7 @@ export default function UsersPage() {
 
         {/* Edit User Modal with Separated Sections */}
         <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="ma-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Edit User</DialogTitle>
               <DialogDescription>
@@ -701,7 +736,7 @@ export default function UsersPage() {
                                 <Input
                                   id={config.key}
                                   type="number"
-                                  disabled={config.label === "Deposit Balance"}
+                                  disabled={config.label === "Total Deposit"}
                                   className="w-full sm:w-48"
                                   value={tempBalances[config.key] ?? 0}
                                   onChange={(e) =>
@@ -715,12 +750,12 @@ export default function UsersPage() {
                                   onClick={() =>
                                     handleUpdateSingleBalance(
                                       config.key,
-                                      tempBalances[config.key]
+                                      tempBalances[config.key],
                                     )
                                   }
                                   disabled={
                                     isUpdatingBalance ||
-                                    config.label === "Deposit Balance"
+                                    config.label === "Total Deposit"
                                   }
                                   size="sm"
                                 >
@@ -939,7 +974,7 @@ export default function UsersPage() {
                       bulkUpdateAdPrompts(
                         selectedUser!._id,
                         prompts,
-                        adPromptNotes
+                        adPromptNotes,
                       );
                     }}
                   />

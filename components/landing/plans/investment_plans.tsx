@@ -1,8 +1,14 @@
 "use client";
+import Image from "next/image";
 // components/landing/plans/investment_plans.tsx
 import Animate from "../../animation/animate";
 import InvestmentCard from "./investment_card";
 import { useTranslate } from "@/hooks/use_translate";
+import beginnerBg from "@/assets/images/beginner_plan.jpeg";
+import accessoriesBg from "@/assets/images/accessories_plan.jpeg";
+import oilAndGasBg from "@/assets/images/oil_and_gas.jpeg";
+import agricBg from "@/assets/images/agric_plan.jpeg";
+import realEstateBg from "@/assets/images/real_estate.jpeg";
 
 export default function InvestmentPlans() {
   const { t } = useTranslate();
@@ -22,90 +28,161 @@ export default function InvestmentPlans() {
 
         {/* Investment Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <InvestmentCard
-            key="beginners"
-            plan={{
-              id: "beginners",
-              name: t.landing.investmentPlans.plans.beginners.name,
-              icon: "🛍",
-              min: 50,
-              max: 499,
-              return: t.landing.investmentPlans.plans.beginners.return,
-              frequency: t.landing.investmentPlans.plans.beginners.frequency,
-              duration: t.landing.investmentPlans.plans.beginners.duration,
-              referralBonus:
-                t.landing.investmentPlans.plans.beginners.referralBonus,
-              welcomeBonus:
-                t.landing.investmentPlans.plans.beginners.welcomeBonus,
-            }}
-          />
-          <InvestmentCard
-            key="accessories"
-            plan={{
-              id: "accessories",
-              name: t.landing.investmentPlans.plans.accessories.name,
-              icon: "⚙",
-              min: 500,
-              max: 999,
-              return: t.landing.investmentPlans.plans.accessories.return,
-              frequency: t.landing.investmentPlans.plans.accessories.frequency,
-              duration: t.landing.investmentPlans.plans.accessories.duration,
-              referralBonus:
-                t.landing.investmentPlans.plans.accessories.referralBonus,
-              welcomeBonus:
-                t.landing.investmentPlans.plans.accessories.welcomeBonus,
-            }}
-          />
-          <InvestmentCard
-            key="oil-gas"
-            plan={{
-              id: "oil-gas",
-              name: t.landing.investmentPlans.plans.oilGas.name,
-              icon: "🛢",
-              min: 1000,
-              max: 1999,
-              return: t.landing.investmentPlans.plans.oilGas.return,
-              frequency: t.landing.investmentPlans.plans.oilGas.frequency,
-              duration: t.landing.investmentPlans.plans.oilGas.duration,
-              referralBonus:
-                t.landing.investmentPlans.plans.oilGas.referralBonus,
-              welcomeBonus: t.landing.investmentPlans.plans.oilGas.welcomeBonus,
-            }}
-          />
-          <InvestmentCard
-            key="agriculture"
-            plan={{
-              id: "agriculture",
-              name: t.landing.investmentPlans.plans.agriculture.name,
-              icon: "🌾",
-              min: 2000,
-              max: 4999,
-              return: t.landing.investmentPlans.plans.agriculture.return,
-              frequency: t.landing.investmentPlans.plans.agriculture.frequency,
-              duration: t.landing.investmentPlans.plans.agriculture.duration,
-              referralBonus:
-                t.landing.investmentPlans.plans.agriculture.referralBonus,
-              welcomeBonus:
-                t.landing.investmentPlans.plans.agriculture.welcomeBonus,
-            }}
-          />
-          <InvestmentCard
-            key="real-estate"
-            plan={{
-              id: "real-estate",
-              name: t.landing.investmentPlans.plans.realEstate.name,
-              icon: "🏢",
-              min: 5000,
-              max: 1000000,
-              return: t.landing.investmentPlans.plans.realEstate.return,
-              frequency: t.landing.investmentPlans.plans.realEstate.frequency,
-              duration: t.landing.investmentPlans.plans.realEstate.duration,
-              referralBonus:
-                t.landing.investmentPlans.plans.realEstate.referralBonus,
-              welcomeBonus:
-                t.landing.investmentPlans.plans.realEstate.welcomeBonus,
-            }}
-          />
+          <div className="flex flex-col h-full">
+            {/* <Animate className="relative overflow-hidden rounded-lg -mb-2">
+              <Image
+                src={beginnerBg}
+                alt="beginner plan"
+                className="w-full h-60 md:h-108 object-cover"
+              />
+            </Animate> */}
+            <div className="flex-1 ">
+              <InvestmentCard
+                key="beginners"
+                plan={{
+                  image:beginnerBg,
+                  id: "beginners",
+                  name: t.landing.investmentPlans.plans.beginners.name,
+                  icon: "🛍",
+                  min: 50,
+                  max: 499,
+                  return: t.landing.investmentPlans.plans.beginners.return,
+                  frequency:
+                    t.landing.investmentPlans.plans.beginners.frequency,
+                  duration: t.landing.investmentPlans.plans.beginners.duration,
+                  referralBonus:
+                    t.landing.investmentPlans.plans.beginners.referralBonus,
+                  welcomeBonus:
+                    t.landing.investmentPlans.plans.beginners.welcomeBonus,
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col h-full">
+            {/* <Animate className="relative overflow-hidden rounded-lg -mb-2">
+              <Image
+                src={accessoriesBg}
+                alt="beginner plan"
+                className="w-full h-60 md:h-108 object-cover"
+              />
+            </Animate> */}
+            <div className="flex-1 ">
+              <InvestmentCard
+                key="accessories"
+                plan={{
+                  image:accessoriesBg,
+                  id: "accessories",
+                  name: t.landing.investmentPlans.plans.accessories.name,
+                  icon: "⚙",
+                  min: 500,
+                  max: 999,
+                  return: t.landing.investmentPlans.plans.accessories.return,
+                  frequency:
+                    t.landing.investmentPlans.plans.accessories.frequency,
+                  duration:
+                    t.landing.investmentPlans.plans.accessories.duration,
+                  referralBonus:
+                    t.landing.investmentPlans.plans.accessories.referralBonus,
+                  welcomeBonus:
+                    t.landing.investmentPlans.plans.accessories.welcomeBonus,
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col h-full">
+            {/* <Animate className="relative overflow-hidden rounded-lg -mb-2">
+              <Image
+                src={oilAndGasBg}
+                alt="beginner plan"
+                className="w-full h-60 md:h-108 object-cover"
+              />
+            </Animate> */}
+            <div className="flex-1 ">
+              <InvestmentCard
+                key="oil-gas"
+                plan={{
+                  image:oilAndGasBg,
+                  id: "oil-gas",
+                  name: t.landing.investmentPlans.plans.oilGas.name,
+                  icon: "🛢",
+                  min: 1000,
+                  max: 1999,
+                  return: t.landing.investmentPlans.plans.oilGas.return,
+                  frequency: t.landing.investmentPlans.plans.oilGas.frequency,
+                  duration: t.landing.investmentPlans.plans.oilGas.duration,
+                  referralBonus:
+                    t.landing.investmentPlans.plans.oilGas.referralBonus,
+                  welcomeBonus:
+                    t.landing.investmentPlans.plans.oilGas.welcomeBonus,
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col h-full">
+            {/* <Animate className="relative overflow-hidden rounded-lg -mb-2">
+              <Image
+                src={agricBg}
+                alt="beginner plan"
+                className="w-full h-60 md:h-108 object-cover"
+              />
+            </Animate> */}
+            <div className="flex-1 ">
+              <InvestmentCard
+                key="agriculture"
+                plan={{
+                  image:agricBg,
+                  id: "agriculture",
+                  name: t.landing.investmentPlans.plans.agriculture.name,
+                  icon: "🌾",
+                  min: 2000,
+                  max: 4999,
+                  return: t.landing.investmentPlans.plans.agriculture.return,
+                  frequency:
+                    t.landing.investmentPlans.plans.agriculture.frequency,
+                  duration:
+                    t.landing.investmentPlans.plans.agriculture.duration,
+                  referralBonus:
+                    t.landing.investmentPlans.plans.agriculture.referralBonus,
+                  welcomeBonus:
+                    t.landing.investmentPlans.plans.agriculture.welcomeBonus,
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col h-full">
+            {/* <Animate className="relative overflow-hidden rounded-lg -mb-2">
+              <Image
+                src={realEstateBg}
+                alt="beginner plan"
+                className="w-full h-60 md:h-108 object-cover"
+              />
+            </Animate> */}
+            <div className="flex-1 ">
+              <InvestmentCard
+                key="real-estate"
+                plan={{
+                  image:realEstateBg,
+                  id: "real-estate",
+                  name: t.landing.investmentPlans.plans.realEstate.name,
+                  icon: "🏢",
+                  min: 5000,
+                  max: 1000000,
+                  return: t.landing.investmentPlans.plans.realEstate.return,
+                  frequency:
+                    t.landing.investmentPlans.plans.realEstate.frequency,
+                  duration: t.landing.investmentPlans.plans.realEstate.duration,
+                  referralBonus:
+                    t.landing.investmentPlans.plans.realEstate.referralBonus,
+                  welcomeBonus:
+                    t.landing.investmentPlans.plans.realEstate.welcomeBonus,
+                }}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

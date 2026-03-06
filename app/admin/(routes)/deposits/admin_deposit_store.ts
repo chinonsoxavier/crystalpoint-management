@@ -7,7 +7,7 @@ export interface IDeposit {
     // deposits:{
   _id: string;
   user: {
-    id:string;
+    _id:string;
     username:string;
     email:string
   };
@@ -58,7 +58,7 @@ interface AdminDepositsStore {
   isRejectingDeposit: boolean;
 
   // Actions
-  fetchDeposits: (params: {
+  fetchDeposits: (params?: {
     page?: number;
     limit?: number;
     status?: "pending_approval" | "confirmed" | "failed";
@@ -86,9 +86,9 @@ export const useAdminDepositsStore = create<AdminDepositsStore>()(
         set({ isLoadingDeposits: true });
         try {
           const queryString = new URLSearchParams({
-            page: String(params.page || 1),
-            limit: String(params.limit || 10),
-            ...(params.status && { status: params.status }),
+            page: String(params?.page || 1),
+            limit: String(params?.limit || 10),
+            ...(params?.status && { status: params.status }),
           }).toString();
 
           const response = await baseAxios.get(

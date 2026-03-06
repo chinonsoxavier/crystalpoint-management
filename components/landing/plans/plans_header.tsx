@@ -10,7 +10,7 @@ const PlansHeader = () => {
         <Animate type="fadeInLeft" className="">
           <h1 className="text-xl sm:text-3xl font-bold mb-4">{t.landing.sidemenu.plans}</h1>
           <p className="text-[#999] sm:text-lg">
-            CristalPoint Investment {t.landing.sidemenu.plans}
+           {t.landing.name} {t.landing.sidemenu.plans}
           </p>
         </Animate>
       </header>
