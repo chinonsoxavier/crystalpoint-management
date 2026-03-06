@@ -36,7 +36,10 @@ baseAxios.interceptors.request.use((config) => {
 const axiosError = (error: customError | unknown) => {
   const msg = (error as customError)?.response?.data?.error;
   console.log((error as customError)?.response?.data);
-  enqueueSnackbar(msg, { variant: "error" });
+  console.log(msg);
+  if (msg) {
+    enqueueSnackbar(msg, { variant: "error" });
+  }
   return msg;
 };
 

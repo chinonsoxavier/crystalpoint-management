@@ -28,7 +28,7 @@ export function BalanceCards({ showValues }: BalanceCardsProps) {
     {
       label: t.admin.overview.balanceCards.totalDeposit,
       value:
-        depositHistory.reduce<number>(
+        depositHistory?.reduce<number>(
           (total, deposit) =>
             total + (deposit.status === "confirmed" ? deposit.amount : 0),
           0,
@@ -37,23 +37,23 @@ export function BalanceCards({ showValues }: BalanceCardsProps) {
     },
     {
       label: t.admin.overview.balanceCards.profitBalance,
-      value: user?.balance.profit,
+      value: user?.balance?.profit,
       colorClass: "from-yellow-500 to-yellow-600",
     },
     {
       label: t.admin.overview.balanceCards.totalWithdrawals,
-      value: user?.balance.totalWithdrawn,
+      value: user?.balance?.totalWithdrawn,
       colorClass: "bg-white",
     },
     {
       label: t.admin.overview.balanceCards.activeDeposits,
-      value: profile?.balance_breakdown.deposit,
+      value: profile?.balance_breakdown?.deposit,
       colorClass: "from-green-500 to-green-600",
     },
     {
       label: t.admin.overview.balanceCards.pendingWithdrawals,
       value:
-        pendingWithdrawals.reduce<number>(
+        pendingWithdrawals?.reduce<number>(
           (total, withdrawal) => total + withdrawal.amount,
           0,
         ) || 0,
@@ -61,7 +61,7 @@ export function BalanceCards({ showValues }: BalanceCardsProps) {
     },
     {
       label: t.admin.overview.balanceCards.bonus,
-      value: user?.balance.bonus,
+      value: user?.balance?.bonus,
       colorClass: "from-orange-400 to-orange-500",
     },
   ];

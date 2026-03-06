@@ -167,7 +167,7 @@ const Page = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [referralCode, setReferralCode] = useState<string | null>(null);
-  const [showReferralBanner, setShowReferralBanner] = useState(false);
+  const [ShowReferralBanner, setShowReferralBanner] = useState(false);
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
@@ -239,11 +239,11 @@ const handleSubmit = async (e: React.FormEvent) => {
     referralCode: finalReferralCode,
   };
 
-  const res = await register(payload);
+  await register(payload);
 
-  if (res === "success") {
-    router.push("/sign-in");
-  }
+  // if (res === "success") {
+  //   router.push("/sign-in");
+  // }
 
   // Reset form
   setFormData({

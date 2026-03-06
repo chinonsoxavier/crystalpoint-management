@@ -77,7 +77,7 @@ const Page = () => {
     if (!validateEmailStep()) return;
 
     const res = await resetPassword(formData.email);
-    if (res === "success") {
+    if (res) {
       router.push("/sign-in");
     }
   };

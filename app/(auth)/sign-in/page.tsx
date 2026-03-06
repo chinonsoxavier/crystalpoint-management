@@ -58,14 +58,14 @@ const Page = () => {
 
     if (!validateForm()) return;
 
-    const res = await login({
+     await login({
       username: formData.username,
       password: formData.password,
     });
 
-    if (res === "success") {
-      router.push("/user");
-    }
+    // if (res === "success") {
+    //   router.push("/user");
+    // }
   };
 
   return (
